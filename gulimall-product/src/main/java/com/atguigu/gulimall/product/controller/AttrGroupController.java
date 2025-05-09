@@ -1,0 +1,70 @@
+package com.atguigu.gulimall.product.controller;
+
+import com.atguigu.gulimall.product.entity.AttrGroupEntity;
+import com.atguigu.gulimall.product.service.AttrGroupService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import utils.R;
+
+import java.util.List;
+
+/**
+* <p>
+    * 属性分组 前端控制器
+    * </p>
+*
+* @author tifa
+* @since 2025-05-09
+*/
+@RestController
+@RequestMapping("/product/attrGroup")
+public class AttrGroupController {
+
+@Autowired
+private AttrGroupService attrGroupService;
+
+/**
+* 获取所有数据
+*/
+@GetMapping("/list")
+public R list() {
+List<AttrGroupEntity> list = attrGroupService.list();
+    return R.ok().put("data", list);
+    }
+
+    /**
+    * 根据ID获取数据
+    */
+    @GetMapping("/info/{id}")
+    public R info(@PathVariable("id") Long id) {
+    AttrGroupEntity entity = attrGroupService.getById(id);
+    return R.ok().put("data", entity);
+    }
+
+    /**
+    * 保存数据
+    */
+    @PostMapping("/save")
+    public R save(@RequestBody AttrGroupEntity attrGroup) {
+    boolean saved = attrGroupService.save(attrGroup);
+    return saved ? R.ok() : R.error();
+    }
+
+    /**
+    * 修改数据
+    */
+    @PostMapping("/update")
+    public R update(@RequestBody AttrGroupEntity attrGroup) {
+    boolean updated = attrGroupService.updateById(attrGroup);
+    return updated ? R.ok() : R.error();
+    }
+
+    /**
+    * 删除数据
+    */
+    @PostMapping("/delete/{id}")
+    public R delete(@PathVariable("id") Long id) {
+    boolean removed = attrGroupService.removeById(id);
+    return removed ? R.ok() : R.error();
+    }
+    }
