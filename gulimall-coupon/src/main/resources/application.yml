@@ -14,3 +14,11 @@ spring:
   cloud:
     nacos:
       server-addr: 127.0.0.1:8848
+      # 以下配置项必须填写
+      username: 'nacos'
+      password: 'nacos'
+      config:
+        namespace: public
+  config:
+    import:
+      - nacos:gulimall-coupon.properties?refreshEnabled=true&group=DEFAULT_GROUP
