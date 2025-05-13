@@ -1,3 +1,6 @@
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
 spring:
   application:
     name: gulimall-gateway
@@ -8,6 +11,7 @@ spring:
         username: "nacos"
         password: "nacos"
     gateway:
+
       routes:
         - id: test_route
           uri: http://www.baidu.com
@@ -18,6 +22,14 @@ spring:
           uri: http://www.qq.com
           predicates:
             - Query=url,qq
+
+
+        - id: product-service
+          uri: lb://gulimall-product
+          predicates:
+            - Path=/api/product/**
+          filters:
+            - StripPrefix=1
   config:
     import:
       - nacos:gulimall-gateway.properties?refreshEnabled=true&group=DEFAULT_GROUP

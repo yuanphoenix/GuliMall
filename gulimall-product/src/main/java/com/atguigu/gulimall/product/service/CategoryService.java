@@ -3,6 +3,8 @@ package com.atguigu.gulimall.product.service;
 import com.atguigu.gulimall.product.entity.CategoryEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
 * @author tifa
 * @description 针对表【pms_category(商品三级分类)】的数据库操作Service
@@ -10,4 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface CategoryService extends IService<CategoryEntity> {
 
+    List<CategoryEntity> listWithTree();
 }

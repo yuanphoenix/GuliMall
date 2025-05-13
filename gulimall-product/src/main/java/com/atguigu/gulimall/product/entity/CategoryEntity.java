@@ -5,11 +5,15 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 商品三级分类
+ *
  * @TableName pms_category
  */
-@TableName(value ="pms_category")
+@TableName(value = "pms_category")
 public class CategoryEntity {
     /**
      * 分类id
@@ -56,6 +60,11 @@ public class CategoryEntity {
      * 商品数量
      */
     private Integer productCount;
+
+
+    @TableField(exist = false)
+    private List<CategoryEntity> children;
+
 
     /**
      * 分类id
@@ -176,6 +185,7 @@ public class CategoryEntity {
         return productCount;
     }
 
+
     /**
      * 商品数量
      */
@@ -196,14 +206,14 @@ public class CategoryEntity {
         }
         CategoryEntity other = (CategoryEntity) that;
         return (this.getCatId() == null ? other.getCatId() == null : this.getCatId().equals(other.getCatId()))
-            && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
-            && (this.getParentCid() == null ? other.getParentCid() == null : this.getParentCid().equals(other.getParentCid()))
-            && (this.getCatLevel() == null ? other.getCatLevel() == null : this.getCatLevel().equals(other.getCatLevel()))
-            && (this.getShowStatus() == null ? other.getShowStatus() == null : this.getShowStatus().equals(other.getShowStatus()))
-            && (this.getSort() == null ? other.getSort() == null : this.getSort().equals(other.getSort()))
-            && (this.getIcon() == null ? other.getIcon() == null : this.getIcon().equals(other.getIcon()))
-            && (this.getProductUnit() == null ? other.getProductUnit() == null : this.getProductUnit().equals(other.getProductUnit()))
-            && (this.getProductCount() == null ? other.getProductCount() == null : this.getProductCount().equals(other.getProductCount()));
+                && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
+                && (this.getParentCid() == null ? other.getParentCid() == null : this.getParentCid().equals(other.getParentCid()))
+                && (this.getCatLevel() == null ? other.getCatLevel() == null : this.getCatLevel().equals(other.getCatLevel()))
+                && (this.getShowStatus() == null ? other.getShowStatus() == null : this.getShowStatus().equals(other.getShowStatus()))
+                && (this.getSort() == null ? other.getSort() == null : this.getSort().equals(other.getSort()))
+                && (this.getIcon() == null ? other.getIcon() == null : this.getIcon().equals(other.getIcon()))
+                && (this.getProductUnit() == null ? other.getProductUnit() == null : this.getProductUnit().equals(other.getProductUnit()))
+                && (this.getProductCount() == null ? other.getProductCount() == null : this.getProductCount().equals(other.getProductCount()));
     }
 
     @Override
@@ -239,5 +249,16 @@ public class CategoryEntity {
         sb.append(", productCount=").append(productCount);
         sb.append("]");
         return sb.toString();
+    }
+
+    public List<CategoryEntity> getChildren() {
+        if (children == null) {
+            children = new ArrayList<>();
+        }
+        return children;
+    }
+
+    public void setChildren(List<CategoryEntity> children) {
+        this.children = children;
     }
 }
