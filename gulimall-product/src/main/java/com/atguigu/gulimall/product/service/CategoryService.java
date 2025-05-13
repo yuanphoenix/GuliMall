@@ -13,4 +13,6 @@ import java.util.List;
 public interface CategoryService extends IService<CategoryEntity> {
 
     List<CategoryEntity> listWithTree();
+
+    boolean checkAndRemove(CategoryEntity category);
 }

@@ -66,9 +66,9 @@ public class CategoryController {
     /**
      * 删除数据
      */
-    @PostMapping("/delete/{id}")
-    public R delete(@PathVariable("id") Long id) {
-        boolean removed = categoryService.removeById(id);
+    @PostMapping("/delete")
+    public R delete(@RequestBody CategoryEntity category) {
+        boolean removed = categoryService.checkAndRemove(category);
         return removed ? R.ok() : R.error();
     }
 }

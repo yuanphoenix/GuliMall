@@ -31,6 +31,10 @@ public class R extends HashMap<String, Object> {
         return error(HttpStatus.SC_INTERNAL_SERVER_ERROR, "出错了");
     }
 
+    public static R error(String msg) {
+        return error(HttpStatus.SC_INTERNAL_SERVER_ERROR, msg);
+    }
+
     public static R error(int code, String msg) {
         R r = new R();
         r.put("code", code);

@@ -1,5 +1,6 @@
 package com.atguigu.gulimall.product.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.atguigu.gulimall.product.entity.CategoryEntity;
 import com.atguigu.gulimall.product.service.CategoryService;
@@ -34,6 +35,26 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
         }
         return list.stream().filter(e -> e.getCatLevel() == 1).toList();
     }
+
+    @Override
+    public boolean checkAndRemove(CategoryEntity category) {
+        if (category == null || category.getCatId() == null) {
+            return true;
+        }
+
+
+        CategoryEntity byId = this.getById(category.getCatId());
+        if (byId == null || byId.getCatId() == null) {
+            return true;
+        }
+        if (!baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", byId.getCatId())).isEmpty()) {
+            return false;
+        }
+
+        return baseMapper.deleteById(byId.getCatId()) == 1;
+    }
+
+
 }
 
 
