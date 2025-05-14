@@ -1,5 +1,6 @@
 package com.atguigu.gulimall.product.service.impl;
 
+import com.atguigu.gulimall.product.dto.TreeDropRequest;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.atguigu.gulimall.product.entity.CategoryEntity;
@@ -8,8 +9,7 @@ import com.atguigu.gulimall.product.mapper.CategoryMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author tifa
@@ -24,6 +24,12 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
     public List<CategoryEntity> listWithTree() {
 
         List<CategoryEntity> list = list();
+        for (var c : list) {
+            if (c.getSort() == null) {
+                c.setSort(0);
+            }
+        }
+        list.sort(Comparator.comparingInt(CategoryEntity::getSort));
         HashMap<Long, CategoryEntity> categoryMap = new HashMap<>();
         for (CategoryEntity category : list) {
             categoryMap.put(category.getCatId(), category);
@@ -34,6 +40,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
             }
             categoryMap.get(category.getParentCid()).getChildren().add(category);
         }
+
         return list.stream().filter(e -> e.getCatLevel() == 1).toList();
     }
 
@@ -73,6 +80,83 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
         return baseMapper.insert(category) == 1;
     }
 
+    @Override
+    public boolean sort(TreeDropRequest treeDropRequest) {
+        if (treeDropRequest == null) {
+            return false;
+        }
+        Long target = treeDropRequest.getDropNodeId();
+        Long moveId = treeDropRequest.getDraggingNodeId();
+        String type = treeDropRequest.getDropType();
+        if (target == null || moveId == null || type == null) {
+            return false;
+        }
+        CategoryEntity targetEntity = baseMapper.selectById(target);
+        CategoryEntity moveEntity = baseMapper.selectById(moveId);
+
+        if ("inner".equals(type)) {
+            moveEntity.setParentCid(targetEntity.getCatId());
+            moveEntity.setCatLevel(targetEntity.getCatLevel() + 1);
+            moveEntity.setSort(Integer.MIN_VALUE);
+            List<CategoryEntity> parentCid = baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", targetEntity.getCatId()));
+            parentCid = new ArrayList<>(parentCid.stream().filter(a -> a.getCatId().equals(moveEntity.getCatId())).toList());
+            parentCid.add(moveEntity);
+            parentCid.sort(Comparator.comparingInt(CategoryEntity::getSort));
+            for (int i = 0; i < parentCid.size(); i++) {
+                parentCid.get(i).setSort(i);
+            }
+            this.saveOrUpdateBatch(parentCid);
+        } else {
+            moveEntity.setParentCid(targetEntity.getParentCid());
+            moveEntity.setCatLevel(targetEntity.getCatLevel());
+            List<CategoryEntity> parentCid = baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", targetEntity.getParentCid()));
+            parentCid.sort(Comparator.comparingInt(CategoryEntity::getSort));
+            List<CategoryEntity> temp = new ArrayList<>(parentCid.size() + 1);
+            for (var entity : parentCid) {
+                if (entity.getCatId().equals(moveEntity.getCatId())) {
+                    continue;
+                }
+                if (entity.getCatId().equals(target)) {
+                    if ("before".equals(type)) {
+                        temp.add(moveEntity);
+
+                        temp.add(entity);
+                        continue;
+                    } else {
+                        temp.add(entity);
+                        temp.add(moveEntity);
+
+                        continue;
+                    }
+                }
+                temp.add(entity);
+            }
+            for (int i = 0; i < temp.size(); i++) {
+                temp.get(i).setSort(i);
+            }
+            this.saveOrUpdateBatch(temp);
+
+        }
+
+        updateChildren(moveEntity);
+        return true;
+    }
+
+
+    private void updateChildren(CategoryEntity category) {
+        //更新moveEntity所有子代的catLevel
+        LinkedList<CategoryEntity> list = new LinkedList<>();
+        list.add(category);
+        while (!list.isEmpty()) {
+            CategoryEntity categoryEntity = list.removeFirst();
+            List<CategoryEntity> parentCid = baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", categoryEntity.getCatId()));
+            list.addAll(parentCid);
+            for (CategoryEntity parentCategoryEntity : parentCid) {
+                parentCategoryEntity.setCatLevel(categoryEntity.getCatLevel() + 1);
+            }
+            this.saveOrUpdateBatch(parentCid);
+        }
+    }
 
 }
 

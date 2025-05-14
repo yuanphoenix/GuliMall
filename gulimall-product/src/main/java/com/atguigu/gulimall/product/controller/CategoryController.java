@@ -1,5 +1,6 @@
 package com.atguigu.gulimall.product.controller;
 
+import com.atguigu.gulimall.product.dto.TreeDropRequest;
 import com.atguigu.gulimall.product.entity.CategoryEntity;
 import com.atguigu.gulimall.product.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,15 @@ public class CategoryController {
         boolean updated = categoryService.updateById(category);
         return updated ? R.ok() : R.error();
     }
+
+
+    @PostMapping("/sort")
+    public R sort(@RequestBody TreeDropRequest treeDropRequest) {
+        boolean sort = categoryService.sort(treeDropRequest);
+        return sort ? R.ok() : R.error();
+
+    }
+
 
     /**
      * 删除数据
