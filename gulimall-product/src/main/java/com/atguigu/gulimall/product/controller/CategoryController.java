@@ -50,7 +50,7 @@ public class CategoryController {
      */
     @PostMapping("/save")
     public R save(@RequestBody CategoryEntity category) {
-        boolean saved = categoryService.save(category);
+        boolean saved = categoryService.addNew(category);
         return saved ? R.ok() : R.error();
     }
 

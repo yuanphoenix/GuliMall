@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.atguigu.gulimall.product.entity.CategoryEntity;
 import com.atguigu.gulimall.product.service.CategoryService;
 import com.atguigu.gulimall.product.mapper.CategoryMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -52,6 +53,24 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
         }
 
         return baseMapper.deleteById(byId.getCatId()) == 1;
+    }
+
+    @Override
+    public boolean addNew(CategoryEntity category) {
+        if (category == null || category.getParentCid() == null) {
+            return false;
+        }
+        CategoryEntity categoryEntity = baseMapper.selectById(category.getParentCid());
+        if (categoryEntity == null) {
+            return false;
+        }
+        String categoryName = category.getName();
+        BeanUtils.copyProperties(categoryEntity, category);
+        category.setCatLevel(categoryEntity.getCatLevel() + 1);
+        category.setName(categoryName);
+        category.setParentCid(categoryEntity.getCatId());
+        category.setCatId(null);
+        return baseMapper.insert(category) == 1;
     }
 
 

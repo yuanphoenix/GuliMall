@@ -15,4 +15,6 @@ public interface CategoryService extends IService<CategoryEntity> {
     List<CategoryEntity> listWithTree();
 
     boolean checkAndRemove(CategoryEntity category);
+
+    boolean addNew(CategoryEntity category);
 }
