@@ -5,17 +5,18 @@
 <mapper namespace="com.atguigu.gulimall.product.mapper.BrandMapper">
 
     <resultMap id="BaseResultMap" type="com.atguigu.gulimall.product.entity.BrandEntity">
-            <id property="brandId" column="brand_id" />
-            <result property="name" column="name" />
-            <result property="logo" column="logo" />
-            <result property="descript" column="descript" />
-            <result property="showStatus" column="show_status" />
-            <result property="firstLetter" column="first_letter" />
-            <result property="sort" column="sort" />
+        <id property="brandId" column="brand_id"/>
+        <result property="name" column="name"/>
+        <result property="logo" column="logo"/>
+        <result property="descript" column="descript"/>
+        <result property="showStatus" column="show_status"/>
+        <result property="firstLetter" column="first_letter"/>
+        <result property="sort" column="sort"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        brand_id,name,logo,descript,show_status,first_letter,
+        brand_id
+        ,name,logo,descript,show_status,first_letter,
         sort
     </sql>
 </mapper>

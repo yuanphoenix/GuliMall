@@ -8,8 +8,10 @@ import com.atguigu.gulimall.product.service.CategoryService;
 import com.atguigu.gulimall.product.mapper.CategoryMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author tifa
@@ -77,6 +79,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
         category.setName(categoryName);
         category.setParentCid(categoryEntity.getCatId());
         category.setCatId(null);
+        category.setSort(-1);
         return baseMapper.insert(category) == 1;
     }
 
@@ -119,13 +122,11 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
                 if (entity.getCatId().equals(target)) {
                     if ("before".equals(type)) {
                         temp.add(moveEntity);
-
                         temp.add(entity);
                         continue;
                     } else {
                         temp.add(entity);
                         temp.add(moveEntity);
-
                         continue;
                     }
                 }
@@ -135,11 +136,19 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
                 temp.get(i).setSort(i);
             }
             this.saveOrUpdateBatch(temp);
-
         }
-
         updateChildren(moveEntity);
         return true;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean removeBatchByEntities(List<CategoryEntity> categoryEntityList) {
+        if (categoryEntityList == null) {
+            return false;
+        }
+        return baseMapper.deleteByIds(categoryEntityList.stream().map(CategoryEntity::getCatId).filter(Objects::nonNull).toList()) >= 0;
+
     }
 
 

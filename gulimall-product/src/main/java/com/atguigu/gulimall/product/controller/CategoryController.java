@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import utils.R;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -81,4 +82,12 @@ public class CategoryController {
         boolean removed = categoryService.checkAndRemove(category);
         return removed ? R.ok() : R.error();
     }
+
+    @PostMapping("/batchDelete")
+    public R batchDelete(@RequestBody List<CategoryEntity> categoryEntityList) {
+
+        return categoryService.removeBatchByEntities(categoryEntityList) ? R.ok() : R.error("删除失败");
+    }
+
+
 }
