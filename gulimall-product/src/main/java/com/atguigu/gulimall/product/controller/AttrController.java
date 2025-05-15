@@ -30,6 +30,8 @@ private AttrService attrService;
 public R list() {
 List<AttrEntity> list = attrService.list();
     return R.ok().put("data", list);
+
+
     }
 
     /**
