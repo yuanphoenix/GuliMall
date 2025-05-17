@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: gulimall-third-party
+  cloud:
+    nacos:
+      server-addr: 127.0.0.1:8848
+      config:
+        import-check:
+          enabled: false
+
+server:
+  port: 30000

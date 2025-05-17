@@ -29,6 +29,14 @@ spring:
             - Path=/api/product/**
           filters:
             - StripPrefix=1
+
+        - id: oss-service
+          uri: lb://gulimall-third-party
+          predicates:
+            - Path=/api/oss/get_post_signature_for_oss_upload/**
+          filters:
+            - StripPrefix=1
+
   config:
     import:
       - nacos:gulimall-gateway.properties?refreshEnabled=true&group=DEFAULT_GROUP

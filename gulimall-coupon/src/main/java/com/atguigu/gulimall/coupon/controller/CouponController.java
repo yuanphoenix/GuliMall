@@ -24,22 +24,8 @@ import java.util.List;
 @RequestMapping("/coupon/coupon")
 public class CouponController {
 
-
-    @Value("${coupon.user.name}")
-    private String name;
-
-    @Value("${coupon.user.age}")
-    private Integer age;
-
-
     @Autowired
     private CouponService couponService;
-
-
-    @GetMapping("/test")
-    public R test() {
-        return R.ok().put("name", name).put("age", age);
-    }
 
     /**
      * 获取所有数据
