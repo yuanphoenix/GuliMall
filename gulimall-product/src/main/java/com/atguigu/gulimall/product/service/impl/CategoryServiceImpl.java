@@ -41,6 +41,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
                 continue;
             }
             categoryMap.get(category.getParentCid()).getChildren().add(category);
+            categoryMap.get(category.getParentCid()).setLeaf(Boolean.FALSE);
         }
 
         return list.stream().filter(e -> e.getCatLevel() == 1).toList();

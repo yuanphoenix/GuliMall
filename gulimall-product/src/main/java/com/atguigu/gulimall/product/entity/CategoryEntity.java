@@ -1,6 +1,7 @@
 package com.atguigu.gulimall.product.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,9 +61,21 @@ public class CategoryEntity {
     private Integer productCount;
 
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @TableField(exist = false)
     private List<CategoryEntity> children;
 
+    @TableField(exist = false)
+    private Boolean leaf = Boolean.TRUE;
+
+
+    public Boolean getLeaf() {
+        return leaf;
+    }
+
+    public void setLeaf(Boolean leaf) {
+        this.leaf = leaf;
+    }
 
     /**
      * 分类id

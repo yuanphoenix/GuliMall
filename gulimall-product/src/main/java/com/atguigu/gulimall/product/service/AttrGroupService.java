@@ -1,6 +1,8 @@
 package com.atguigu.gulimall.product.service;
 
+import com.atguigu.gulimall.product.dto.AttrGroupQueryDTO;
 import com.atguigu.gulimall.product.entity.AttrGroupEntity;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -10,4 +12,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface AttrGroupService extends IService<AttrGroupEntity> {
 
+
+    IPage<AttrGroupEntity> queryPage(AttrGroupQueryDTO attrGroupQueryDTO);
+
+    IPage<AttrGroupEntity> queryPage(AttrGroupQueryDTO attrGroupQueryDTO, Long catelogId);
 }

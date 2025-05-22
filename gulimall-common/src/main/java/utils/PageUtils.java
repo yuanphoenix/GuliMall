@@ -13,4 +13,9 @@ public class PageUtils<T> {
 
     }
 
+
+    public Page<T> getPageList(PageDTO pageDTO) {
+        return new Page<T>(pageDTO.getPage(), pageDTO.getLimit());
+    }
+
 }
