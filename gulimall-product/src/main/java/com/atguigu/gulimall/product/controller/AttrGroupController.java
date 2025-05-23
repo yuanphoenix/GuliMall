@@ -1,16 +1,12 @@
 package com.atguigu.gulimall.product.controller;
 
-import com.atguigu.gulimall.product.dto.AttrGroupQueryDTO;
 import com.atguigu.gulimall.product.entity.AttrGroupEntity;
-import com.atguigu.gulimall.product.entity.BrandEntity;
 import com.atguigu.gulimall.product.service.AttrGroupService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import utils.PageDTO;
 import utils.R;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -31,7 +27,7 @@ public class AttrGroupController {
      * 获取所有数据
      */
     @GetMapping("/list/{catalogId}")
-    public R list(@PathVariable Long catalogId, @ModelAttribute AttrGroupQueryDTO attrGroupQueryDTO) {
+    public R list(@PathVariable Long catalogId, @ModelAttribute PageDTO attrGroupQueryDTO) {
 
         IPage<AttrGroupEntity> attrGroupEntityIPage = attrGroupService.queryPage(attrGroupQueryDTO, catalogId);
         return R.ok().put("data", attrGroupEntityIPage);
@@ -41,7 +37,7 @@ public class AttrGroupController {
      * 获取所有数据
      */
     @GetMapping("/list/page")
-    public R listPage(@ModelAttribute AttrGroupQueryDTO attrGroupQueryDTO) {
+    public R listPage(@ModelAttribute PageDTO attrGroupQueryDTO) {
         IPage<AttrGroupEntity> attrGroupEntityIPage = attrGroupService.queryPage(attrGroupQueryDTO);
         return R.ok().put("data", attrGroupEntityIPage);
     }

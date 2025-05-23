@@ -1,6 +1,5 @@
 package com.atguigu.gulimall.product.service.impl;
 
-import com.atguigu.gulimall.product.dto.AttrGroupQueryDTO;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -8,6 +7,7 @@ import com.atguigu.gulimall.product.entity.AttrGroupEntity;
 import com.atguigu.gulimall.product.service.AttrGroupService;
 import com.atguigu.gulimall.product.mapper.AttrGroupMapper;
 import org.springframework.stereotype.Service;
+import utils.PageDTO;
 import utils.PageUtils;
 
 /**
@@ -20,13 +20,13 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupMapper, AttrGroup
         implements AttrGroupService {
 
     @Override
-    public IPage<AttrGroupEntity> queryPage(AttrGroupQueryDTO attrGroupQueryDTO) {
+    public IPage<AttrGroupEntity> queryPage(PageDTO attrGroupQueryDTO) {
         return this.page(new PageUtils<AttrGroupEntity>().getPageList(attrGroupQueryDTO));
     }
 
     @Override
-    public IPage<AttrGroupEntity> queryPage(AttrGroupQueryDTO attrGroupQueryDTO, Long catelogId) {
-        var wrapper = new LambdaQueryWrapper<AttrGroupEntity>().eq(AttrGroupEntity::getCatelogId, catelogId).and(o -> o.eq(AttrGroupEntity::getAttrGroupId, catelogId).or().like(AttrGroupEntity::getAttrGroupName, attrGroupQueryDTO.getKey()));
+    public IPage<AttrGroupEntity> queryPage(PageDTO attrGroupQueryDTO, Long catelogId) {
+        var wrapper = new LambdaQueryWrapper<AttrGroupEntity>().eq(AttrGroupEntity::getCatalogId, catelogId).and(o -> o.eq(AttrGroupEntity::getAttrGroupId, catelogId).or().like(AttrGroupEntity::getAttrGroupName, attrGroupQueryDTO.getKey()));
 
         return this.page(new PageUtils<AttrGroupEntity>().getPageList(attrGroupQueryDTO), wrapper);
 

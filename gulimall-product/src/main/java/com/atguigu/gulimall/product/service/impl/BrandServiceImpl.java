@@ -1,5 +1,6 @@
 package com.atguigu.gulimall.product.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -7,6 +8,7 @@ import com.atguigu.gulimall.product.entity.BrandEntity;
 import com.atguigu.gulimall.product.service.BrandService;
 import com.atguigu.gulimall.product.mapper.BrandMapper;
 import org.springframework.stereotype.Service;
+import utils.PageDTO;
 import utils.PageUtils;
 
 import java.util.Map;
@@ -20,11 +22,11 @@ import java.util.Map;
 public class BrandServiceImpl extends ServiceImpl<BrandMapper, BrandEntity>
         implements BrandService {
 
+
     @Override
-    public IPage<BrandEntity> listPage(Map<String, Object> params) {
-        return this.page(
-                new PageUtils<BrandEntity>().getPageList(params), new QueryWrapper<>()
-        );
+    public IPage<BrandEntity> listPage(PageDTO pageDTO) {
+        String key = pageDTO.getKey();
+        return this.page(new PageUtils<BrandEntity>().getPageList(pageDTO), new LambdaQueryWrapper<BrandEntity>().or().like(BrandEntity::getName, key).or().like(BrandEntity::getDescript, key).or().like(BrandEntity::getFirstLetter, key));
     }
 }
 

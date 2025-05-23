@@ -9,15 +9,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import utils.PageDTO;
 import utils.R;
 import valid.AddWithDefaultGroup;
+import valid.UpdateGroup;
 import valid.UpdateWithDefaultGroup;
 
 /**
@@ -49,8 +45,8 @@ public class BrandController {
    * 获取所有数据
    */
   @GetMapping("/list/page")
-  public R listPage(@RequestParam Map<String, Object> params) {
-    IPage<BrandEntity> brandEntityIPage = brandService.listPage(params);
+  public R listPage(@ModelAttribute PageDTO pageDTO) {
+    IPage<BrandEntity> brandEntityIPage = brandService.listPage(pageDTO);
     return R.ok().put("data", brandEntityIPage);
   }
 
@@ -78,7 +74,7 @@ public class BrandController {
    * 修改数据
    */
   @PostMapping("/update")
-  public R update(@Validated(UpdateWithDefaultGroup.class) @RequestBody BrandEntity brand) {
+  public R update(@Validated(UpdateGroup.class) @RequestBody BrandEntity brand) {
     boolean updated = brandService.updateById(brand);
     return updated ? R.ok() : R.error();
   }
