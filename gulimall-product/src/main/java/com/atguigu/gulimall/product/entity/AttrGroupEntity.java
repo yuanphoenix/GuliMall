@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import java.util.List;
 
 /**
  * 属性分组
@@ -40,7 +41,7 @@ public class AttrGroupEntity {
     /**
      * 所属分类id
      */
-    private Long catelogId;
+    private Long catalogId;
 
     /**
      * 分组id
@@ -112,18 +113,12 @@ public class AttrGroupEntity {
         this.icon = icon;
     }
 
-    /**
-     * 所属分类id
-     */
-    public Long getCatelogId() {
-        return catelogId;
+    public Long getCatalogId() {
+        return catalogId;
     }
 
-    /**
-     * 所属分类id
-     */
-    public void setCatelogId(Long catelogId) {
-        this.catelogId = catelogId;
+    public void setCatalogId(Long catalogId) {
+        this.catalogId = catalogId;
     }
 
     @Override
@@ -143,7 +138,7 @@ public class AttrGroupEntity {
             && (this.getSort() == null ? other.getSort() == null : this.getSort().equals(other.getSort()))
             && (this.getDescript() == null ? other.getDescript() == null : this.getDescript().equals(other.getDescript()))
             && (this.getIcon() == null ? other.getIcon() == null : this.getIcon().equals(other.getIcon()))
-            && (this.getCatelogId() == null ? other.getCatelogId() == null : this.getCatelogId().equals(other.getCatelogId()));
+            && (this.getCatalogId() == null ? other.getCatalogId() == null : this.getCatalogId().equals(other.getCatalogId()));
     }
 
     @Override
@@ -155,7 +150,7 @@ public class AttrGroupEntity {
         result = prime * result + ((getSort() == null) ? 0 : getSort().hashCode());
         result = prime * result + ((getDescript() == null) ? 0 : getDescript().hashCode());
         result = prime * result + ((getIcon() == null) ? 0 : getIcon().hashCode());
-        result = prime * result + ((getCatelogId() == null) ? 0 : getCatelogId().hashCode());
+        result = prime * result + ((getCatalogId() == null) ? 0 : getCatalogId().hashCode());
         return result;
     }
 
@@ -170,7 +165,7 @@ public class AttrGroupEntity {
         sb.append(", sort=").append(sort);
         sb.append(", descript=").append(descript);
         sb.append(", icon=").append(icon);
-        sb.append(", catelogId=").append(catelogId);
+        sb.append(", catalogId=").append(catalogId);
         sb.append("]");
         return sb.toString();
     }

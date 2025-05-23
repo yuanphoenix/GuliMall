@@ -30,10 +30,10 @@ public class AttrGroupController {
     /**
      * 获取所有数据
      */
-    @GetMapping("/list/{catelogId}")
-    public R list(@PathVariable Long catelogId, @ModelAttribute AttrGroupQueryDTO attrGroupQueryDTO) {
+    @GetMapping("/list/{catalogId}")
+    public R list(@PathVariable Long catalogId, @ModelAttribute AttrGroupQueryDTO attrGroupQueryDTO) {
 
-        IPage<AttrGroupEntity> attrGroupEntityIPage = attrGroupService.queryPage(attrGroupQueryDTO, catelogId);
+        IPage<AttrGroupEntity> attrGroupEntityIPage = attrGroupService.queryPage(attrGroupQueryDTO, catalogId);
         return R.ok().put("data", attrGroupEntityIPage);
     }
 

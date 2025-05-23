@@ -47,7 +47,6 @@ public class R extends HashMap<String, Object> {
     R r = new R();
     r.put("code", bizCodeEnum.getCode());
     r.put("msg", bizCodeEnum.getMsg());
-
     return r;
   }
 }

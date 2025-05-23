@@ -55,7 +55,7 @@ public class AttrEntity {
     /**
      * 所属分类
      */
-    private Long catelogId;
+    private Long catalogId;
 
     /**
      * 快速展示【是否展示在介绍上；0-否 1-是】，在sku中仍然可以调整
@@ -174,18 +174,12 @@ public class AttrEntity {
         this.enable = enable;
     }
 
-    /**
-     * 所属分类
-     */
-    public Long getCatelogId() {
-        return catelogId;
+    public Long getCatalogId() {
+        return catalogId;
     }
 
-    /**
-     * 所属分类
-     */
-    public void setCatelogId(Long catelogId) {
-        this.catelogId = catelogId;
+    public void setCatalogId(Long catalogId) {
+        this.catalogId = catalogId;
     }
 
     /**
@@ -222,7 +216,7 @@ public class AttrEntity {
             && (this.getValueSelect() == null ? other.getValueSelect() == null : this.getValueSelect().equals(other.getValueSelect()))
             && (this.getAttrType() == null ? other.getAttrType() == null : this.getAttrType().equals(other.getAttrType()))
             && (this.getEnable() == null ? other.getEnable() == null : this.getEnable().equals(other.getEnable()))
-            && (this.getCatelogId() == null ? other.getCatelogId() == null : this.getCatelogId().equals(other.getCatelogId()))
+            && (this.getCatalogId() == null ? other.getCatalogId() == null : this.getCatalogId().equals(other.getCatalogId()))
             && (this.getShowDesc() == null ? other.getShowDesc() == null : this.getShowDesc().equals(other.getShowDesc()));
     }
 
@@ -238,7 +232,7 @@ public class AttrEntity {
         result = prime * result + ((getValueSelect() == null) ? 0 : getValueSelect().hashCode());
         result = prime * result + ((getAttrType() == null) ? 0 : getAttrType().hashCode());
         result = prime * result + ((getEnable() == null) ? 0 : getEnable().hashCode());
-        result = prime * result + ((getCatelogId() == null) ? 0 : getCatelogId().hashCode());
+        result = prime * result + ((getCatalogId() == null) ? 0 : getCatalogId().hashCode());
         result = prime * result + ((getShowDesc() == null) ? 0 : getShowDesc().hashCode());
         return result;
     }
@@ -257,7 +251,7 @@ public class AttrEntity {
         sb.append(", valueSelect=").append(valueSelect);
         sb.append(", attrType=").append(attrType);
         sb.append(", enable=").append(enable);
-        sb.append(", catelogId=").append(catelogId);
+        sb.append(", catalogId=").append(catalogId);
         sb.append(", showDesc=").append(showDesc);
         sb.append("]");
         return sb.toString();
