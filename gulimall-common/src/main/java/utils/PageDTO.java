@@ -1,5 +1,7 @@
 package utils;
 
+import java.util.Optional;
+
 public class PageDTO {
 
     private Integer page;
@@ -7,6 +9,7 @@ public class PageDTO {
     private String key;
     private String sidx;
     private String order;
+
     public Integer getPage() {
         return page;
     }
@@ -24,7 +27,7 @@ public class PageDTO {
     }
 
     public String getKey() {
-        return key == null ? "" : key;
+        return Optional.ofNullable(key).orElse("");
     }
 
     public void setKey(String key) {

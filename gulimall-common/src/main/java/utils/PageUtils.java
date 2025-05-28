@@ -19,7 +19,7 @@ public class PageUtils<T> {
     }
 
 
-    public IPage<T> getPageList(PageDTO pageDTO) {
+    public static<T> IPage<T> of(PageDTO pageDTO) {
         return new Page<>(pageDTO.getPage(), pageDTO.getLimit());
     }
 

@@ -21,7 +21,7 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupMapper, AttrGroup
 
     @Override
     public IPage<AttrGroupEntity> queryPage(PageDTO attrGroupQueryDTO) {
-        return this.page(new PageUtils<AttrGroupEntity>().getPageList(attrGroupQueryDTO));
+        return this.page(PageUtils.of(attrGroupQueryDTO));
     }
 
     @Override
@@ -33,7 +33,7 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupMapper, AttrGroup
         wrapper.and(o -> o.eq(AttrGroupEntity::getAttrGroupId, catalogId)
                 .or()
                 .like(AttrGroupEntity::getAttrGroupName, attrGroupQueryDTO.getKey()));
-        return this.page(new PageUtils<AttrGroupEntity>().getPageList(attrGroupQueryDTO), wrapper);
+        return this.page(PageUtils.of(attrGroupQueryDTO), wrapper);
 
     }
 }

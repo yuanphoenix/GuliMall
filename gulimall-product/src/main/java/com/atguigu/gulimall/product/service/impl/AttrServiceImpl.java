@@ -10,7 +10,6 @@ import com.atguigu.gulimall.product.vo.AttrResponseVo;
 import com.atguigu.gulimall.product.vo.AttrVo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.atguigu.gulimall.product.entity.AttrEntity;
 import com.atguigu.gulimall.product.service.AttrService;
@@ -22,8 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import utils.PageDTO;
 import utils.PageUtils;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -72,7 +69,7 @@ public class AttrServiceImpl extends ServiceImpl<AttrMapper, AttrEntity>
             wrapper.eq(AttrEntity::getCatalogId, catalogId);
         }
         wrapper.and(o -> o.eq(AttrEntity::getCatalogId, catalogId).or().like(AttrEntity::getAttrName, pageDTO.getKey()));
-        IPage<AttrEntity> page = this.page(new PageUtils<AttrEntity>().getPageList(pageDTO), wrapper);
+        IPage<AttrEntity> page = this.page(PageUtils.of(pageDTO), wrapper);
         return new PageUtils<>(page).convertTo(src -> {
             AttrResponseVo attrResponseVo = new AttrResponseVo();
             BeanUtils.copyProperties(src, attrResponseVo);
