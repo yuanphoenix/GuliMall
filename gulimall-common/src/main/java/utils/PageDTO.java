@@ -5,7 +5,8 @@ public class PageDTO {
     private Integer page;
     private Integer limit;
     private String key;
-
+    private String sidx;
+    private String order;
     public Integer getPage() {
         return page;
     }
@@ -23,10 +24,26 @@ public class PageDTO {
     }
 
     public String getKey() {
-        return key;
+        return key == null ? "" : key;
     }
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public String getSidx() {
+        return sidx;
+    }
+
+    public void setSidx(String sidx) {
+        this.sidx = sidx;
+    }
+
+    public String getOrder() {
+        return order;
+    }
+
+    public void setOrder(String order) {
+        this.order = order;
     }
 }

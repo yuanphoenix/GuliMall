@@ -1,7 +1,11 @@
 package com.atguigu.gulimall.product.service;
 
 import com.atguigu.gulimall.product.entity.AttrEntity;
+import com.atguigu.gulimall.product.vo.AttrResponseVo;
+import com.atguigu.gulimall.product.vo.AttrVo;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import utils.PageDTO;
 
 /**
 * @author tifa
@@ -10,4 +14,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface AttrService extends IService<AttrEntity> {
 
+    boolean saveVo(AttrVo attr);
+
+    IPage<AttrResponseVo> getBaseList(Long catalogId, PageDTO pageDTO);
 }

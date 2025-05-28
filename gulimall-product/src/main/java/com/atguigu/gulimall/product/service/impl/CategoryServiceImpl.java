@@ -1,6 +1,6 @@
 package com.atguigu.gulimall.product.service.impl;
 
-import com.atguigu.gulimall.product.dto.TreeDropRequest;
+import com.atguigu.gulimall.product.vo.TreeVoRequest;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.atguigu.gulimall.product.entity.CategoryEntity;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author tifa
@@ -85,13 +84,13 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
     }
 
     @Override
-    public boolean sort(TreeDropRequest treeDropRequest) {
-        if (treeDropRequest == null) {
+    public boolean sort(TreeVoRequest treeVoRequest) {
+        if (treeVoRequest == null) {
             return false;
         }
-        Long target = treeDropRequest.getDropNodeId();
-        Long moveId = treeDropRequest.getDraggingNodeId();
-        String type = treeDropRequest.getDropType();
+        Long target = treeVoRequest.getDropNodeId();
+        Long moveId = treeVoRequest.getDraggingNodeId();
+        String type = treeVoRequest.getDropType();
         if (target == null || moveId == null || type == null) {
             return false;
         }

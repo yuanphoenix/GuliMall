@@ -1,21 +1,34 @@
 package utils;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
-import java.util.Map;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class PageUtils<T> {
+    private IPage<T> page;
 
-    public Page<T> getPageList(Map<String, Object> params) {
-        int current = Integer.parseInt((String) params.get("page"));
-        int size = Integer.parseInt((String) params.get("limit"));
-        return new Page<T>(current, size);
 
+    public PageUtils() {
+    }
+
+    public PageUtils(IPage<T> page) {
+        this.page = page;
     }
 
 
-    public Page<T> getPageList(PageDTO pageDTO) {
-        return new Page<T>(pageDTO.getPage(), pageDTO.getLimit());
+    public IPage<T> getPageList(PageDTO pageDTO) {
+        return new Page<>(pageDTO.getPage(), pageDTO.getLimit());
+    }
+
+    public <R> Page<R> convertTo(Function<? super T, ? extends R> mapper) {
+        List<T> records = this.page.getRecords();
+        List<R> list = records.stream().map(mapper).collect(Collectors.toList());
+        Page<R> rPage = new Page<>(page.getCurrent(), page.getSize(), page.getTotal());
+        rPage.setRecords(list);
+        return rPage;
     }
 
 }

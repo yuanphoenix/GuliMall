@@ -1,6 +1,6 @@
-package com.atguigu.gulimall.product.dto;
+package com.atguigu.gulimall.product.vo;
 
-public class TreeDropRequest {
+public class TreeVoRequest {
     private Long draggingNodeId;  // 被拖拽的节点ID
     private Long dropNodeId;     // 目标节点ID
     private String dropType;     // "prev", "next", "inner"

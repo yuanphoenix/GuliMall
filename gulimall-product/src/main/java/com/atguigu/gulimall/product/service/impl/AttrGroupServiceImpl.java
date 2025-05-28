@@ -25,9 +25,14 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupMapper, AttrGroup
     }
 
     @Override
-    public IPage<AttrGroupEntity> queryPage(PageDTO attrGroupQueryDTO, Long catelogId) {
-        var wrapper = new LambdaQueryWrapper<AttrGroupEntity>().eq(AttrGroupEntity::getCatalogId, catelogId).and(o -> o.eq(AttrGroupEntity::getAttrGroupId, catelogId).or().like(AttrGroupEntity::getAttrGroupName, attrGroupQueryDTO.getKey()));
-
+    public IPage<AttrGroupEntity> queryPage(PageDTO attrGroupQueryDTO, Long catalogId) {
+        var wrapper = new LambdaQueryWrapper<AttrGroupEntity>();
+        if (catalogId != 0) {
+            wrapper.eq(AttrGroupEntity::getCatalogId, catalogId);
+        }
+        wrapper.and(o -> o.eq(AttrGroupEntity::getAttrGroupId, catalogId)
+                .or()
+                .like(AttrGroupEntity::getAttrGroupName, attrGroupQueryDTO.getKey()));
         return this.page(new PageUtils<AttrGroupEntity>().getPageList(attrGroupQueryDTO), wrapper);
 
     }

@@ -1,6 +1,6 @@
 package com.atguigu.gulimall.product.controller;
 
-import com.atguigu.gulimall.product.dto.TreeDropRequest;
+import com.atguigu.gulimall.product.vo.TreeVoRequest;
 import com.atguigu.gulimall.product.entity.CategoryEntity;
 import com.atguigu.gulimall.product.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import utils.R;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -65,8 +64,8 @@ public class CategoryController {
 
 
     @PostMapping("/sort")
-    public R sort(@RequestBody TreeDropRequest treeDropRequest) {
-        boolean sort = categoryService.sort(treeDropRequest);
+    public R sort(@RequestBody TreeVoRequest treeVoRequest) {
+        boolean sort = categoryService.sort(treeVoRequest);
         return sort ? R.ok() : R.error();
 
     }

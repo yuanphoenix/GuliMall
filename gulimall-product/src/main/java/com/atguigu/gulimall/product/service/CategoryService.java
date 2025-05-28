@@ -1,6 +1,6 @@
 package com.atguigu.gulimall.product.service;
 
-import com.atguigu.gulimall.product.dto.TreeDropRequest;
+import com.atguigu.gulimall.product.vo.TreeVoRequest;
 import com.atguigu.gulimall.product.entity.CategoryEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -19,7 +19,7 @@ public interface CategoryService extends IService<CategoryEntity> {
 
     boolean addNew(CategoryEntity category);
 
-    boolean sort(TreeDropRequest treeDropRequest);
+    boolean sort(TreeVoRequest treeVoRequest);
 
     boolean removeBatchByEntities(List<CategoryEntity> categoryEntityList);
 }
