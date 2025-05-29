@@ -1,5 +1,6 @@
 package com.atguigu.gulimall.product.controller;
 
+import com.atguigu.gulimall.product.entity.AttrEntity;
 import com.atguigu.gulimall.product.entity.AttrGroupEntity;
 import com.atguigu.gulimall.product.service.AttrGroupService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -7,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import utils.PageDTO;
 import utils.R;
+
+import java.util.List;
 
 /**
  * <p>
@@ -22,6 +25,20 @@ public class AttrGroupController {
 
     @Autowired
     private AttrGroupService attrGroupService;
+
+
+    @GetMapping("/{attrgroupId}/noattr/relation")
+    public R getNoAttrRelation(@PathVariable Long attrgroupId,@ModelAttribute PageDTO page) {
+        IPage<AttrEntity> result = attrGroupService.getNoAttrRelationByGroupId(attrgroupId,page);
+        return R.ok().put("data", result);
+    }
+
+
+    @GetMapping("/{attrgroupId}/attr/relation")
+    public R listAttrRelationByGroupId(@PathVariable(name = "attrgroupId") Long attrgroupId) {
+        List<AttrEntity> entities = attrGroupService.listAttrRelationByGroupId(attrgroupId);
+        return R.ok().put("data", entities);
+    }
 
     /**
      * 获取所有数据

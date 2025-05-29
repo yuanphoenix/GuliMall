@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import utils.PageDTO;
 
+import java.util.List;
+
 /**
  * @author tifa
  * @description 针对表【pms_attr(商品属性)】的数据库操作Service
@@ -21,4 +23,8 @@ public interface AttrService extends IService<AttrEntity> {
     AttrResponseVo getAttrResponseVo(Long id);
 
     boolean updateAttrVo(AttrVo attr);
+
+    IPage<AttrResponseVo> getSaleList(Long catalogId, PageDTO pageDTO);
+
+    boolean removeAttrAndRelationByIds(List<Long> ids);
 }

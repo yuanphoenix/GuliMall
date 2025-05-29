@@ -27,6 +27,14 @@ public class AttrController {
     @Autowired
     private AttrService attrService;
 
+
+    @GetMapping("/sale/list/{catalogId}")
+    public R saleList(@PathVariable("catalogId") Long catalogId, @ModelAttribute PageDTO pageDTO) {
+        IPage<AttrResponseVo> attrEntityIPage = attrService.getSaleList(catalogId, pageDTO);
+        return R.ok().put("data", attrEntityIPage);
+    }
+
+
     /**
      * 获取所有数据
      */
@@ -69,12 +77,10 @@ public class AttrController {
         return updated ? R.ok() : R.error();
     }
 
-    /**
-     * 删除数据
-     */
-    @PostMapping("/delete/{id}")
-    public R delete(@PathVariable("id") Long id) {
-        boolean removed = attrService.removeById(id);
+
+    @PostMapping("/delete")
+    public R batchDelete(@RequestBody List<Long> ids) {
+        boolean removed = attrService.removeAttrAndRelationByIds(ids);
         return removed ? R.ok() : R.error();
     }
 }

@@ -10,7 +10,7 @@ public class R extends HashMap<String, Object> {
 
     public static R ok() {
         R r = new R();
-        r.put("code", HttpStatus.SC_OK);
+        r.put("code", 0);
         return r;
     }
 

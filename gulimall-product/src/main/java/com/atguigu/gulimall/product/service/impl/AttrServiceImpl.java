@@ -24,6 +24,7 @@ import utils.PageDTO;
 import utils.PageUtils;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -55,39 +56,31 @@ public class AttrServiceImpl extends ServiceImpl<AttrMapper, AttrEntity>
         AttrEntity attrEntity = new AttrEntity();
         BeanUtils.copyProperties(attr, attrEntity);
         baseMapper.insert(attrEntity);
+        if (attr.getAttrType() == 0) {
+            return true;
+        }
+
         Long attrId = attrEntity.getAttrId();
         Long attrGroupId = attr.getAttrGroupId();
         AttrAttrgroupRelationEntity attrAttrgroupRelationEntity = new AttrAttrgroupRelationEntity();
         attrAttrgroupRelationEntity.setAttrId(attrId);
-//        attrAttrgroupRelationEntity.setAttrSort(attrEntity);
         attrAttrgroupRelationEntity.setAttrGroupId(attrGroupId);
         return attrAttrgroupRelationService.save(attrAttrgroupRelationEntity);
+    }
 
+
+    @Override
+    public IPage<AttrResponseVo> getSaleList(Long catalogId, PageDTO pageDTO) {
+        var wrapper = new LambdaQueryWrapper<AttrEntity>();
+        wrapper.eq(AttrEntity::getAttrType, 0);
+        return getAttrResponseVoIPage(catalogId, pageDTO, wrapper);
     }
 
     @Override
     public IPage<AttrResponseVo> getBaseList(Long catalogId, PageDTO pageDTO) {
         var wrapper = new LambdaQueryWrapper<AttrEntity>();
-        if (catalogId != 0) {
-            wrapper.eq(AttrEntity::getCatalogId, catalogId);
-        }
-        wrapper.and(o -> o.eq(AttrEntity::getCatalogId, catalogId).or().like(AttrEntity::getAttrName, pageDTO.getKey()));
-        IPage<AttrEntity> page = this.page(PageUtils.of(pageDTO), wrapper);
-
-
-        return new PageUtils<>(page).convertTo(attr -> {
-            AttrResponseVo attrResponseVo = new AttrResponseVo();
-            BeanUtils.copyProperties(attr, attrResponseVo);
-            Optional.ofNullable(attrAttrgroupRelationService.getOne(new LambdaQueryWrapper<AttrAttrgroupRelationEntity>().eq(AttrAttrgroupRelationEntity::getAttrId, attr.getAttrId())))
-                    .ifPresent(one -> {
-                        AttrGroupEntity attrGroupEntity = attrGroupMapper.selectById(one.getAttrGroupId());
-                        attrResponseVo.setGroupName(attrGroupEntity.getAttrGroupName());
-
-                        CategoryEntity categoryEntity = categoryMapper.selectById(attr.getCatalogId());
-                        attrResponseVo.setCatalogName(categoryEntity.getName());
-                    });
-            return attrResponseVo;
-        });
+        wrapper.eq(AttrEntity::getAttrType, 1);
+        return getAttrResponseVoIPage(catalogId, pageDTO, wrapper);
     }
 
     @Override
@@ -119,6 +112,11 @@ public class AttrServiceImpl extends ServiceImpl<AttrMapper, AttrEntity>
         AttrEntity attrEntity = new AttrEntity();
         BeanUtils.copyProperties(attr, attrEntity);
         baseMapper.updateById(attrEntity);
+
+        if (ObjectUtils.isEmpty(attr.getAttrGroupId())) {
+            return true;
+        }
+
         AttrAttrgroupRelationEntity attrgroupRelationEntity = attrAttrgroupRelationMapper.selectOne(new LambdaQueryWrapper<AttrAttrgroupRelationEntity>().eq(AttrAttrgroupRelationEntity::getAttrId, attr.getAttrId()));
 
         attrgroupRelationEntity = attrgroupRelationEntity == null ? new AttrAttrgroupRelationEntity() : attrgroupRelationEntity;
@@ -128,6 +126,39 @@ public class AttrServiceImpl extends ServiceImpl<AttrMapper, AttrEntity>
 
         return attrAttrgroupRelationMapper.insertOrUpdate(attrgroupRelationEntity);
 
+    }
+
+
+    @Transactional
+    @Override
+    public boolean removeAttrAndRelationByIds(List<Long> ids) {
+        baseMapper.deleteByIds(ids);
+        attrAttrgroupRelationMapper.delete(new LambdaQueryWrapper<AttrAttrgroupRelationEntity>().in(AttrAttrgroupRelationEntity::getAttrId, ids));
+        return true;
+    }
+
+    private IPage<AttrResponseVo> getAttrResponseVoIPage(Long catalogId, PageDTO pageDTO, LambdaQueryWrapper<AttrEntity> wrapper) {
+        if (catalogId != 0) {
+            wrapper.eq(AttrEntity::getCatalogId, catalogId);
+        }
+        wrapper.and(o -> o.eq(AttrEntity::getCatalogId, catalogId).or().like(AttrEntity::getAttrName, pageDTO.getKey()));
+        IPage<AttrEntity> page = this.page(PageUtils.of(pageDTO), wrapper);
+
+        return new PageUtils<>(page).convertTo(attr -> {
+            AttrResponseVo attrResponseVo = new AttrResponseVo();
+            BeanUtils.copyProperties(attr, attrResponseVo);
+
+            Optional.ofNullable(attrAttrgroupRelationService.getOne(new LambdaQueryWrapper<AttrAttrgroupRelationEntity>().eq(AttrAttrgroupRelationEntity::getAttrId, attr.getAttrId())))
+                    .ifPresent(one -> {
+                        AttrGroupEntity attrGroupEntity = attrGroupMapper.selectById(one.getAttrGroupId());
+                        attrResponseVo.setGroupName(attrGroupEntity.getAttrGroupName());
+                    });
+
+
+            CategoryEntity categoryEntity = categoryMapper.selectById(attr.getCatalogId());
+            attrResponseVo.setCatalogName(categoryEntity.getName());
+            return attrResponseVo;
+        });
     }
 }
 
