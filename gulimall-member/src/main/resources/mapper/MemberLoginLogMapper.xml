@@ -5,15 +5,16 @@
 <mapper namespace="com.atguigu.gulimall.member.mapper.MemberLoginLogMapper">
 
     <resultMap id="BaseResultMap" type="com.atguigu.gulimall.member.entity.MemberLoginLogEntity">
-            <id property="id" column="id" />
-            <result property="memberId" column="member_id" />
-            <result property="createTime" column="create_time" />
-            <result property="ip" column="ip" />
-            <result property="city" column="city" />
-            <result property="loginType" column="login_type" />
+        <id property="id" column="id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="ip" column="ip"/>
+        <result property="city" column="city"/>
+        <result property="loginType" column="login_type"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,member_id,create_time,ip,city,login_type
+        id
+        ,member_id,create_time,ip,city,login_type
     </sql>
 </mapper>

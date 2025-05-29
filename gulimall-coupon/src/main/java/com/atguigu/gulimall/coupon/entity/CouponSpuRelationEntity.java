@@ -1,15 +1,15 @@
 package com.atguigu.gulimall.coupon.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
  * 优惠券与产品关联
+ *
  * @TableName sms_coupon_spu_relation
  */
-@TableName(value ="sms_coupon_spu_relation")
+@TableName(value = "sms_coupon_spu_relation")
 public class CouponSpuRelationEntity {
     /**
      * id
@@ -101,9 +101,9 @@ public class CouponSpuRelationEntity {
         }
         CouponSpuRelationEntity other = (CouponSpuRelationEntity) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getCouponId() == null ? other.getCouponId() == null : this.getCouponId().equals(other.getCouponId()))
-            && (this.getSpuId() == null ? other.getSpuId() == null : this.getSpuId().equals(other.getSpuId()))
-            && (this.getSpuName() == null ? other.getSpuName() == null : this.getSpuName().equals(other.getSpuName()));
+                && (this.getCouponId() == null ? other.getCouponId() == null : this.getCouponId().equals(other.getCouponId()))
+                && (this.getSpuId() == null ? other.getSpuId() == null : this.getSpuId().equals(other.getSpuId()))
+                && (this.getSpuName() == null ? other.getSpuName() == null : this.getSpuName().equals(other.getSpuName()));
     }
 
     @Override

@@ -1,16 +1,17 @@
 package com.atguigu.gulimall.coupon.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.math.BigDecimal;
 
 /**
  * 商品spu积分设置
+ *
  * @TableName sms_spu_bounds
  */
-@TableName(value ="sms_spu_bounds")
+@TableName(value = "sms_spu_bounds")
 public class SpuBoundsEntity {
     /**
      * id
@@ -19,7 +20,7 @@ public class SpuBoundsEntity {
     private Long id;
 
     /**
-     * 
+     *
      */
     private Long spuId;
 
@@ -53,14 +54,14 @@ public class SpuBoundsEntity {
     }
 
     /**
-     * 
+     *
      */
     public Long getSpuId() {
         return spuId;
     }
 
     /**
-     * 
+     *
      */
     public void setSpuId(Long spuId) {
         this.spuId = spuId;
@@ -121,10 +122,10 @@ public class SpuBoundsEntity {
         }
         SpuBoundsEntity other = (SpuBoundsEntity) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getSpuId() == null ? other.getSpuId() == null : this.getSpuId().equals(other.getSpuId()))
-            && (this.getGrowBounds() == null ? other.getGrowBounds() == null : this.getGrowBounds().equals(other.getGrowBounds()))
-            && (this.getBuyBounds() == null ? other.getBuyBounds() == null : this.getBuyBounds().equals(other.getBuyBounds()))
-            && (this.getWork() == null ? other.getWork() == null : this.getWork().equals(other.getWork()));
+                && (this.getSpuId() == null ? other.getSpuId() == null : this.getSpuId().equals(other.getSpuId()))
+                && (this.getGrowBounds() == null ? other.getGrowBounds() == null : this.getGrowBounds().equals(other.getGrowBounds()))
+                && (this.getBuyBounds() == null ? other.getBuyBounds() == null : this.getBuyBounds().equals(other.getBuyBounds()))
+                && (this.getWork() == null ? other.getWork() == null : this.getWork().equals(other.getWork()));
     }
 
     @Override

@@ -1,16 +1,17 @@
 package com.atguigu.gulimall.order.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.time.LocalDateTime;
 
 /**
  * 订单操作历史记录
+ *
  * @TableName oms_order_operate_history
  */
-@TableName(value ="oms_order_operate_history")
+@TableName(value = "oms_order_operate_history")
 public class OrderOperateHistoryEntity {
     /**
      * id
@@ -140,11 +141,11 @@ public class OrderOperateHistoryEntity {
         }
         OrderOperateHistoryEntity other = (OrderOperateHistoryEntity) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getOrderId() == null ? other.getOrderId() == null : this.getOrderId().equals(other.getOrderId()))
-            && (this.getOperateMan() == null ? other.getOperateMan() == null : this.getOperateMan().equals(other.getOperateMan()))
-            && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
-            && (this.getOrderStatus() == null ? other.getOrderStatus() == null : this.getOrderStatus().equals(other.getOrderStatus()))
-            && (this.getNote() == null ? other.getNote() == null : this.getNote().equals(other.getNote()));
+                && (this.getOrderId() == null ? other.getOrderId() == null : this.getOrderId().equals(other.getOrderId()))
+                && (this.getOperateMan() == null ? other.getOperateMan() == null : this.getOperateMan().equals(other.getOperateMan()))
+                && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
+                && (this.getOrderStatus() == null ? other.getOrderStatus() == null : this.getOrderStatus().equals(other.getOrderStatus()))
+                && (this.getNote() == null ? other.getNote() == null : this.getNote().equals(other.getNote()));
     }
 
     @Override

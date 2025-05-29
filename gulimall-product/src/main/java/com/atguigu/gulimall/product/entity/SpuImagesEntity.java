@@ -1,15 +1,15 @@
 package com.atguigu.gulimall.product.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
  * spu图片
+ *
  * @TableName pms_spu_images
  */
-@TableName(value ="pms_spu_images")
+@TableName(value = "pms_spu_images")
 public class SpuImagesEntity {
     /**
      * id
@@ -139,11 +139,11 @@ public class SpuImagesEntity {
         }
         SpuImagesEntity other = (SpuImagesEntity) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getSpuId() == null ? other.getSpuId() == null : this.getSpuId().equals(other.getSpuId()))
-            && (this.getImgName() == null ? other.getImgName() == null : this.getImgName().equals(other.getImgName()))
-            && (this.getImgUrl() == null ? other.getImgUrl() == null : this.getImgUrl().equals(other.getImgUrl()))
-            && (this.getImgSort() == null ? other.getImgSort() == null : this.getImgSort().equals(other.getImgSort()))
-            && (this.getDefaultImg() == null ? other.getDefaultImg() == null : this.getDefaultImg().equals(other.getDefaultImg()));
+                && (this.getSpuId() == null ? other.getSpuId() == null : this.getSpuId().equals(other.getSpuId()))
+                && (this.getImgName() == null ? other.getImgName() == null : this.getImgName().equals(other.getImgName()))
+                && (this.getImgUrl() == null ? other.getImgUrl() == null : this.getImgUrl().equals(other.getImgUrl()))
+                && (this.getImgSort() == null ? other.getImgSort() == null : this.getImgSort().equals(other.getImgSort()))
+                && (this.getDefaultImg() == null ? other.getDefaultImg() == null : this.getDefaultImg().equals(other.getDefaultImg()));
     }
 
     @Override

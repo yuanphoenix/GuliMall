@@ -30,7 +30,8 @@ private ${table.serviceName} ${table.entityPath}Service;
 */
 @GetMapping("/list")
 public R list() {
-List<${entity}Entity> list = ${table.entityPath}Service.list();
+List
+<${entity}Entity> list = ${table.entityPath}Service.list();
     return R.ok().put("data", list);
     }
 

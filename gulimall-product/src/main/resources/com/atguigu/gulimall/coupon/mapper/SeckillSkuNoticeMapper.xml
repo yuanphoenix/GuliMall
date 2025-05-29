@@ -5,17 +5,18 @@
 <mapper namespace="com.atguigu.gulimall.coupon.mapper.SeckillSkuNoticeMapper">
 
     <resultMap id="BaseResultMap" type="com.atguigu.gulimall.coupon.entity.SeckillSkuNoticeEntity">
-            <id property="id" column="id" />
-            <result property="memberId" column="member_id" />
-            <result property="skuId" column="sku_id" />
-            <result property="sessionId" column="session_id" />
-            <result property="subcribeTime" column="subcribe_time" />
-            <result property="sendTime" column="send_time" />
-            <result property="noticeType" column="notice_type" />
+        <id property="id" column="id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="skuId" column="sku_id"/>
+        <result property="sessionId" column="session_id"/>
+        <result property="subcribeTime" column="subcribe_time"/>
+        <result property="sendTime" column="send_time"/>
+        <result property="noticeType" column="notice_type"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,member_id,sku_id,session_id,subcribe_time,send_time,
+        id
+        ,member_id,sku_id,session_id,subcribe_time,send_time,
         notice_type
     </sql>
 </mapper>

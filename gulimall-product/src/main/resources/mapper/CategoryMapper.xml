@@ -5,19 +5,20 @@
 <mapper namespace="com.atguigu.gulimall.product.mapper.CategoryMapper">
 
     <resultMap id="BaseResultMap" type="com.atguigu.gulimall.product.entity.CategoryEntity">
-            <id property="catId" column="cat_id" />
-            <result property="name" column="name" />
-            <result property="parentCid" column="parent_cid" />
-            <result property="catLevel" column="cat_level" />
-            <result property="showStatus" column="show_status" />
-            <result property="sort" column="sort" />
-            <result property="icon" column="icon" />
-            <result property="productUnit" column="product_unit" />
-            <result property="productCount" column="product_count" />
+        <id property="catId" column="cat_id"/>
+        <result property="name" column="name"/>
+        <result property="parentCid" column="parent_cid"/>
+        <result property="catLevel" column="cat_level"/>
+        <result property="showStatus" column="show_status"/>
+        <result property="sort" column="sort"/>
+        <result property="icon" column="icon"/>
+        <result property="productUnit" column="product_unit"/>
+        <result property="productCount" column="product_count"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        cat_id,name,parent_cid,cat_level,show_status,sort,
+        cat_id
+        ,name,parent_cid,cat_level,show_status,sort,
         icon,product_unit,product_count
     </sql>
 </mapper>

@@ -1,15 +1,15 @@
 package com.atguigu.gulimall.coupon.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
  * 优惠券分类关联
+ *
  * @TableName sms_coupon_spu_category_relation
  */
-@TableName(value ="sms_coupon_spu_category_relation")
+@TableName(value = "sms_coupon_spu_category_relation")
 public class CouponSpuCategoryRelationEntity {
     /**
      * id
@@ -101,9 +101,9 @@ public class CouponSpuCategoryRelationEntity {
         }
         CouponSpuCategoryRelationEntity other = (CouponSpuCategoryRelationEntity) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getCouponId() == null ? other.getCouponId() == null : this.getCouponId().equals(other.getCouponId()))
-            && (this.getCategoryId() == null ? other.getCategoryId() == null : this.getCategoryId().equals(other.getCategoryId()))
-            && (this.getCategoryName() == null ? other.getCategoryName() == null : this.getCategoryName().equals(other.getCategoryName()));
+                && (this.getCouponId() == null ? other.getCouponId() == null : this.getCouponId().equals(other.getCouponId()))
+                && (this.getCategoryId() == null ? other.getCategoryId() == null : this.getCategoryId().equals(other.getCategoryId()))
+                && (this.getCategoryName() == null ? other.getCategoryName() == null : this.getCategoryName().equals(other.getCategoryName()));
     }
 
     @Override

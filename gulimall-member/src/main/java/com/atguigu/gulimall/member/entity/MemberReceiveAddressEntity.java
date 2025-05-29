@@ -1,15 +1,15 @@
 package com.atguigu.gulimall.member.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
  * 会员收货地址
+ *
  * @TableName ums_member_receive_address
  */
-@TableName(value ="ums_member_receive_address")
+@TableName(value = "ums_member_receive_address")
 public class MemberReceiveAddressEntity {
     /**
      * id
@@ -234,16 +234,16 @@ public class MemberReceiveAddressEntity {
         }
         MemberReceiveAddressEntity other = (MemberReceiveAddressEntity) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getMemberId() == null ? other.getMemberId() == null : this.getMemberId().equals(other.getMemberId()))
-            && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
-            && (this.getPhone() == null ? other.getPhone() == null : this.getPhone().equals(other.getPhone()))
-            && (this.getPostCode() == null ? other.getPostCode() == null : this.getPostCode().equals(other.getPostCode()))
-            && (this.getProvince() == null ? other.getProvince() == null : this.getProvince().equals(other.getProvince()))
-            && (this.getCity() == null ? other.getCity() == null : this.getCity().equals(other.getCity()))
-            && (this.getRegion() == null ? other.getRegion() == null : this.getRegion().equals(other.getRegion()))
-            && (this.getDetailAddress() == null ? other.getDetailAddress() == null : this.getDetailAddress().equals(other.getDetailAddress()))
-            && (this.getAreacode() == null ? other.getAreacode() == null : this.getAreacode().equals(other.getAreacode()))
-            && (this.getDefaultStatus() == null ? other.getDefaultStatus() == null : this.getDefaultStatus().equals(other.getDefaultStatus()));
+                && (this.getMemberId() == null ? other.getMemberId() == null : this.getMemberId().equals(other.getMemberId()))
+                && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
+                && (this.getPhone() == null ? other.getPhone() == null : this.getPhone().equals(other.getPhone()))
+                && (this.getPostCode() == null ? other.getPostCode() == null : this.getPostCode().equals(other.getPostCode()))
+                && (this.getProvince() == null ? other.getProvince() == null : this.getProvince().equals(other.getProvince()))
+                && (this.getCity() == null ? other.getCity() == null : this.getCity().equals(other.getCity()))
+                && (this.getRegion() == null ? other.getRegion() == null : this.getRegion().equals(other.getRegion()))
+                && (this.getDetailAddress() == null ? other.getDetailAddress() == null : this.getDetailAddress().equals(other.getDetailAddress()))
+                && (this.getAreacode() == null ? other.getAreacode() == null : this.getAreacode().equals(other.getAreacode()))
+                && (this.getDefaultStatus() == null ? other.getDefaultStatus() == null : this.getDefaultStatus().equals(other.getDefaultStatus()));
     }
 
     @Override

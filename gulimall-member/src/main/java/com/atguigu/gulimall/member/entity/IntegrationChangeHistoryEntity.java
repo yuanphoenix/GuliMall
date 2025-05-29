@@ -1,16 +1,17 @@
 package com.atguigu.gulimall.member.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.time.LocalDateTime;
 
 /**
  * 积分变化历史记录
+ *
  * @TableName ums_integration_change_history
  */
-@TableName(value ="ums_integration_change_history")
+@TableName(value = "ums_integration_change_history")
 public class IntegrationChangeHistoryEntity {
     /**
      * id
@@ -140,11 +141,11 @@ public class IntegrationChangeHistoryEntity {
         }
         IntegrationChangeHistoryEntity other = (IntegrationChangeHistoryEntity) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getMemberId() == null ? other.getMemberId() == null : this.getMemberId().equals(other.getMemberId()))
-            && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
-            && (this.getChangeCount() == null ? other.getChangeCount() == null : this.getChangeCount().equals(other.getChangeCount()))
-            && (this.getNote() == null ? other.getNote() == null : this.getNote().equals(other.getNote()))
-            && (this.getSourceTyoe() == null ? other.getSourceTyoe() == null : this.getSourceTyoe().equals(other.getSourceTyoe()));
+                && (this.getMemberId() == null ? other.getMemberId() == null : this.getMemberId().equals(other.getMemberId()))
+                && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
+                && (this.getChangeCount() == null ? other.getChangeCount() == null : this.getChangeCount().equals(other.getChangeCount()))
+                && (this.getNote() == null ? other.getNote() == null : this.getNote().equals(other.getNote()))
+                && (this.getSourceTyoe() == null ? other.getSourceTyoe() == null : this.getSourceTyoe().equals(other.getSourceTyoe()));
     }
 
     @Override

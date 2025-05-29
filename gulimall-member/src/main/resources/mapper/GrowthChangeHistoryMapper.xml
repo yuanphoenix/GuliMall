@@ -5,15 +5,16 @@
 <mapper namespace="com.atguigu.gulimall.member.mapper.GrowthChangeHistoryMapper">
 
     <resultMap id="BaseResultMap" type="com.atguigu.gulimall.member.entity.GrowthChangeHistoryEntity">
-            <id property="id" column="id" />
-            <result property="memberId" column="member_id" />
-            <result property="createTime" column="create_time" />
-            <result property="changeCount" column="change_count" />
-            <result property="note" column="note" />
-            <result property="sourceType" column="source_type" />
+        <id property="id" column="id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="changeCount" column="change_count"/>
+        <result property="note" column="note"/>
+        <result property="sourceType" column="source_type"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,member_id,create_time,change_count,note,source_type
+        id
+        ,member_id,create_time,change_count,note,source_type
     </sql>
 </mapper>

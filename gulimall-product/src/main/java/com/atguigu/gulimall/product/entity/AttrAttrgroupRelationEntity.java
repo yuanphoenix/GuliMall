@@ -1,15 +1,15 @@
 package com.atguigu.gulimall.product.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
  * 属性&属性分组关联
+ *
  * @TableName pms_attr_attrgroup_relation
  */
-@TableName(value ="pms_attr_attrgroup_relation")
+@TableName(value = "pms_attr_attrgroup_relation")
 public class AttrAttrgroupRelationEntity {
     /**
      * id
@@ -101,9 +101,9 @@ public class AttrAttrgroupRelationEntity {
         }
         AttrAttrgroupRelationEntity other = (AttrAttrgroupRelationEntity) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getAttrId() == null ? other.getAttrId() == null : this.getAttrId().equals(other.getAttrId()))
-            && (this.getAttrGroupId() == null ? other.getAttrGroupId() == null : this.getAttrGroupId().equals(other.getAttrGroupId()))
-            && (this.getAttrSort() == null ? other.getAttrSort() == null : this.getAttrSort().equals(other.getAttrSort()));
+                && (this.getAttrId() == null ? other.getAttrId() == null : this.getAttrId().equals(other.getAttrId()))
+                && (this.getAttrGroupId() == null ? other.getAttrGroupId() == null : this.getAttrGroupId().equals(other.getAttrGroupId()))
+                && (this.getAttrSort() == null ? other.getAttrSort() == null : this.getAttrSort().equals(other.getAttrSort()));
     }
 
     @Override

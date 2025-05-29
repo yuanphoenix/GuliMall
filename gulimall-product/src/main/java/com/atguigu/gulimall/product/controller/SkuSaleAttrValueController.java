@@ -9,62 +9,62 @@ import utils.R;
 import java.util.List;
 
 /**
-* <p>
-    * sku销售属性&值 前端控制器
-    * </p>
-*
-* @author tifa
-* @since 2025-05-09
-*/
+ * <p>
+ * sku销售属性&值 前端控制器
+ * </p>
+ *
+ * @author tifa
+ * @since 2025-05-09
+ */
 @RestController
 @RequestMapping("/product/skuSaleAttrValue")
 public class SkuSaleAttrValueController {
 
-@Autowired
-private SkuSaleAttrValueService skuSaleAttrValueService;
+    @Autowired
+    private SkuSaleAttrValueService skuSaleAttrValueService;
 
-/**
-* 获取所有数据
-*/
-@GetMapping("/list")
-public R list() {
-List<SkuSaleAttrValueEntity> list = skuSaleAttrValueService.list();
-    return R.ok().put("data", list);
+    /**
+     * 获取所有数据
+     */
+    @GetMapping("/list")
+    public R list() {
+        List<SkuSaleAttrValueEntity> list = skuSaleAttrValueService.list();
+        return R.ok().put("data", list);
     }
 
     /**
-    * 根据ID获取数据
-    */
+     * 根据ID获取数据
+     */
     @GetMapping("/info/{id}")
     public R info(@PathVariable("id") Long id) {
-    SkuSaleAttrValueEntity entity = skuSaleAttrValueService.getById(id);
-    return R.ok().put("data", entity);
+        SkuSaleAttrValueEntity entity = skuSaleAttrValueService.getById(id);
+        return R.ok().put("data", entity);
     }
 
     /**
-    * 保存数据
-    */
+     * 保存数据
+     */
     @PostMapping("/save")
     public R save(@RequestBody SkuSaleAttrValueEntity skuSaleAttrValue) {
-    boolean saved = skuSaleAttrValueService.save(skuSaleAttrValue);
-    return saved ? R.ok() : R.error();
+        boolean saved = skuSaleAttrValueService.save(skuSaleAttrValue);
+        return saved ? R.ok() : R.error();
     }
 
     /**
-    * 修改数据
-    */
+     * 修改数据
+     */
     @PostMapping("/update")
     public R update(@RequestBody SkuSaleAttrValueEntity skuSaleAttrValue) {
-    boolean updated = skuSaleAttrValueService.updateById(skuSaleAttrValue);
-    return updated ? R.ok() : R.error();
+        boolean updated = skuSaleAttrValueService.updateById(skuSaleAttrValue);
+        return updated ? R.ok() : R.error();
     }
 
     /**
-    * 删除数据
-    */
+     * 删除数据
+     */
     @PostMapping("/delete/{id}")
     public R delete(@PathVariable("id") Long id) {
-    boolean removed = skuSaleAttrValueService.removeById(id);
-    return removed ? R.ok() : R.error();
+        boolean removed = skuSaleAttrValueService.removeById(id);
+        return removed ? R.ok() : R.error();
     }
-    }
+}

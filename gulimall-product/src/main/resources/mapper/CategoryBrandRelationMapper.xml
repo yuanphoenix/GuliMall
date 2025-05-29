@@ -5,14 +5,15 @@
 <mapper namespace="com.atguigu.gulimall.product.mapper.CategoryBrandRelationMapper">
 
     <resultMap id="BaseResultMap" type="com.atguigu.gulimall.product.entity.CategoryBrandRelationEntity">
-            <id property="id" column="id" />
-            <result property="brandId" column="brand_id" />
-            <result property="catalogId" column="catalog_id" />
-            <result property="brandName" column="brand_name" />
-            <result property="catalogName" column="catalog_name" />
+        <id property="id" column="id"/>
+        <result property="brandId" column="brand_id"/>
+        <result property="catalogId" column="catalog_id"/>
+        <result property="brandName" column="brand_name"/>
+        <result property="catalogName" column="catalog_name"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,brand_id,catelog_id,brand_name,catelog_name
+        id
+        ,brand_id,catelog_id,brand_name,catelog_name
     </sql>
 </mapper>

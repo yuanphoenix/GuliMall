@@ -6,10 +6,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import utils.PageDTO;
 
 /**
-* @author tifa
-* @description 针对表【pms_attr_group(属性分组)】的数据库操作Service
-* @createDate 2025-05-08 20:51:50
-*/
+ * @author tifa
+ * @description 针对表【pms_attr_group(属性分组)】的数据库操作Service
+ * @createDate 2025-05-08 20:51:50
+ */
 public interface AttrGroupService extends IService<AttrGroupEntity> {
 
 

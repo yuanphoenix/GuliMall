@@ -5,21 +5,22 @@
 <mapper namespace="com.atguigu.gulimall.member.mapper.MemberReceiveAddressMapper">
 
     <resultMap id="BaseResultMap" type="com.atguigu.gulimall.member.entity.MemberReceiveAddressEntity">
-            <id property="id" column="id" />
-            <result property="memberId" column="member_id" />
-            <result property="name" column="name" />
-            <result property="phone" column="phone" />
-            <result property="postCode" column="post_code" />
-            <result property="province" column="province" />
-            <result property="city" column="city" />
-            <result property="region" column="region" />
-            <result property="detailAddress" column="detail_address" />
-            <result property="areacode" column="areacode" />
-            <result property="defaultStatus" column="default_status" />
+        <id property="id" column="id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="name" column="name"/>
+        <result property="phone" column="phone"/>
+        <result property="postCode" column="post_code"/>
+        <result property="province" column="province"/>
+        <result property="city" column="city"/>
+        <result property="region" column="region"/>
+        <result property="detailAddress" column="detail_address"/>
+        <result property="areacode" column="areacode"/>
+        <result property="defaultStatus" column="default_status"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,member_id,name,phone,post_code,province,
+        id
+        ,member_id,name,phone,post_code,province,
         city,region,detail_address,areacode,default_status
     </sql>
 </mapper>

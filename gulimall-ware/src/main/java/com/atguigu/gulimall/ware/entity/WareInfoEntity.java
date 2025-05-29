@@ -1,15 +1,15 @@
 package com.atguigu.gulimall.ware.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
  * 仓库信息
+ *
  * @TableName wms_ware_info
  */
-@TableName(value ="wms_ware_info")
+@TableName(value = "wms_ware_info")
 public class WareInfoEntity {
     /**
      * id
@@ -101,9 +101,9 @@ public class WareInfoEntity {
         }
         WareInfoEntity other = (WareInfoEntity) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
-            && (this.getAddress() == null ? other.getAddress() == null : this.getAddress().equals(other.getAddress()))
-            && (this.getAreacode() == null ? other.getAreacode() == null : this.getAreacode().equals(other.getAreacode()));
+                && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
+                && (this.getAddress() == null ? other.getAddress() == null : this.getAddress().equals(other.getAddress()))
+                && (this.getAreacode() == null ? other.getAreacode() == null : this.getAreacode().equals(other.getAreacode()));
     }
 
     @Override

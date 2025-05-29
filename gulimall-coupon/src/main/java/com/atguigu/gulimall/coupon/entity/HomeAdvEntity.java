@@ -1,16 +1,17 @@
 package com.atguigu.gulimall.coupon.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.time.LocalDateTime;
 
 /**
  * 首页轮播广告
+ *
  * @TableName sms_home_adv
  */
-@TableName(value ="sms_home_adv")
+@TableName(value = "sms_home_adv")
 public class HomeAdvEntity {
     /**
      * id
@@ -254,17 +255,17 @@ public class HomeAdvEntity {
         }
         HomeAdvEntity other = (HomeAdvEntity) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
-            && (this.getPic() == null ? other.getPic() == null : this.getPic().equals(other.getPic()))
-            && (this.getStartTime() == null ? other.getStartTime() == null : this.getStartTime().equals(other.getStartTime()))
-            && (this.getEndTime() == null ? other.getEndTime() == null : this.getEndTime().equals(other.getEndTime()))
-            && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
-            && (this.getClickCount() == null ? other.getClickCount() == null : this.getClickCount().equals(other.getClickCount()))
-            && (this.getUrl() == null ? other.getUrl() == null : this.getUrl().equals(other.getUrl()))
-            && (this.getNote() == null ? other.getNote() == null : this.getNote().equals(other.getNote()))
-            && (this.getSort() == null ? other.getSort() == null : this.getSort().equals(other.getSort()))
-            && (this.getPublisherId() == null ? other.getPublisherId() == null : this.getPublisherId().equals(other.getPublisherId()))
-            && (this.getAuthId() == null ? other.getAuthId() == null : this.getAuthId().equals(other.getAuthId()));
+                && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
+                && (this.getPic() == null ? other.getPic() == null : this.getPic().equals(other.getPic()))
+                && (this.getStartTime() == null ? other.getStartTime() == null : this.getStartTime().equals(other.getStartTime()))
+                && (this.getEndTime() == null ? other.getEndTime() == null : this.getEndTime().equals(other.getEndTime()))
+                && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
+                && (this.getClickCount() == null ? other.getClickCount() == null : this.getClickCount().equals(other.getClickCount()))
+                && (this.getUrl() == null ? other.getUrl() == null : this.getUrl().equals(other.getUrl()))
+                && (this.getNote() == null ? other.getNote() == null : this.getNote().equals(other.getNote()))
+                && (this.getSort() == null ? other.getSort() == null : this.getSort().equals(other.getSort()))
+                && (this.getPublisherId() == null ? other.getPublisherId() == null : this.getPublisherId().equals(other.getPublisherId()))
+                && (this.getAuthId() == null ? other.getAuthId() == null : this.getAuthId().equals(other.getAuthId()));
     }
 
     @Override

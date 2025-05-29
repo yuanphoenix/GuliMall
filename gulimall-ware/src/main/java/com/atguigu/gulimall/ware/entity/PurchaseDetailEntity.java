@@ -1,19 +1,20 @@
 package com.atguigu.gulimall.ware.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.math.BigDecimal;
 
 /**
  * 采购需求
+ *
  * @TableName wms_purchase_detail
  */
-@TableName(value ="wms_purchase_detail")
+@TableName(value = "wms_purchase_detail")
 public class PurchaseDetailEntity {
     /**
-     * 
+     *
      */
     @TableId(type = IdType.AUTO)
     private Long id;
@@ -49,14 +50,14 @@ public class PurchaseDetailEntity {
     private Integer status;
 
     /**
-     * 
+     *
      */
     public Long getId() {
         return id;
     }
 
     /**
-     * 
+     *
      */
     public void setId(Long id) {
         this.id = id;
@@ -159,12 +160,12 @@ public class PurchaseDetailEntity {
         }
         PurchaseDetailEntity other = (PurchaseDetailEntity) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getPurchaseId() == null ? other.getPurchaseId() == null : this.getPurchaseId().equals(other.getPurchaseId()))
-            && (this.getSkuId() == null ? other.getSkuId() == null : this.getSkuId().equals(other.getSkuId()))
-            && (this.getSkuNum() == null ? other.getSkuNum() == null : this.getSkuNum().equals(other.getSkuNum()))
-            && (this.getSkuPrice() == null ? other.getSkuPrice() == null : this.getSkuPrice().equals(other.getSkuPrice()))
-            && (this.getWareId() == null ? other.getWareId() == null : this.getWareId().equals(other.getWareId()))
-            && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()));
+                && (this.getPurchaseId() == null ? other.getPurchaseId() == null : this.getPurchaseId().equals(other.getPurchaseId()))
+                && (this.getSkuId() == null ? other.getSkuId() == null : this.getSkuId().equals(other.getSkuId()))
+                && (this.getSkuNum() == null ? other.getSkuNum() == null : this.getSkuNum().equals(other.getSkuNum()))
+                && (this.getSkuPrice() == null ? other.getSkuPrice() == null : this.getSkuPrice().equals(other.getSkuPrice()))
+                && (this.getWareId() == null ? other.getWareId() == null : this.getWareId().equals(other.getWareId()))
+                && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()));
     }
 
     @Override

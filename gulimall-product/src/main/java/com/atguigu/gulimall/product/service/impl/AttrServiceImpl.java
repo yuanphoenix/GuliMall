@@ -1,21 +1,20 @@
 package com.atguigu.gulimall.product.service.impl;
 
 import com.atguigu.gulimall.product.entity.AttrAttrgroupRelationEntity;
+import com.atguigu.gulimall.product.entity.AttrEntity;
 import com.atguigu.gulimall.product.entity.AttrGroupEntity;
 import com.atguigu.gulimall.product.entity.CategoryEntity;
 import com.atguigu.gulimall.product.mapper.AttrAttrgroupRelationMapper;
 import com.atguigu.gulimall.product.mapper.AttrGroupMapper;
+import com.atguigu.gulimall.product.mapper.AttrMapper;
 import com.atguigu.gulimall.product.mapper.CategoryMapper;
 import com.atguigu.gulimall.product.service.AttrAttrgroupRelationService;
+import com.atguigu.gulimall.product.service.AttrService;
 import com.atguigu.gulimall.product.vo.AttrResponseVo;
 import com.atguigu.gulimall.product.vo.AttrVo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.atguigu.gulimall.product.entity.AttrEntity;
-import com.atguigu.gulimall.product.service.AttrService;
-import com.atguigu.gulimall.product.mapper.AttrMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,13 +36,11 @@ public class AttrServiceImpl extends ServiceImpl<AttrMapper, AttrEntity>
         implements AttrService {
 
 
+    private final AttrAttrgroupRelationService attrAttrgroupRelationService;
     @Autowired
     private CategoryMapper categoryMapper;
     @Autowired
     private AttrGroupMapper attrGroupMapper;
-
-
-    private final AttrAttrgroupRelationService attrAttrgroupRelationService;
     @Autowired
     private AttrAttrgroupRelationMapper attrAttrgroupRelationMapper;
 

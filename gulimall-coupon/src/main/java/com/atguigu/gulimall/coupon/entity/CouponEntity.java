@@ -1,17 +1,18 @@
 package com.atguigu.gulimall.coupon.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
  * 优惠券信息
+ *
  * @TableName sms_coupon
  */
-@TableName(value ="sms_coupon")
+@TableName(value = "sms_coupon")
 public class CouponEntity {
     /**
      * id
@@ -407,25 +408,25 @@ public class CouponEntity {
         }
         CouponEntity other = (CouponEntity) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getCouponType() == null ? other.getCouponType() == null : this.getCouponType().equals(other.getCouponType()))
-            && (this.getCouponImg() == null ? other.getCouponImg() == null : this.getCouponImg().equals(other.getCouponImg()))
-            && (this.getCouponName() == null ? other.getCouponName() == null : this.getCouponName().equals(other.getCouponName()))
-            && (this.getNum() == null ? other.getNum() == null : this.getNum().equals(other.getNum()))
-            && (this.getAmount() == null ? other.getAmount() == null : this.getAmount().equals(other.getAmount()))
-            && (this.getPerLimit() == null ? other.getPerLimit() == null : this.getPerLimit().equals(other.getPerLimit()))
-            && (this.getMinPoint() == null ? other.getMinPoint() == null : this.getMinPoint().equals(other.getMinPoint()))
-            && (this.getStartTime() == null ? other.getStartTime() == null : this.getStartTime().equals(other.getStartTime()))
-            && (this.getEndTime() == null ? other.getEndTime() == null : this.getEndTime().equals(other.getEndTime()))
-            && (this.getUseType() == null ? other.getUseType() == null : this.getUseType().equals(other.getUseType()))
-            && (this.getNote() == null ? other.getNote() == null : this.getNote().equals(other.getNote()))
-            && (this.getPublishCount() == null ? other.getPublishCount() == null : this.getPublishCount().equals(other.getPublishCount()))
-            && (this.getUseCount() == null ? other.getUseCount() == null : this.getUseCount().equals(other.getUseCount()))
-            && (this.getReceiveCount() == null ? other.getReceiveCount() == null : this.getReceiveCount().equals(other.getReceiveCount()))
-            && (this.getEnableStartTime() == null ? other.getEnableStartTime() == null : this.getEnableStartTime().equals(other.getEnableStartTime()))
-            && (this.getEnableEndTime() == null ? other.getEnableEndTime() == null : this.getEnableEndTime().equals(other.getEnableEndTime()))
-            && (this.getCode() == null ? other.getCode() == null : this.getCode().equals(other.getCode()))
-            && (this.getMemberLevel() == null ? other.getMemberLevel() == null : this.getMemberLevel().equals(other.getMemberLevel()))
-            && (this.getPublish() == null ? other.getPublish() == null : this.getPublish().equals(other.getPublish()));
+                && (this.getCouponType() == null ? other.getCouponType() == null : this.getCouponType().equals(other.getCouponType()))
+                && (this.getCouponImg() == null ? other.getCouponImg() == null : this.getCouponImg().equals(other.getCouponImg()))
+                && (this.getCouponName() == null ? other.getCouponName() == null : this.getCouponName().equals(other.getCouponName()))
+                && (this.getNum() == null ? other.getNum() == null : this.getNum().equals(other.getNum()))
+                && (this.getAmount() == null ? other.getAmount() == null : this.getAmount().equals(other.getAmount()))
+                && (this.getPerLimit() == null ? other.getPerLimit() == null : this.getPerLimit().equals(other.getPerLimit()))
+                && (this.getMinPoint() == null ? other.getMinPoint() == null : this.getMinPoint().equals(other.getMinPoint()))
+                && (this.getStartTime() == null ? other.getStartTime() == null : this.getStartTime().equals(other.getStartTime()))
+                && (this.getEndTime() == null ? other.getEndTime() == null : this.getEndTime().equals(other.getEndTime()))
+                && (this.getUseType() == null ? other.getUseType() == null : this.getUseType().equals(other.getUseType()))
+                && (this.getNote() == null ? other.getNote() == null : this.getNote().equals(other.getNote()))
+                && (this.getPublishCount() == null ? other.getPublishCount() == null : this.getPublishCount().equals(other.getPublishCount()))
+                && (this.getUseCount() == null ? other.getUseCount() == null : this.getUseCount().equals(other.getUseCount()))
+                && (this.getReceiveCount() == null ? other.getReceiveCount() == null : this.getReceiveCount().equals(other.getReceiveCount()))
+                && (this.getEnableStartTime() == null ? other.getEnableStartTime() == null : this.getEnableStartTime().equals(other.getEnableStartTime()))
+                && (this.getEnableEndTime() == null ? other.getEnableEndTime() == null : this.getEnableEndTime().equals(other.getEnableEndTime()))
+                && (this.getCode() == null ? other.getCode() == null : this.getCode().equals(other.getCode()))
+                && (this.getMemberLevel() == null ? other.getMemberLevel() == null : this.getMemberLevel().equals(other.getMemberLevel()))
+                && (this.getPublish() == null ? other.getPublish() == null : this.getPublish().equals(other.getPublish()));
     }
 
     @Override

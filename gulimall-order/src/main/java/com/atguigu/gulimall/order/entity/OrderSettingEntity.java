@@ -1,15 +1,15 @@
 package com.atguigu.gulimall.order.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
  * 订单配置信息
+ *
  * @TableName oms_order_setting
  */
-@TableName(value ="oms_order_setting")
+@TableName(value = "oms_order_setting")
 public class OrderSettingEntity {
     /**
      * id
@@ -158,12 +158,12 @@ public class OrderSettingEntity {
         }
         OrderSettingEntity other = (OrderSettingEntity) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getFlashOrderOvertime() == null ? other.getFlashOrderOvertime() == null : this.getFlashOrderOvertime().equals(other.getFlashOrderOvertime()))
-            && (this.getNormalOrderOvertime() == null ? other.getNormalOrderOvertime() == null : this.getNormalOrderOvertime().equals(other.getNormalOrderOvertime()))
-            && (this.getConfirmOvertime() == null ? other.getConfirmOvertime() == null : this.getConfirmOvertime().equals(other.getConfirmOvertime()))
-            && (this.getFinishOvertime() == null ? other.getFinishOvertime() == null : this.getFinishOvertime().equals(other.getFinishOvertime()))
-            && (this.getCommentOvertime() == null ? other.getCommentOvertime() == null : this.getCommentOvertime().equals(other.getCommentOvertime()))
-            && (this.getMemberLevel() == null ? other.getMemberLevel() == null : this.getMemberLevel().equals(other.getMemberLevel()));
+                && (this.getFlashOrderOvertime() == null ? other.getFlashOrderOvertime() == null : this.getFlashOrderOvertime().equals(other.getFlashOrderOvertime()))
+                && (this.getNormalOrderOvertime() == null ? other.getNormalOrderOvertime() == null : this.getNormalOrderOvertime().equals(other.getNormalOrderOvertime()))
+                && (this.getConfirmOvertime() == null ? other.getConfirmOvertime() == null : this.getConfirmOvertime().equals(other.getConfirmOvertime()))
+                && (this.getFinishOvertime() == null ? other.getFinishOvertime() == null : this.getFinishOvertime().equals(other.getFinishOvertime()))
+                && (this.getCommentOvertime() == null ? other.getCommentOvertime() == null : this.getCommentOvertime().equals(other.getCommentOvertime()))
+                && (this.getMemberLevel() == null ? other.getMemberLevel() == null : this.getMemberLevel().equals(other.getMemberLevel()));
     }
 
     @Override

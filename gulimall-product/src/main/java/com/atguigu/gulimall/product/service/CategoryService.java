@@ -1,7 +1,7 @@
 package com.atguigu.gulimall.product.service;
 
-import com.atguigu.gulimall.product.vo.TreeVoRequest;
 import com.atguigu.gulimall.product.entity.CategoryEntity;
+import com.atguigu.gulimall.product.vo.TreeVoRequest;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;

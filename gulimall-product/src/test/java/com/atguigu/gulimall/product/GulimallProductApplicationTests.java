@@ -4,15 +4,7 @@ import com.aliyuncs.exceptions.ClientException;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.io.*;
-import java.util.Random;
-
-import com.aliyun.oss.*;
-import com.aliyun.oss.model.OSSObject;
-import com.aliyun.oss.model.ObjectListing;
-import com.aliyun.oss.model.OSSObjectSummary;
-import com.aliyun.oss.common.auth.*;
-import com.aliyun.oss.common.comm.SignVersion;
+import java.io.FileNotFoundException;
 
 @SpringBootTest
 class GulimallProductApplicationTests {

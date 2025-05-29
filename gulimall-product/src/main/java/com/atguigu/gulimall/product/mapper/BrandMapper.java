@@ -2,7 +2,6 @@ package com.atguigu.gulimall.product.mapper;
 
 import com.atguigu.gulimall.product.entity.BrandEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 
 /**
  * @author tifa

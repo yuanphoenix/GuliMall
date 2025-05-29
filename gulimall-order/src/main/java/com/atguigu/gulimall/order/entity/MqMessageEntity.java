@@ -1,40 +1,38 @@
 package com.atguigu.gulimall.order.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.time.LocalDateTime;
 
 /**
- * 
  * @TableName mq_message
  */
-@TableName(value ="mq_message")
+@TableName(value = "mq_message")
 public class MqMessageEntity {
     /**
-     * 
+     *
      */
     @TableId
     private String messageId;
 
     /**
-     * 
+     *
      */
     private String content;
 
     /**
-     * 
+     *
      */
     private String toExchane;
 
     /**
-     * 
+     *
      */
     private String routingKey;
 
     /**
-     * 
+     *
      */
     private String classType;
 
@@ -44,80 +42,80 @@ public class MqMessageEntity {
     private Integer messageStatus;
 
     /**
-     * 
+     *
      */
     private LocalDateTime createTime;
 
     /**
-     * 
+     *
      */
     private LocalDateTime updateTime;
 
     /**
-     * 
+     *
      */
     public String getMessageId() {
         return messageId;
     }
 
     /**
-     * 
+     *
      */
     public void setMessageId(String messageId) {
         this.messageId = messageId;
     }
 
     /**
-     * 
+     *
      */
     public String getContent() {
         return content;
     }
 
     /**
-     * 
+     *
      */
     public void setContent(String content) {
         this.content = content;
     }
 
     /**
-     * 
+     *
      */
     public String getToExchane() {
         return toExchane;
     }
 
     /**
-     * 
+     *
      */
     public void setToExchane(String toExchane) {
         this.toExchane = toExchane;
     }
 
     /**
-     * 
+     *
      */
     public String getRoutingKey() {
         return routingKey;
     }
 
     /**
-     * 
+     *
      */
     public void setRoutingKey(String routingKey) {
         this.routingKey = routingKey;
     }
 
     /**
-     * 
+     *
      */
     public String getClassType() {
         return classType;
     }
 
     /**
-     * 
+     *
      */
     public void setClassType(String classType) {
         this.classType = classType;
@@ -138,28 +136,28 @@ public class MqMessageEntity {
     }
 
     /**
-     * 
+     *
      */
     public LocalDateTime getCreateTime() {
         return createTime;
     }
 
     /**
-     * 
+     *
      */
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
     }
 
     /**
-     * 
+     *
      */
     public LocalDateTime getUpdateTime() {
         return updateTime;
     }
 
     /**
-     * 
+     *
      */
     public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
@@ -178,13 +176,13 @@ public class MqMessageEntity {
         }
         MqMessageEntity other = (MqMessageEntity) that;
         return (this.getMessageId() == null ? other.getMessageId() == null : this.getMessageId().equals(other.getMessageId()))
-            && (this.getContent() == null ? other.getContent() == null : this.getContent().equals(other.getContent()))
-            && (this.getToExchane() == null ? other.getToExchane() == null : this.getToExchane().equals(other.getToExchane()))
-            && (this.getRoutingKey() == null ? other.getRoutingKey() == null : this.getRoutingKey().equals(other.getRoutingKey()))
-            && (this.getClassType() == null ? other.getClassType() == null : this.getClassType().equals(other.getClassType()))
-            && (this.getMessageStatus() == null ? other.getMessageStatus() == null : this.getMessageStatus().equals(other.getMessageStatus()))
-            && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
-            && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()));
+                && (this.getContent() == null ? other.getContent() == null : this.getContent().equals(other.getContent()))
+                && (this.getToExchane() == null ? other.getToExchane() == null : this.getToExchane().equals(other.getToExchane()))
+                && (this.getRoutingKey() == null ? other.getRoutingKey() == null : this.getRoutingKey().equals(other.getRoutingKey()))
+                && (this.getClassType() == null ? other.getClassType() == null : this.getClassType().equals(other.getClassType()))
+                && (this.getMessageStatus() == null ? other.getMessageStatus() == null : this.getMessageStatus().equals(other.getMessageStatus()))
+                && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
+                && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()));
     }
 
     @Override

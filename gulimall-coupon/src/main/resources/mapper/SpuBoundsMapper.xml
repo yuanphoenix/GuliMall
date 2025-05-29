@@ -5,14 +5,15 @@
 <mapper namespace="com.atguigu.gulimall.coupon.mapper.SpuBoundsMapper">
 
     <resultMap id="BaseResultMap" type="com.atguigu.gulimall.coupon.entity.SpuBoundsEntity">
-            <id property="id" column="id" />
-            <result property="spuId" column="spu_id" />
-            <result property="growBounds" column="grow_bounds" />
-            <result property="buyBounds" column="buy_bounds" />
-            <result property="work" column="work" />
+        <id property="id" column="id"/>
+        <result property="spuId" column="spu_id"/>
+        <result property="growBounds" column="grow_bounds"/>
+        <result property="buyBounds" column="buy_bounds"/>
+        <result property="work" column="work"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,spu_id,grow_bounds,buy_bounds,work
+        id
+        ,spu_id,grow_bounds,buy_bounds,work
     </sql>
 </mapper>

@@ -9,62 +9,62 @@ import utils.R;
 import java.util.List;
 
 /**
-* <p>
-    * 会员统计信息 前端控制器
-    * </p>
-*
-* @author tifa
-* @since 2025-05-09
-*/
+ * <p>
+ * 会员统计信息 前端控制器
+ * </p>
+ *
+ * @author tifa
+ * @since 2025-05-09
+ */
 @RestController
 @RequestMapping("/member/memberStatisticsInfo")
 public class MemberStatisticsInfoController {
 
-@Autowired
-private MemberStatisticsInfoService memberStatisticsInfoService;
+    @Autowired
+    private MemberStatisticsInfoService memberStatisticsInfoService;
 
-/**
-* 获取所有数据
-*/
-@GetMapping("/list")
-public R list() {
-List<MemberStatisticsInfoEntity> list = memberStatisticsInfoService.list();
-    return R.ok().put("data", list);
+    /**
+     * 获取所有数据
+     */
+    @GetMapping("/list")
+    public R list() {
+        List<MemberStatisticsInfoEntity> list = memberStatisticsInfoService.list();
+        return R.ok().put("data", list);
     }
 
     /**
-    * 根据ID获取数据
-    */
+     * 根据ID获取数据
+     */
     @GetMapping("/info/{id}")
     public R info(@PathVariable("id") Long id) {
-    MemberStatisticsInfoEntity entity = memberStatisticsInfoService.getById(id);
-    return R.ok().put("data", entity);
+        MemberStatisticsInfoEntity entity = memberStatisticsInfoService.getById(id);
+        return R.ok().put("data", entity);
     }
 
     /**
-    * 保存数据
-    */
+     * 保存数据
+     */
     @PostMapping("/save")
     public R save(@RequestBody MemberStatisticsInfoEntity memberStatisticsInfo) {
-    boolean saved = memberStatisticsInfoService.save(memberStatisticsInfo);
-    return saved ? R.ok() : R.error();
+        boolean saved = memberStatisticsInfoService.save(memberStatisticsInfo);
+        return saved ? R.ok() : R.error();
     }
 
     /**
-    * 修改数据
-    */
+     * 修改数据
+     */
     @PostMapping("/update")
     public R update(@RequestBody MemberStatisticsInfoEntity memberStatisticsInfo) {
-    boolean updated = memberStatisticsInfoService.updateById(memberStatisticsInfo);
-    return updated ? R.ok() : R.error();
+        boolean updated = memberStatisticsInfoService.updateById(memberStatisticsInfo);
+        return updated ? R.ok() : R.error();
     }
 
     /**
-    * 删除数据
-    */
+     * 删除数据
+     */
     @PostMapping("/delete/{id}")
     public R delete(@PathVariable("id") Long id) {
-    boolean removed = memberStatisticsInfoService.removeById(id);
-    return removed ? R.ok() : R.error();
+        boolean removed = memberStatisticsInfoService.removeById(id);
+        return removed ? R.ok() : R.error();
     }
-    }
+}

@@ -1,15 +1,15 @@
 package com.atguigu.gulimall.product.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
  * spu属性值
+ *
  * @TableName pms_product_attr_value
  */
-@TableName(value ="pms_product_attr_value")
+@TableName(value = "pms_product_attr_value")
 public class ProductAttrValueEntity {
     /**
      * id
@@ -158,12 +158,12 @@ public class ProductAttrValueEntity {
         }
         ProductAttrValueEntity other = (ProductAttrValueEntity) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getSpuId() == null ? other.getSpuId() == null : this.getSpuId().equals(other.getSpuId()))
-            && (this.getAttrId() == null ? other.getAttrId() == null : this.getAttrId().equals(other.getAttrId()))
-            && (this.getAttrName() == null ? other.getAttrName() == null : this.getAttrName().equals(other.getAttrName()))
-            && (this.getAttrValue() == null ? other.getAttrValue() == null : this.getAttrValue().equals(other.getAttrValue()))
-            && (this.getAttrSort() == null ? other.getAttrSort() == null : this.getAttrSort().equals(other.getAttrSort()))
-            && (this.getQuickShow() == null ? other.getQuickShow() == null : this.getQuickShow().equals(other.getQuickShow()));
+                && (this.getSpuId() == null ? other.getSpuId() == null : this.getSpuId().equals(other.getSpuId()))
+                && (this.getAttrId() == null ? other.getAttrId() == null : this.getAttrId().equals(other.getAttrId()))
+                && (this.getAttrName() == null ? other.getAttrName() == null : this.getAttrName().equals(other.getAttrName()))
+                && (this.getAttrValue() == null ? other.getAttrValue() == null : this.getAttrValue().equals(other.getAttrValue()))
+                && (this.getAttrSort() == null ? other.getAttrSort() == null : this.getAttrSort().equals(other.getAttrSort()))
+                && (this.getQuickShow() == null ? other.getQuickShow() == null : this.getQuickShow().equals(other.getQuickShow()));
     }
 
     @Override

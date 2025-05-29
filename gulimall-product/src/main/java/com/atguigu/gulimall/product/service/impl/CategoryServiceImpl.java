@@ -1,11 +1,11 @@
 package com.atguigu.gulimall.product.service.impl;
 
+import com.atguigu.gulimall.product.entity.CategoryEntity;
+import com.atguigu.gulimall.product.mapper.CategoryMapper;
+import com.atguigu.gulimall.product.service.CategoryService;
 import com.atguigu.gulimall.product.vo.TreeVoRequest;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.atguigu.gulimall.product.entity.CategoryEntity;
-import com.atguigu.gulimall.product.service.CategoryService;
-import com.atguigu.gulimall.product.mapper.CategoryMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

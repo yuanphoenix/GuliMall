@@ -1,16 +1,17 @@
 package com.atguigu.gulimall.member.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.time.LocalDateTime;
 
 /**
  * 会员登录记录
+ *
  * @TableName ums_member_login_log
  */
-@TableName(value ="ums_member_login_log")
+@TableName(value = "ums_member_login_log")
 public class MemberLoginLogEntity {
     /**
      * id
@@ -140,11 +141,11 @@ public class MemberLoginLogEntity {
         }
         MemberLoginLogEntity other = (MemberLoginLogEntity) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getMemberId() == null ? other.getMemberId() == null : this.getMemberId().equals(other.getMemberId()))
-            && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
-            && (this.getIp() == null ? other.getIp() == null : this.getIp().equals(other.getIp()))
-            && (this.getCity() == null ? other.getCity() == null : this.getCity().equals(other.getCity()))
-            && (this.getLoginType() == null ? other.getLoginType() == null : this.getLoginType().equals(other.getLoginType()));
+                && (this.getMemberId() == null ? other.getMemberId() == null : this.getMemberId().equals(other.getMemberId()))
+                && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
+                && (this.getIp() == null ? other.getIp() == null : this.getIp().equals(other.getIp()))
+                && (this.getCity() == null ? other.getCity() == null : this.getCity().equals(other.getCity()))
+                && (this.getLoginType() == null ? other.getLoginType() == null : this.getLoginType().equals(other.getLoginType()));
     }
 
     @Override

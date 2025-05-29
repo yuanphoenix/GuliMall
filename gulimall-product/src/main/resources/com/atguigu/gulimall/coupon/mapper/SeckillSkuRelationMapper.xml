@@ -5,18 +5,19 @@
 <mapper namespace="com.atguigu.gulimall.coupon.mapper.SeckillSkuRelationMapper">
 
     <resultMap id="BaseResultMap" type="com.atguigu.gulimall.coupon.entity.SeckillSkuRelationEntity">
-            <id property="id" column="id" />
-            <result property="promotionId" column="promotion_id" />
-            <result property="promotionSessionId" column="promotion_session_id" />
-            <result property="skuId" column="sku_id" />
-            <result property="seckillPrice" column="seckill_price" />
-            <result property="seckillCount" column="seckill_count" />
-            <result property="seckillLimit" column="seckill_limit" />
-            <result property="seckillSort" column="seckill_sort" />
+        <id property="id" column="id"/>
+        <result property="promotionId" column="promotion_id"/>
+        <result property="promotionSessionId" column="promotion_session_id"/>
+        <result property="skuId" column="sku_id"/>
+        <result property="seckillPrice" column="seckill_price"/>
+        <result property="seckillCount" column="seckill_count"/>
+        <result property="seckillLimit" column="seckill_limit"/>
+        <result property="seckillSort" column="seckill_sort"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,promotion_id,promotion_session_id,sku_id,seckill_price,seckill_count,
+        id
+        ,promotion_id,promotion_session_id,sku_id,seckill_price,seckill_count,
         seckill_limit,seckill_sort
     </sql>
 </mapper>

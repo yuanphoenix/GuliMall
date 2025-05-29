@@ -1,15 +1,15 @@
 package com.atguigu.gulimall.product.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
  * 商品属性
+ *
  * @TableName pms_attr
  */
-@TableName(value ="pms_attr")
+@TableName(value = "pms_attr")
 public class AttrEntity {
     /**
      * 属性id
@@ -127,7 +127,6 @@ public class AttrEntity {
 
     /**
      * 属性图标
-     *
      */
     public void setIcon(String icon) {
         this.icon = icon;
@@ -210,15 +209,15 @@ public class AttrEntity {
         }
         AttrEntity other = (AttrEntity) that;
         return (this.getAttrId() == null ? other.getAttrId() == null : this.getAttrId().equals(other.getAttrId()))
-            && (this.getAttrName() == null ? other.getAttrName() == null : this.getAttrName().equals(other.getAttrName()))
-            && (this.getSearchType() == null ? other.getSearchType() == null : this.getSearchType().equals(other.getSearchType()))
-            && (this.getValueType() == null ? other.getValueType() == null : this.getValueType().equals(other.getValueType()))
-            && (this.getIcon() == null ? other.getIcon() == null : this.getIcon().equals(other.getIcon()))
-            && (this.getValueSelect() == null ? other.getValueSelect() == null : this.getValueSelect().equals(other.getValueSelect()))
-            && (this.getAttrType() == null ? other.getAttrType() == null : this.getAttrType().equals(other.getAttrType()))
-            && (this.getEnable() == null ? other.getEnable() == null : this.getEnable().equals(other.getEnable()))
-            && (this.getCatalogId() == null ? other.getCatalogId() == null : this.getCatalogId().equals(other.getCatalogId()))
-            && (this.getShowDesc() == null ? other.getShowDesc() == null : this.getShowDesc().equals(other.getShowDesc()));
+                && (this.getAttrName() == null ? other.getAttrName() == null : this.getAttrName().equals(other.getAttrName()))
+                && (this.getSearchType() == null ? other.getSearchType() == null : this.getSearchType().equals(other.getSearchType()))
+                && (this.getValueType() == null ? other.getValueType() == null : this.getValueType().equals(other.getValueType()))
+                && (this.getIcon() == null ? other.getIcon() == null : this.getIcon().equals(other.getIcon()))
+                && (this.getValueSelect() == null ? other.getValueSelect() == null : this.getValueSelect().equals(other.getValueSelect()))
+                && (this.getAttrType() == null ? other.getAttrType() == null : this.getAttrType().equals(other.getAttrType()))
+                && (this.getEnable() == null ? other.getEnable() == null : this.getEnable().equals(other.getEnable()))
+                && (this.getCatalogId() == null ? other.getCatalogId() == null : this.getCatalogId().equals(other.getCatalogId()))
+                && (this.getShowDesc() == null ? other.getShowDesc() == null : this.getShowDesc().equals(other.getShowDesc()));
     }
 
     @Override

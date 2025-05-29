@@ -5,17 +5,18 @@
 <mapper namespace="com.atguigu.gulimall.product.mapper.ProductAttrValueMapper">
 
     <resultMap id="BaseResultMap" type="com.atguigu.gulimall.product.entity.ProductAttrValueEntity">
-            <id property="id" column="id" />
-            <result property="spuId" column="spu_id" />
-            <result property="attrId" column="attr_id" />
-            <result property="attrName" column="attr_name" />
-            <result property="attrValue" column="attr_value" />
-            <result property="attrSort" column="attr_sort" />
-            <result property="quickShow" column="quick_show" />
+        <id property="id" column="id"/>
+        <result property="spuId" column="spu_id"/>
+        <result property="attrId" column="attr_id"/>
+        <result property="attrName" column="attr_name"/>
+        <result property="attrValue" column="attr_value"/>
+        <result property="attrSort" column="attr_sort"/>
+        <result property="quickShow" column="quick_show"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,spu_id,attr_id,attr_name,attr_value,attr_sort,
+        id
+        ,spu_id,attr_id,attr_name,attr_value,attr_sort,
         quick_show
     </sql>
 </mapper>

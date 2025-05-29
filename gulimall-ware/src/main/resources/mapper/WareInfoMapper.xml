@@ -5,13 +5,14 @@
 <mapper namespace="com.atguigu.gulimall.ware.mapper.WareInfoMapper">
 
     <resultMap id="BaseResultMap" type="com.atguigu.gulimall.ware.entity.WareInfoEntity">
-            <id property="id" column="id" />
-            <result property="name" column="name" />
-            <result property="address" column="address" />
-            <result property="areacode" column="areacode" />
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="address" column="address"/>
+        <result property="areacode" column="areacode"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,name,address,areacode
+        id
+        ,name,address,areacode
     </sql>
 </mapper>

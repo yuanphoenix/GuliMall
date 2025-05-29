@@ -5,24 +5,25 @@
 <mapper namespace="com.atguigu.gulimall.ware.mapper.WareOrderTaskMapper">
 
     <resultMap id="BaseResultMap" type="com.atguigu.gulimall.ware.entity.WareOrderTaskEntity">
-            <id property="id" column="id" />
-            <result property="orderId" column="order_id" />
-            <result property="orderSn" column="order_sn" />
-            <result property="consignee" column="consignee" />
-            <result property="consigneeTel" column="consignee_tel" />
-            <result property="deliveryAddress" column="delivery_address" />
-            <result property="orderComment" column="order_comment" />
-            <result property="paymentWay" column="payment_way" />
-            <result property="taskStatus" column="task_status" />
-            <result property="orderBody" column="order_body" />
-            <result property="trackingNo" column="tracking_no" />
-            <result property="createTime" column="create_time" />
-            <result property="wareId" column="ware_id" />
-            <result property="taskComment" column="task_comment" />
+        <id property="id" column="id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="orderSn" column="order_sn"/>
+        <result property="consignee" column="consignee"/>
+        <result property="consigneeTel" column="consignee_tel"/>
+        <result property="deliveryAddress" column="delivery_address"/>
+        <result property="orderComment" column="order_comment"/>
+        <result property="paymentWay" column="payment_way"/>
+        <result property="taskStatus" column="task_status"/>
+        <result property="orderBody" column="order_body"/>
+        <result property="trackingNo" column="tracking_no"/>
+        <result property="createTime" column="create_time"/>
+        <result property="wareId" column="ware_id"/>
+        <result property="taskComment" column="task_comment"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,order_id,order_sn,consignee,consignee_tel,delivery_address,
+        id
+        ,order_id,order_sn,consignee,consignee_tel,delivery_address,
         order_comment,payment_way,task_status,order_body,tracking_no,
         create_time,ware_id,task_comment
     </sql>

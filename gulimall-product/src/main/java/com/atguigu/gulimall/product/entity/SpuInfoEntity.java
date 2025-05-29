@@ -1,17 +1,18 @@
 package com.atguigu.gulimall.product.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
  * spu信息
+ *
  * @TableName pms_spu_info
  */
-@TableName(value ="pms_spu_info")
+@TableName(value = "pms_spu_info")
 public class SpuInfoEntity {
     /**
      * 商品id
@@ -40,7 +41,7 @@ public class SpuInfoEntity {
     private Long brandId;
 
     /**
-     * 
+     *
      */
     private BigDecimal weight;
 
@@ -50,12 +51,12 @@ public class SpuInfoEntity {
     private Integer publishStatus;
 
     /**
-     * 
+     *
      */
     private LocalDateTime createTime;
 
     /**
-     * 
+     *
      */
     private LocalDateTime updateTime;
 
@@ -130,14 +131,14 @@ public class SpuInfoEntity {
     }
 
     /**
-     * 
+     *
      */
     public BigDecimal getWeight() {
         return weight;
     }
 
     /**
-     * 
+     *
      */
     public void setWeight(BigDecimal weight) {
         this.weight = weight;
@@ -158,28 +159,28 @@ public class SpuInfoEntity {
     }
 
     /**
-     * 
+     *
      */
     public LocalDateTime getCreateTime() {
         return createTime;
     }
 
     /**
-     * 
+     *
      */
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
     }
 
     /**
-     * 
+     *
      */
     public LocalDateTime getUpdateTime() {
         return updateTime;
     }
 
     /**
-     * 
+     *
      */
     public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
@@ -198,14 +199,14 @@ public class SpuInfoEntity {
         }
         SpuInfoEntity other = (SpuInfoEntity) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getSpuName() == null ? other.getSpuName() == null : this.getSpuName().equals(other.getSpuName()))
-            && (this.getSpuDescription() == null ? other.getSpuDescription() == null : this.getSpuDescription().equals(other.getSpuDescription()))
-            && (this.getCatalogId() == null ? other.getCatalogId() == null : this.getCatalogId().equals(other.getCatalogId()))
-            && (this.getBrandId() == null ? other.getBrandId() == null : this.getBrandId().equals(other.getBrandId()))
-            && (this.getWeight() == null ? other.getWeight() == null : this.getWeight().equals(other.getWeight()))
-            && (this.getPublishStatus() == null ? other.getPublishStatus() == null : this.getPublishStatus().equals(other.getPublishStatus()))
-            && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
-            && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()));
+                && (this.getSpuName() == null ? other.getSpuName() == null : this.getSpuName().equals(other.getSpuName()))
+                && (this.getSpuDescription() == null ? other.getSpuDescription() == null : this.getSpuDescription().equals(other.getSpuDescription()))
+                && (this.getCatalogId() == null ? other.getCatalogId() == null : this.getCatalogId().equals(other.getCatalogId()))
+                && (this.getBrandId() == null ? other.getBrandId() == null : this.getBrandId().equals(other.getBrandId()))
+                && (this.getWeight() == null ? other.getWeight() == null : this.getWeight().equals(other.getWeight()))
+                && (this.getPublishStatus() == null ? other.getPublishStatus() == null : this.getPublishStatus().equals(other.getPublishStatus()))
+                && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
+                && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()));
     }
 
     @Override

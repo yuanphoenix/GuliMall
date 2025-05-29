@@ -1,15 +1,15 @@
 package com.atguigu.gulimall.ware.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
  * 商品库存
+ *
  * @TableName wms_ware_sku
  */
-@TableName(value ="wms_ware_sku")
+@TableName(value = "wms_ware_sku")
 public class WareSkuEntity {
     /**
      * id
@@ -139,11 +139,11 @@ public class WareSkuEntity {
         }
         WareSkuEntity other = (WareSkuEntity) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getSkuId() == null ? other.getSkuId() == null : this.getSkuId().equals(other.getSkuId()))
-            && (this.getWareId() == null ? other.getWareId() == null : this.getWareId().equals(other.getWareId()))
-            && (this.getStock() == null ? other.getStock() == null : this.getStock().equals(other.getStock()))
-            && (this.getSkuName() == null ? other.getSkuName() == null : this.getSkuName().equals(other.getSkuName()))
-            && (this.getStockLocked() == null ? other.getStockLocked() == null : this.getStockLocked().equals(other.getStockLocked()));
+                && (this.getSkuId() == null ? other.getSkuId() == null : this.getSkuId().equals(other.getSkuId()))
+                && (this.getWareId() == null ? other.getWareId() == null : this.getWareId().equals(other.getWareId()))
+                && (this.getStock() == null ? other.getStock() == null : this.getStock().equals(other.getStock()))
+                && (this.getSkuName() == null ? other.getSkuName() == null : this.getSkuName().equals(other.getSkuName()))
+                && (this.getStockLocked() == null ? other.getStockLocked() == null : this.getStockLocked().equals(other.getStockLocked()));
     }
 
     @Override

@@ -1,7 +1,5 @@
 package com.atguigu.gulimall.product.vo;
 
-import java.util.List;
-
 public class AttrVo {
 
 

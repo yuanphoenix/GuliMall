@@ -5,15 +5,16 @@
 <mapper namespace="com.atguigu.gulimall.coupon.mapper.SeckillSessionMapper">
 
     <resultMap id="BaseResultMap" type="com.atguigu.gulimall.coupon.entity.SeckillSessionEntity">
-            <id property="id" column="id" />
-            <result property="name" column="name" />
-            <result property="startTime" column="start_time" />
-            <result property="endTime" column="end_time" />
-            <result property="status" column="status" />
-            <result property="createTime" column="create_time" />
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="create_time"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,name,start_time,end_time,status,create_time
+        id
+        ,name,start_time,end_time,status,create_time
     </sql>
 </mapper>

@@ -1,13 +1,13 @@
 package com.atguigu.gulimall.product.service.impl;
 
 import com.atguigu.gulimall.product.entity.BrandEntity;
+import com.atguigu.gulimall.product.entity.CategoryBrandRelationEntity;
 import com.atguigu.gulimall.product.entity.CategoryEntity;
 import com.atguigu.gulimall.product.mapper.BrandMapper;
-import com.atguigu.gulimall.product.mapper.CategoryMapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.atguigu.gulimall.product.entity.CategoryBrandRelationEntity;
-import com.atguigu.gulimall.product.service.CategoryBrandRelationService;
 import com.atguigu.gulimall.product.mapper.CategoryBrandRelationMapper;
+import com.atguigu.gulimall.product.mapper.CategoryMapper;
+import com.atguigu.gulimall.product.service.CategoryBrandRelationService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

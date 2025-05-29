@@ -5,11 +5,12 @@
 <mapper namespace="com.atguigu.gulimall.product.mapper.SpuInfoDescMapper">
 
     <resultMap id="BaseResultMap" type="com.atguigu.gulimall.product.entity.SpuInfoDescEntity">
-            <id property="spuId" column="spu_id" />
-            <result property="decript" column="decript" />
+        <id property="spuId" column="spu_id"/>
+        <result property="decript" column="decript"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        spu_id,decript
+        spu_id
+        ,decript
     </sql>
 </mapper>

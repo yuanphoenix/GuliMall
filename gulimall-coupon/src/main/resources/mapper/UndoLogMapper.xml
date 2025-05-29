@@ -5,18 +5,19 @@
 <mapper namespace="com.atguigu.gulimall.coupon.mapper.UndoLogMapper">
 
     <resultMap id="BaseResultMap" type="com.atguigu.gulimall.coupon.entity.UndoLogEntity">
-            <id property="id" column="id" />
-            <result property="branchId" column="branch_id" />
-            <result property="xid" column="xid" />
-            <result property="context" column="context" />
-            <result property="logStatus" column="log_status" />
-            <result property="logCreated" column="log_created" />
-            <result property="logModified" column="log_modified" />
-            <result property="ext" column="ext" />
+        <id property="id" column="id"/>
+        <result property="branchId" column="branch_id"/>
+        <result property="xid" column="xid"/>
+        <result property="context" column="context"/>
+        <result property="logStatus" column="log_status"/>
+        <result property="logCreated" column="log_created"/>
+        <result property="logModified" column="log_modified"/>
+        <result property="ext" column="ext"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,branch_id,xid,context,log_status,log_created,
+        id
+        ,branch_id,xid,context,log_status,log_created,
         log_modified,ext,rollback_info
     </sql>
 </mapper>

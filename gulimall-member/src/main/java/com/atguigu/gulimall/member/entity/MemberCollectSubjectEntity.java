@@ -1,15 +1,15 @@
 package com.atguigu.gulimall.member.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
  * 会员收藏的专题活动
+ *
  * @TableName ums_member_collect_subject
  */
-@TableName(value ="ums_member_collect_subject")
+@TableName(value = "ums_member_collect_subject")
 public class MemberCollectSubjectEntity {
     /**
      * id
@@ -120,10 +120,10 @@ public class MemberCollectSubjectEntity {
         }
         MemberCollectSubjectEntity other = (MemberCollectSubjectEntity) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getSubjectId() == null ? other.getSubjectId() == null : this.getSubjectId().equals(other.getSubjectId()))
-            && (this.getSubjectName() == null ? other.getSubjectName() == null : this.getSubjectName().equals(other.getSubjectName()))
-            && (this.getSubjectImg() == null ? other.getSubjectImg() == null : this.getSubjectImg().equals(other.getSubjectImg()))
-            && (this.getSubjectUrll() == null ? other.getSubjectUrll() == null : this.getSubjectUrll().equals(other.getSubjectUrll()));
+                && (this.getSubjectId() == null ? other.getSubjectId() == null : this.getSubjectId().equals(other.getSubjectId()))
+                && (this.getSubjectName() == null ? other.getSubjectName() == null : this.getSubjectName().equals(other.getSubjectName()))
+                && (this.getSubjectImg() == null ? other.getSubjectImg() == null : this.getSubjectImg().equals(other.getSubjectImg()))
+                && (this.getSubjectUrll() == null ? other.getSubjectUrll() == null : this.getSubjectUrll().equals(other.getSubjectUrll()));
     }
 
     @Override

@@ -1,8 +1,8 @@
 package com.atguigu.gulimall.product.controller;
 
-import com.atguigu.gulimall.product.vo.TreeVoRequest;
 import com.atguigu.gulimall.product.entity.CategoryEntity;
 import com.atguigu.gulimall.product.service.CategoryService;
+import com.atguigu.gulimall.product.vo.TreeVoRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import utils.R;

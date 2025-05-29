@@ -1,16 +1,15 @@
 package com.atguigu.gulimall.product.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.util.List;
 
 /**
  * 属性分组
+ *
  * @TableName pms_attr_group
  */
-@TableName(value ="pms_attr_group")
+@TableName(value = "pms_attr_group")
 public class AttrGroupEntity {
     /**
      * 分组id
@@ -134,11 +133,11 @@ public class AttrGroupEntity {
         }
         AttrGroupEntity other = (AttrGroupEntity) that;
         return (this.getAttrGroupId() == null ? other.getAttrGroupId() == null : this.getAttrGroupId().equals(other.getAttrGroupId()))
-            && (this.getAttrGroupName() == null ? other.getAttrGroupName() == null : this.getAttrGroupName().equals(other.getAttrGroupName()))
-            && (this.getSort() == null ? other.getSort() == null : this.getSort().equals(other.getSort()))
-            && (this.getDescript() == null ? other.getDescript() == null : this.getDescript().equals(other.getDescript()))
-            && (this.getIcon() == null ? other.getIcon() == null : this.getIcon().equals(other.getIcon()))
-            && (this.getCatalogId() == null ? other.getCatalogId() == null : this.getCatalogId().equals(other.getCatalogId()));
+                && (this.getAttrGroupName() == null ? other.getAttrGroupName() == null : this.getAttrGroupName().equals(other.getAttrGroupName()))
+                && (this.getSort() == null ? other.getSort() == null : this.getSort().equals(other.getSort()))
+                && (this.getDescript() == null ? other.getDescript() == null : this.getDescript().equals(other.getDescript()))
+                && (this.getIcon() == null ? other.getIcon() == null : this.getIcon().equals(other.getIcon()))
+                && (this.getCatalogId() == null ? other.getCatalogId() == null : this.getCatalogId().equals(other.getCatalogId()));
     }
 
     @Override

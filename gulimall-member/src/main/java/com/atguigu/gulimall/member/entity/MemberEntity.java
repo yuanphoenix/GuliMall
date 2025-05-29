@@ -1,17 +1,18 @@
 package com.atguigu.gulimall.member.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
  * 会员
+ *
  * @TableName ums_member
  */
-@TableName(value ="ums_member")
+@TableName(value = "ums_member")
 public class MemberEntity {
     /**
      * id
@@ -426,26 +427,26 @@ public class MemberEntity {
         }
         MemberEntity other = (MemberEntity) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getLevelId() == null ? other.getLevelId() == null : this.getLevelId().equals(other.getLevelId()))
-            && (this.getUsername() == null ? other.getUsername() == null : this.getUsername().equals(other.getUsername()))
-            && (this.getPassword() == null ? other.getPassword() == null : this.getPassword().equals(other.getPassword()))
-            && (this.getNickname() == null ? other.getNickname() == null : this.getNickname().equals(other.getNickname()))
-            && (this.getMobile() == null ? other.getMobile() == null : this.getMobile().equals(other.getMobile()))
-            && (this.getEmail() == null ? other.getEmail() == null : this.getEmail().equals(other.getEmail()))
-            && (this.getHeader() == null ? other.getHeader() == null : this.getHeader().equals(other.getHeader()))
-            && (this.getGender() == null ? other.getGender() == null : this.getGender().equals(other.getGender()))
-            && (this.getBirth() == null ? other.getBirth() == null : this.getBirth().equals(other.getBirth()))
-            && (this.getCity() == null ? other.getCity() == null : this.getCity().equals(other.getCity()))
-            && (this.getJob() == null ? other.getJob() == null : this.getJob().equals(other.getJob()))
-            && (this.getSign() == null ? other.getSign() == null : this.getSign().equals(other.getSign()))
-            && (this.getSourceType() == null ? other.getSourceType() == null : this.getSourceType().equals(other.getSourceType()))
-            && (this.getIntegration() == null ? other.getIntegration() == null : this.getIntegration().equals(other.getIntegration()))
-            && (this.getGrowth() == null ? other.getGrowth() == null : this.getGrowth().equals(other.getGrowth()))
-            && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
-            && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
-            && (this.getWeiboUid() == null ? other.getWeiboUid() == null : this.getWeiboUid().equals(other.getWeiboUid()))
-            && (this.getAccessToken() == null ? other.getAccessToken() == null : this.getAccessToken().equals(other.getAccessToken()))
-            && (this.getExpiresIn() == null ? other.getExpiresIn() == null : this.getExpiresIn().equals(other.getExpiresIn()));
+                && (this.getLevelId() == null ? other.getLevelId() == null : this.getLevelId().equals(other.getLevelId()))
+                && (this.getUsername() == null ? other.getUsername() == null : this.getUsername().equals(other.getUsername()))
+                && (this.getPassword() == null ? other.getPassword() == null : this.getPassword().equals(other.getPassword()))
+                && (this.getNickname() == null ? other.getNickname() == null : this.getNickname().equals(other.getNickname()))
+                && (this.getMobile() == null ? other.getMobile() == null : this.getMobile().equals(other.getMobile()))
+                && (this.getEmail() == null ? other.getEmail() == null : this.getEmail().equals(other.getEmail()))
+                && (this.getHeader() == null ? other.getHeader() == null : this.getHeader().equals(other.getHeader()))
+                && (this.getGender() == null ? other.getGender() == null : this.getGender().equals(other.getGender()))
+                && (this.getBirth() == null ? other.getBirth() == null : this.getBirth().equals(other.getBirth()))
+                && (this.getCity() == null ? other.getCity() == null : this.getCity().equals(other.getCity()))
+                && (this.getJob() == null ? other.getJob() == null : this.getJob().equals(other.getJob()))
+                && (this.getSign() == null ? other.getSign() == null : this.getSign().equals(other.getSign()))
+                && (this.getSourceType() == null ? other.getSourceType() == null : this.getSourceType().equals(other.getSourceType()))
+                && (this.getIntegration() == null ? other.getIntegration() == null : this.getIntegration().equals(other.getIntegration()))
+                && (this.getGrowth() == null ? other.getGrowth() == null : this.getGrowth().equals(other.getGrowth()))
+                && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
+                && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
+                && (this.getWeiboUid() == null ? other.getWeiboUid() == null : this.getWeiboUid().equals(other.getWeiboUid()))
+                && (this.getAccessToken() == null ? other.getAccessToken() == null : this.getAccessToken().equals(other.getAccessToken()))
+                && (this.getExpiresIn() == null ? other.getExpiresIn() == null : this.getExpiresIn().equals(other.getExpiresIn()));
     }
 
     @Override

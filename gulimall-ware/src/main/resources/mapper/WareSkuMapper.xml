@@ -5,15 +5,16 @@
 <mapper namespace="com.atguigu.gulimall.ware.mapper.WareSkuMapper">
 
     <resultMap id="BaseResultMap" type="com.atguigu.gulimall.ware.entity.WareSkuEntity">
-            <id property="id" column="id" />
-            <result property="skuId" column="sku_id" />
-            <result property="wareId" column="ware_id" />
-            <result property="stock" column="stock" />
-            <result property="skuName" column="sku_name" />
-            <result property="stockLocked" column="stock_locked" />
+        <id property="id" column="id"/>
+        <result property="skuId" column="sku_id"/>
+        <result property="wareId" column="ware_id"/>
+        <result property="stock" column="stock"/>
+        <result property="skuName" column="sku_name"/>
+        <result property="stockLocked" column="stock_locked"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,sku_id,ware_id,stock,sku_name,stock_locked
+        id
+        ,sku_id,ware_id,stock,sku_name,stock_locked
     </sql>
 </mapper>

@@ -1,15 +1,15 @@
 package com.atguigu.gulimall.coupon.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
  * 首页专题表【jd首页下面很多专题，每个专题链接新的页面，展示专题商品信息】
+ *
  * @TableName sms_home_subject
  */
-@TableName(value ="sms_home_subject")
+@TableName(value = "sms_home_subject")
 public class HomeSubjectEntity {
     /**
      * id
@@ -177,13 +177,13 @@ public class HomeSubjectEntity {
         }
         HomeSubjectEntity other = (HomeSubjectEntity) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
-            && (this.getTitle() == null ? other.getTitle() == null : this.getTitle().equals(other.getTitle()))
-            && (this.getSubTitle() == null ? other.getSubTitle() == null : this.getSubTitle().equals(other.getSubTitle()))
-            && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
-            && (this.getUrl() == null ? other.getUrl() == null : this.getUrl().equals(other.getUrl()))
-            && (this.getSort() == null ? other.getSort() == null : this.getSort().equals(other.getSort()))
-            && (this.getImg() == null ? other.getImg() == null : this.getImg().equals(other.getImg()));
+                && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
+                && (this.getTitle() == null ? other.getTitle() == null : this.getTitle().equals(other.getTitle()))
+                && (this.getSubTitle() == null ? other.getSubTitle() == null : this.getSubTitle().equals(other.getSubTitle()))
+                && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
+                && (this.getUrl() == null ? other.getUrl() == null : this.getUrl().equals(other.getUrl()))
+                && (this.getSort() == null ? other.getSort() == null : this.getSort().equals(other.getSort()))
+                && (this.getImg() == null ? other.getImg() == null : this.getImg().equals(other.getImg()));
     }
 
     @Override

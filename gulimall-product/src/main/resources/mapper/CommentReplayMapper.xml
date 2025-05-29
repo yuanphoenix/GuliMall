@@ -5,12 +5,13 @@
 <mapper namespace="com.atguigu.gulimall.product.mapper.CommentReplayMapper">
 
     <resultMap id="BaseResultMap" type="com.atguigu.gulimall.product.entity.CommentReplayEntity">
-            <id property="id" column="id" />
-            <result property="commentId" column="comment_id" />
-            <result property="replyId" column="reply_id" />
+        <id property="id" column="id"/>
+        <result property="commentId" column="comment_id"/>
+        <result property="replyId" column="reply_id"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,comment_id,reply_id
+        id
+        ,comment_id,reply_id
     </sql>
 </mapper>

@@ -1,11 +1,11 @@
 package com.atguigu.gulimall.product.service.impl;
 
+import com.atguigu.gulimall.product.entity.BrandEntity;
+import com.atguigu.gulimall.product.mapper.BrandMapper;
+import com.atguigu.gulimall.product.service.BrandService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.atguigu.gulimall.product.entity.BrandEntity;
-import com.atguigu.gulimall.product.service.BrandService;
-import com.atguigu.gulimall.product.mapper.BrandMapper;
 import org.springframework.stereotype.Service;
 import utils.PageDTO;
 import utils.PageUtils;

@@ -5,14 +5,15 @@
 <mapper namespace="com.atguigu.gulimall.member.mapper.MemberCollectSubjectMapper">
 
     <resultMap id="BaseResultMap" type="com.atguigu.gulimall.member.entity.MemberCollectSubjectEntity">
-            <id property="id" column="id" />
-            <result property="subjectId" column="subject_id" />
-            <result property="subjectName" column="subject_name" />
-            <result property="subjectImg" column="subject_img" />
-            <result property="subjectUrll" column="subject_urll" />
+        <id property="id" column="id"/>
+        <result property="subjectId" column="subject_id"/>
+        <result property="subjectName" column="subject_name"/>
+        <result property="subjectImg" column="subject_img"/>
+        <result property="subjectUrll" column="subject_urll"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,subject_id,subject_name,subject_img,subject_urll
+        id
+        ,subject_id,subject_name,subject_img,subject_urll
     </sql>
 </mapper>

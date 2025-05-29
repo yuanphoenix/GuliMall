@@ -1,16 +1,17 @@
 package com.atguigu.gulimall.coupon.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.math.BigDecimal;
 
 /**
  * 商品满减信息
+ *
  * @TableName sms_sku_full_reduction
  */
-@TableName(value ="sms_sku_full_reduction")
+@TableName(value = "sms_sku_full_reduction")
 public class SkuFullReductionEntity {
     /**
      * id
@@ -121,10 +122,10 @@ public class SkuFullReductionEntity {
         }
         SkuFullReductionEntity other = (SkuFullReductionEntity) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getSkuId() == null ? other.getSkuId() == null : this.getSkuId().equals(other.getSkuId()))
-            && (this.getFullPrice() == null ? other.getFullPrice() == null : this.getFullPrice().equals(other.getFullPrice()))
-            && (this.getReducePrice() == null ? other.getReducePrice() == null : this.getReducePrice().equals(other.getReducePrice()))
-            && (this.getAddOther() == null ? other.getAddOther() == null : this.getAddOther().equals(other.getAddOther()));
+                && (this.getSkuId() == null ? other.getSkuId() == null : this.getSkuId().equals(other.getSkuId()))
+                && (this.getFullPrice() == null ? other.getFullPrice() == null : this.getFullPrice().equals(other.getFullPrice()))
+                && (this.getReducePrice() == null ? other.getReducePrice() == null : this.getReducePrice().equals(other.getReducePrice()))
+                && (this.getAddOther() == null ? other.getAddOther() == null : this.getAddOther().equals(other.getAddOther()));
     }
 
     @Override

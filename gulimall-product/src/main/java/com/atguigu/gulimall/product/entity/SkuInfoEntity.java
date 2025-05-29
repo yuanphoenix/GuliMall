@@ -1,16 +1,17 @@
 package com.atguigu.gulimall.product.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.math.BigDecimal;
 
 /**
  * sku信息
+ *
  * @TableName pms_sku_info
  */
-@TableName(value ="pms_sku_info")
+@TableName(value = "pms_sku_info")
 public class SkuInfoEntity {
     /**
      * skuId
@@ -235,16 +236,16 @@ public class SkuInfoEntity {
         }
         SkuInfoEntity other = (SkuInfoEntity) that;
         return (this.getSkuId() == null ? other.getSkuId() == null : this.getSkuId().equals(other.getSkuId()))
-            && (this.getSpuId() == null ? other.getSpuId() == null : this.getSpuId().equals(other.getSpuId()))
-            && (this.getSkuName() == null ? other.getSkuName() == null : this.getSkuName().equals(other.getSkuName()))
-            && (this.getSkuDesc() == null ? other.getSkuDesc() == null : this.getSkuDesc().equals(other.getSkuDesc()))
-            && (this.getCatalogId() == null ? other.getCatalogId() == null : this.getCatalogId().equals(other.getCatalogId()))
-            && (this.getBrandId() == null ? other.getBrandId() == null : this.getBrandId().equals(other.getBrandId()))
-            && (this.getSkuDefaultImg() == null ? other.getSkuDefaultImg() == null : this.getSkuDefaultImg().equals(other.getSkuDefaultImg()))
-            && (this.getSkuTitle() == null ? other.getSkuTitle() == null : this.getSkuTitle().equals(other.getSkuTitle()))
-            && (this.getSkuSubtitle() == null ? other.getSkuSubtitle() == null : this.getSkuSubtitle().equals(other.getSkuSubtitle()))
-            && (this.getPrice() == null ? other.getPrice() == null : this.getPrice().equals(other.getPrice()))
-            && (this.getSaleCount() == null ? other.getSaleCount() == null : this.getSaleCount().equals(other.getSaleCount()));
+                && (this.getSpuId() == null ? other.getSpuId() == null : this.getSpuId().equals(other.getSpuId()))
+                && (this.getSkuName() == null ? other.getSkuName() == null : this.getSkuName().equals(other.getSkuName()))
+                && (this.getSkuDesc() == null ? other.getSkuDesc() == null : this.getSkuDesc().equals(other.getSkuDesc()))
+                && (this.getCatalogId() == null ? other.getCatalogId() == null : this.getCatalogId().equals(other.getCatalogId()))
+                && (this.getBrandId() == null ? other.getBrandId() == null : this.getBrandId().equals(other.getBrandId()))
+                && (this.getSkuDefaultImg() == null ? other.getSkuDefaultImg() == null : this.getSkuDefaultImg().equals(other.getSkuDefaultImg()))
+                && (this.getSkuTitle() == null ? other.getSkuTitle() == null : this.getSkuTitle().equals(other.getSkuTitle()))
+                && (this.getSkuSubtitle() == null ? other.getSkuSubtitle() == null : this.getSkuSubtitle().equals(other.getSkuSubtitle()))
+                && (this.getPrice() == null ? other.getPrice() == null : this.getPrice().equals(other.getPrice()))
+                && (this.getSaleCount() == null ? other.getSaleCount() == null : this.getSaleCount().equals(other.getSaleCount()));
     }
 
     @Override

@@ -1,15 +1,15 @@
 package com.atguigu.gulimall.ware.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
  * 库存工作单
+ *
  * @TableName wms_ware_order_task_detail
  */
-@TableName(value ="wms_ware_order_task_detail")
+@TableName(value = "wms_ware_order_task_detail")
 public class WareOrderTaskDetailEntity {
     /**
      * id
@@ -158,12 +158,12 @@ public class WareOrderTaskDetailEntity {
         }
         WareOrderTaskDetailEntity other = (WareOrderTaskDetailEntity) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getSkuId() == null ? other.getSkuId() == null : this.getSkuId().equals(other.getSkuId()))
-            && (this.getSkuName() == null ? other.getSkuName() == null : this.getSkuName().equals(other.getSkuName()))
-            && (this.getSkuNum() == null ? other.getSkuNum() == null : this.getSkuNum().equals(other.getSkuNum()))
-            && (this.getTaskId() == null ? other.getTaskId() == null : this.getTaskId().equals(other.getTaskId()))
-            && (this.getWareId() == null ? other.getWareId() == null : this.getWareId().equals(other.getWareId()))
-            && (this.getLockStatus() == null ? other.getLockStatus() == null : this.getLockStatus().equals(other.getLockStatus()));
+                && (this.getSkuId() == null ? other.getSkuId() == null : this.getSkuId().equals(other.getSkuId()))
+                && (this.getSkuName() == null ? other.getSkuName() == null : this.getSkuName().equals(other.getSkuName()))
+                && (this.getSkuNum() == null ? other.getSkuNum() == null : this.getSkuNum().equals(other.getSkuNum()))
+                && (this.getTaskId() == null ? other.getTaskId() == null : this.getTaskId().equals(other.getTaskId()))
+                && (this.getWareId() == null ? other.getWareId() == null : this.getWareId().equals(other.getWareId()))
+                && (this.getLockStatus() == null ? other.getLockStatus() == null : this.getLockStatus().equals(other.getLockStatus()));
     }
 
     @Override

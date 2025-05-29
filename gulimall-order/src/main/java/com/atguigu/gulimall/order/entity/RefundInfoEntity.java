@@ -1,16 +1,17 @@
 package com.atguigu.gulimall.order.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.math.BigDecimal;
 
 /**
  * 退款信息
+ *
  * @TableName oms_refund_info
  */
-@TableName(value ="oms_refund_info")
+@TableName(value = "oms_refund_info")
 public class RefundInfoEntity {
     /**
      * id
@@ -44,7 +45,7 @@ public class RefundInfoEntity {
     private Integer refundChannel;
 
     /**
-     * 
+     *
      */
     private String refundContent;
 
@@ -133,14 +134,14 @@ public class RefundInfoEntity {
     }
 
     /**
-     * 
+     *
      */
     public String getRefundContent() {
         return refundContent;
     }
 
     /**
-     * 
+     *
      */
     public void setRefundContent(String refundContent) {
         this.refundContent = refundContent;
@@ -159,12 +160,12 @@ public class RefundInfoEntity {
         }
         RefundInfoEntity other = (RefundInfoEntity) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getOrderReturnId() == null ? other.getOrderReturnId() == null : this.getOrderReturnId().equals(other.getOrderReturnId()))
-            && (this.getRefund() == null ? other.getRefund() == null : this.getRefund().equals(other.getRefund()))
-            && (this.getRefundSn() == null ? other.getRefundSn() == null : this.getRefundSn().equals(other.getRefundSn()))
-            && (this.getRefundStatus() == null ? other.getRefundStatus() == null : this.getRefundStatus().equals(other.getRefundStatus()))
-            && (this.getRefundChannel() == null ? other.getRefundChannel() == null : this.getRefundChannel().equals(other.getRefundChannel()))
-            && (this.getRefundContent() == null ? other.getRefundContent() == null : this.getRefundContent().equals(other.getRefundContent()));
+                && (this.getOrderReturnId() == null ? other.getOrderReturnId() == null : this.getOrderReturnId().equals(other.getOrderReturnId()))
+                && (this.getRefund() == null ? other.getRefund() == null : this.getRefund().equals(other.getRefund()))
+                && (this.getRefundSn() == null ? other.getRefundSn() == null : this.getRefundSn().equals(other.getRefundSn()))
+                && (this.getRefundStatus() == null ? other.getRefundStatus() == null : this.getRefundStatus().equals(other.getRefundStatus()))
+                && (this.getRefundChannel() == null ? other.getRefundChannel() == null : this.getRefundChannel().equals(other.getRefundChannel()))
+                && (this.getRefundContent() == null ? other.getRefundContent() == null : this.getRefundContent().equals(other.getRefundContent()));
     }
 
     @Override

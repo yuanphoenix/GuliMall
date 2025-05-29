@@ -9,62 +9,62 @@ import utils.R;
 import java.util.List;
 
 /**
-* <p>
-    * 库存工作单 前端控制器
-    * </p>
-*
-* @author tifa
-* @since 2025-05-09
-*/
+ * <p>
+ * 库存工作单 前端控制器
+ * </p>
+ *
+ * @author tifa
+ * @since 2025-05-09
+ */
 @RestController
 @RequestMapping("/ware/wareOrderTaskDetail")
 public class WareOrderTaskDetailController {
 
-@Autowired
-private WareOrderTaskDetailService wareOrderTaskDetailService;
+    @Autowired
+    private WareOrderTaskDetailService wareOrderTaskDetailService;
 
-/**
-* 获取所有数据
-*/
-@GetMapping("/list")
-public R list() {
-List<WareOrderTaskDetailEntity> list = wareOrderTaskDetailService.list();
-    return R.ok().put("data", list);
+    /**
+     * 获取所有数据
+     */
+    @GetMapping("/list")
+    public R list() {
+        List<WareOrderTaskDetailEntity> list = wareOrderTaskDetailService.list();
+        return R.ok().put("data", list);
     }
 
     /**
-    * 根据ID获取数据
-    */
+     * 根据ID获取数据
+     */
     @GetMapping("/info/{id}")
     public R info(@PathVariable("id") Long id) {
-    WareOrderTaskDetailEntity entity = wareOrderTaskDetailService.getById(id);
-    return R.ok().put("data", entity);
+        WareOrderTaskDetailEntity entity = wareOrderTaskDetailService.getById(id);
+        return R.ok().put("data", entity);
     }
 
     /**
-    * 保存数据
-    */
+     * 保存数据
+     */
     @PostMapping("/save")
     public R save(@RequestBody WareOrderTaskDetailEntity wareOrderTaskDetail) {
-    boolean saved = wareOrderTaskDetailService.save(wareOrderTaskDetail);
-    return saved ? R.ok() : R.error();
+        boolean saved = wareOrderTaskDetailService.save(wareOrderTaskDetail);
+        return saved ? R.ok() : R.error();
     }
 
     /**
-    * 修改数据
-    */
+     * 修改数据
+     */
     @PostMapping("/update")
     public R update(@RequestBody WareOrderTaskDetailEntity wareOrderTaskDetail) {
-    boolean updated = wareOrderTaskDetailService.updateById(wareOrderTaskDetail);
-    return updated ? R.ok() : R.error();
+        boolean updated = wareOrderTaskDetailService.updateById(wareOrderTaskDetail);
+        return updated ? R.ok() : R.error();
     }
 
     /**
-    * 删除数据
-    */
+     * 删除数据
+     */
     @PostMapping("/delete/{id}")
     public R delete(@PathVariable("id") Long id) {
-    boolean removed = wareOrderTaskDetailService.removeById(id);
-    return removed ? R.ok() : R.error();
+        boolean removed = wareOrderTaskDetailService.removeById(id);
+        return removed ? R.ok() : R.error();
     }
-    }
+}

@@ -9,62 +9,62 @@ import utils.R;
 import java.util.List;
 
 /**
-* <p>
-    * spu信息 前端控制器
-    * </p>
-*
-* @author tifa
-* @since 2025-05-09
-*/
+ * <p>
+ * spu信息 前端控制器
+ * </p>
+ *
+ * @author tifa
+ * @since 2025-05-09
+ */
 @RestController
 @RequestMapping("/product/spuInfo")
 public class SpuInfoController {
 
-@Autowired
-private SpuInfoService spuInfoService;
+    @Autowired
+    private SpuInfoService spuInfoService;
 
-/**
-* 获取所有数据
-*/
-@GetMapping("/list")
-public R list() {
-List<SpuInfoEntity> list = spuInfoService.list();
-    return R.ok().put("data", list);
+    /**
+     * 获取所有数据
+     */
+    @GetMapping("/list")
+    public R list() {
+        List<SpuInfoEntity> list = spuInfoService.list();
+        return R.ok().put("data", list);
     }
 
     /**
-    * 根据ID获取数据
-    */
+     * 根据ID获取数据
+     */
     @GetMapping("/info/{id}")
     public R info(@PathVariable("id") Long id) {
-    SpuInfoEntity entity = spuInfoService.getById(id);
-    return R.ok().put("data", entity);
+        SpuInfoEntity entity = spuInfoService.getById(id);
+        return R.ok().put("data", entity);
     }
 
     /**
-    * 保存数据
-    */
+     * 保存数据
+     */
     @PostMapping("/save")
     public R save(@RequestBody SpuInfoEntity spuInfo) {
-    boolean saved = spuInfoService.save(spuInfo);
-    return saved ? R.ok() : R.error();
+        boolean saved = spuInfoService.save(spuInfo);
+        return saved ? R.ok() : R.error();
     }
 
     /**
-    * 修改数据
-    */
+     * 修改数据
+     */
     @PostMapping("/update")
     public R update(@RequestBody SpuInfoEntity spuInfo) {
-    boolean updated = spuInfoService.updateById(spuInfo);
-    return updated ? R.ok() : R.error();
+        boolean updated = spuInfoService.updateById(spuInfo);
+        return updated ? R.ok() : R.error();
     }
 
     /**
-    * 删除数据
-    */
+     * 删除数据
+     */
     @PostMapping("/delete/{id}")
     public R delete(@PathVariable("id") Long id) {
-    boolean removed = spuInfoService.removeById(id);
-    return removed ? R.ok() : R.error();
+        boolean removed = spuInfoService.removeById(id);
+        return removed ? R.ok() : R.error();
     }
-    }
+}

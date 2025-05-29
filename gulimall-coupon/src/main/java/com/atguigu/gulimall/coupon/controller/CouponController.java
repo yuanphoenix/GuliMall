@@ -3,7 +3,6 @@ package com.atguigu.gulimall.coupon.controller;
 import com.atguigu.gulimall.coupon.entity.CouponEntity;
 import com.atguigu.gulimall.coupon.service.CouponService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
 import utils.R;

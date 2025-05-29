@@ -5,17 +5,18 @@
 <mapper namespace="com.atguigu.gulimall.order.mapper.OrderSettingMapper">
 
     <resultMap id="BaseResultMap" type="com.atguigu.gulimall.order.entity.OrderSettingEntity">
-            <id property="id" column="id" />
-            <result property="flashOrderOvertime" column="flash_order_overtime" />
-            <result property="normalOrderOvertime" column="normal_order_overtime" />
-            <result property="confirmOvertime" column="confirm_overtime" />
-            <result property="finishOvertime" column="finish_overtime" />
-            <result property="commentOvertime" column="comment_overtime" />
-            <result property="memberLevel" column="member_level" />
+        <id property="id" column="id"/>
+        <result property="flashOrderOvertime" column="flash_order_overtime"/>
+        <result property="normalOrderOvertime" column="normal_order_overtime"/>
+        <result property="confirmOvertime" column="confirm_overtime"/>
+        <result property="finishOvertime" column="finish_overtime"/>
+        <result property="commentOvertime" column="comment_overtime"/>
+        <result property="memberLevel" column="member_level"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,flash_order_overtime,normal_order_overtime,confirm_overtime,finish_overtime,comment_overtime,
+        id
+        ,flash_order_overtime,normal_order_overtime,confirm_overtime,finish_overtime,comment_overtime,
         member_level
     </sql>
 </mapper>

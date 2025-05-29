@@ -5,13 +5,14 @@
 <mapper namespace="com.atguigu.gulimall.coupon.mapper.CouponSpuCategoryRelationMapper">
 
     <resultMap id="BaseResultMap" type="com.atguigu.gulimall.coupon.entity.CouponSpuCategoryRelationEntity">
-            <id property="id" column="id" />
-            <result property="couponId" column="coupon_id" />
-            <result property="categoryId" column="category_id" />
-            <result property="categoryName" column="category_name" />
+        <id property="id" column="id"/>
+        <result property="couponId" column="coupon_id"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="categoryName" column="category_name"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,coupon_id,category_id,category_name
+        id
+        ,coupon_id,category_id,category_name
     </sql>
 </mapper>

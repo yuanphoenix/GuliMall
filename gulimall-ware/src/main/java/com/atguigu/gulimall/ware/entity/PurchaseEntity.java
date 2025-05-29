@@ -1,204 +1,205 @@
 package com.atguigu.gulimall.ware.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
  * 采购单
+ *
  * @TableName wms_purchase
  */
-@TableName(value ="wms_purchase")
+@TableName(value = "wms_purchase")
 public class PurchaseEntity {
     /**
-     * 
+     *
      */
     @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
-     * 
+     *
      */
     private Long assigneeId;
 
     /**
-     * 
+     *
      */
     private String assigneeName;
 
     /**
-     * 
+     *
      */
     private String phone;
 
     /**
-     * 
+     *
      */
     private Integer priority;
 
     /**
-     * 
+     *
      */
     private Integer status;
 
     /**
-     * 
+     *
      */
     private Long wareId;
 
     /**
-     * 
+     *
      */
     private BigDecimal amount;
 
     /**
-     * 
+     *
      */
     private LocalDateTime createTime;
 
     /**
-     * 
+     *
      */
     private LocalDateTime updateTime;
 
     /**
-     * 
+     *
      */
     public Long getId() {
         return id;
     }
 
     /**
-     * 
+     *
      */
     public void setId(Long id) {
         this.id = id;
     }
 
     /**
-     * 
+     *
      */
     public Long getAssigneeId() {
         return assigneeId;
     }
 
     /**
-     * 
+     *
      */
     public void setAssigneeId(Long assigneeId) {
         this.assigneeId = assigneeId;
     }
 
     /**
-     * 
+     *
      */
     public String getAssigneeName() {
         return assigneeName;
     }
 
     /**
-     * 
+     *
      */
     public void setAssigneeName(String assigneeName) {
         this.assigneeName = assigneeName;
     }
 
     /**
-     * 
+     *
      */
     public String getPhone() {
         return phone;
     }
 
     /**
-     * 
+     *
      */
     public void setPhone(String phone) {
         this.phone = phone;
     }
 
     /**
-     * 
+     *
      */
     public Integer getPriority() {
         return priority;
     }
 
     /**
-     * 
+     *
      */
     public void setPriority(Integer priority) {
         this.priority = priority;
     }
 
     /**
-     * 
+     *
      */
     public Integer getStatus() {
         return status;
     }
 
     /**
-     * 
+     *
      */
     public void setStatus(Integer status) {
         this.status = status;
     }
 
     /**
-     * 
+     *
      */
     public Long getWareId() {
         return wareId;
     }
 
     /**
-     * 
+     *
      */
     public void setWareId(Long wareId) {
         this.wareId = wareId;
     }
 
     /**
-     * 
+     *
      */
     public BigDecimal getAmount() {
         return amount;
     }
 
     /**
-     * 
+     *
      */
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
     /**
-     * 
+     *
      */
     public LocalDateTime getCreateTime() {
         return createTime;
     }
 
     /**
-     * 
+     *
      */
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
     }
 
     /**
-     * 
+     *
      */
     public LocalDateTime getUpdateTime() {
         return updateTime;
     }
 
     /**
-     * 
+     *
      */
     public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
@@ -217,15 +218,15 @@ public class PurchaseEntity {
         }
         PurchaseEntity other = (PurchaseEntity) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getAssigneeId() == null ? other.getAssigneeId() == null : this.getAssigneeId().equals(other.getAssigneeId()))
-            && (this.getAssigneeName() == null ? other.getAssigneeName() == null : this.getAssigneeName().equals(other.getAssigneeName()))
-            && (this.getPhone() == null ? other.getPhone() == null : this.getPhone().equals(other.getPhone()))
-            && (this.getPriority() == null ? other.getPriority() == null : this.getPriority().equals(other.getPriority()))
-            && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
-            && (this.getWareId() == null ? other.getWareId() == null : this.getWareId().equals(other.getWareId()))
-            && (this.getAmount() == null ? other.getAmount() == null : this.getAmount().equals(other.getAmount()))
-            && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
-            && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()));
+                && (this.getAssigneeId() == null ? other.getAssigneeId() == null : this.getAssigneeId().equals(other.getAssigneeId()))
+                && (this.getAssigneeName() == null ? other.getAssigneeName() == null : this.getAssigneeName().equals(other.getAssigneeName()))
+                && (this.getPhone() == null ? other.getPhone() == null : this.getPhone().equals(other.getPhone()))
+                && (this.getPriority() == null ? other.getPriority() == null : this.getPriority().equals(other.getPriority()))
+                && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
+                && (this.getWareId() == null ? other.getWareId() == null : this.getWareId().equals(other.getWareId()))
+                && (this.getAmount() == null ? other.getAmount() == null : this.getAmount().equals(other.getAmount()))
+                && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
+                && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()));
     }
 
     @Override

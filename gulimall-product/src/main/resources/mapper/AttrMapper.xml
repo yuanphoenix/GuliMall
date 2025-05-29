@@ -5,20 +5,21 @@
 <mapper namespace="com.atguigu.gulimall.product.mapper.AttrMapper">
 
     <resultMap id="BaseResultMap" type="com.atguigu.gulimall.product.entity.AttrEntity">
-            <id property="attrId" column="attr_id" />
-            <result property="attrName" column="attr_name" />
-            <result property="searchType" column="search_type" />
-            <result property="valueType" column="value_type" />
-            <result property="icon" column="icon" />
-            <result property="valueSelect" column="value_select" />
-            <result property="attrType" column="attr_type" />
-            <result property="enable" column="enable" />
-            <result property="catalogId" column="catalog_id" />
-            <result property="showDesc" column="show_desc" />
+        <id property="attrId" column="attr_id"/>
+        <result property="attrName" column="attr_name"/>
+        <result property="searchType" column="search_type"/>
+        <result property="valueType" column="value_type"/>
+        <result property="icon" column="icon"/>
+        <result property="valueSelect" column="value_select"/>
+        <result property="attrType" column="attr_type"/>
+        <result property="enable" column="enable"/>
+        <result property="catalogId" column="catalog_id"/>
+        <result property="showDesc" column="show_desc"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        attr_id,attr_name,search_type,value_type,icon,value_select,
+        attr_id
+        ,attr_name,search_type,value_type,icon,value_select,
         attr_type,enable,catelog_id,show_desc
     </sql>
 </mapper>

@@ -1,15 +1,14 @@
 package com.atguigu.gulimall.product.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
  * spu信息介绍
+ *
  * @TableName pms_spu_info_desc
  */
-@TableName(value ="pms_spu_info_desc")
+@TableName(value = "pms_spu_info_desc")
 public class SpuInfoDescEntity {
     /**
      * 商品id
@@ -63,7 +62,7 @@ public class SpuInfoDescEntity {
         }
         SpuInfoDescEntity other = (SpuInfoDescEntity) that;
         return (this.getSpuId() == null ? other.getSpuId() == null : this.getSpuId().equals(other.getSpuId()))
-            && (this.getDecript() == null ? other.getDecript() == null : this.getDecript().equals(other.getDecript()));
+                && (this.getDecript() == null ? other.getDecript() == null : this.getDecript().equals(other.getDecript()));
     }
 
     @Override

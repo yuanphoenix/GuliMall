@@ -1,17 +1,18 @@
 package com.atguigu.gulimall.order.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
  * 订单退货申请
+ *
  * @TableName oms_order_return_apply
  */
-@TableName(value ="oms_order_return_apply")
+@TableName(value = "oms_order_return_apply")
 public class OrderReturnApplyEntity {
     /**
      * id
@@ -559,33 +560,33 @@ public class OrderReturnApplyEntity {
         }
         OrderReturnApplyEntity other = (OrderReturnApplyEntity) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getOrderId() == null ? other.getOrderId() == null : this.getOrderId().equals(other.getOrderId()))
-            && (this.getSkuId() == null ? other.getSkuId() == null : this.getSkuId().equals(other.getSkuId()))
-            && (this.getOrderSn() == null ? other.getOrderSn() == null : this.getOrderSn().equals(other.getOrderSn()))
-            && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
-            && (this.getMemberUsername() == null ? other.getMemberUsername() == null : this.getMemberUsername().equals(other.getMemberUsername()))
-            && (this.getReturnAmount() == null ? other.getReturnAmount() == null : this.getReturnAmount().equals(other.getReturnAmount()))
-            && (this.getReturnName() == null ? other.getReturnName() == null : this.getReturnName().equals(other.getReturnName()))
-            && (this.getReturnPhone() == null ? other.getReturnPhone() == null : this.getReturnPhone().equals(other.getReturnPhone()))
-            && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
-            && (this.getHandleTime() == null ? other.getHandleTime() == null : this.getHandleTime().equals(other.getHandleTime()))
-            && (this.getSkuImg() == null ? other.getSkuImg() == null : this.getSkuImg().equals(other.getSkuImg()))
-            && (this.getSkuName() == null ? other.getSkuName() == null : this.getSkuName().equals(other.getSkuName()))
-            && (this.getSkuBrand() == null ? other.getSkuBrand() == null : this.getSkuBrand().equals(other.getSkuBrand()))
-            && (this.getSkuAttrsVals() == null ? other.getSkuAttrsVals() == null : this.getSkuAttrsVals().equals(other.getSkuAttrsVals()))
-            && (this.getSkuCount() == null ? other.getSkuCount() == null : this.getSkuCount().equals(other.getSkuCount()))
-            && (this.getSkuPrice() == null ? other.getSkuPrice() == null : this.getSkuPrice().equals(other.getSkuPrice()))
-            && (this.getSkuRealPrice() == null ? other.getSkuRealPrice() == null : this.getSkuRealPrice().equals(other.getSkuRealPrice()))
-            && (this.getReason() == null ? other.getReason() == null : this.getReason().equals(other.getReason()))
-            && (this.getDescription述() == null ? other.getDescription述() == null : this.getDescription述().equals(other.getDescription述()))
-            && (this.getDescPics() == null ? other.getDescPics() == null : this.getDescPics().equals(other.getDescPics()))
-            && (this.getHandleNote() == null ? other.getHandleNote() == null : this.getHandleNote().equals(other.getHandleNote()))
-            && (this.getHandleMan() == null ? other.getHandleMan() == null : this.getHandleMan().equals(other.getHandleMan()))
-            && (this.getReceiveMan() == null ? other.getReceiveMan() == null : this.getReceiveMan().equals(other.getReceiveMan()))
-            && (this.getReceiveTime() == null ? other.getReceiveTime() == null : this.getReceiveTime().equals(other.getReceiveTime()))
-            && (this.getReceiveNote() == null ? other.getReceiveNote() == null : this.getReceiveNote().equals(other.getReceiveNote()))
-            && (this.getReceivePhone() == null ? other.getReceivePhone() == null : this.getReceivePhone().equals(other.getReceivePhone()))
-            && (this.getCompanyAddress() == null ? other.getCompanyAddress() == null : this.getCompanyAddress().equals(other.getCompanyAddress()));
+                && (this.getOrderId() == null ? other.getOrderId() == null : this.getOrderId().equals(other.getOrderId()))
+                && (this.getSkuId() == null ? other.getSkuId() == null : this.getSkuId().equals(other.getSkuId()))
+                && (this.getOrderSn() == null ? other.getOrderSn() == null : this.getOrderSn().equals(other.getOrderSn()))
+                && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
+                && (this.getMemberUsername() == null ? other.getMemberUsername() == null : this.getMemberUsername().equals(other.getMemberUsername()))
+                && (this.getReturnAmount() == null ? other.getReturnAmount() == null : this.getReturnAmount().equals(other.getReturnAmount()))
+                && (this.getReturnName() == null ? other.getReturnName() == null : this.getReturnName().equals(other.getReturnName()))
+                && (this.getReturnPhone() == null ? other.getReturnPhone() == null : this.getReturnPhone().equals(other.getReturnPhone()))
+                && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
+                && (this.getHandleTime() == null ? other.getHandleTime() == null : this.getHandleTime().equals(other.getHandleTime()))
+                && (this.getSkuImg() == null ? other.getSkuImg() == null : this.getSkuImg().equals(other.getSkuImg()))
+                && (this.getSkuName() == null ? other.getSkuName() == null : this.getSkuName().equals(other.getSkuName()))
+                && (this.getSkuBrand() == null ? other.getSkuBrand() == null : this.getSkuBrand().equals(other.getSkuBrand()))
+                && (this.getSkuAttrsVals() == null ? other.getSkuAttrsVals() == null : this.getSkuAttrsVals().equals(other.getSkuAttrsVals()))
+                && (this.getSkuCount() == null ? other.getSkuCount() == null : this.getSkuCount().equals(other.getSkuCount()))
+                && (this.getSkuPrice() == null ? other.getSkuPrice() == null : this.getSkuPrice().equals(other.getSkuPrice()))
+                && (this.getSkuRealPrice() == null ? other.getSkuRealPrice() == null : this.getSkuRealPrice().equals(other.getSkuRealPrice()))
+                && (this.getReason() == null ? other.getReason() == null : this.getReason().equals(other.getReason()))
+                && (this.getDescription述() == null ? other.getDescription述() == null : this.getDescription述().equals(other.getDescription述()))
+                && (this.getDescPics() == null ? other.getDescPics() == null : this.getDescPics().equals(other.getDescPics()))
+                && (this.getHandleNote() == null ? other.getHandleNote() == null : this.getHandleNote().equals(other.getHandleNote()))
+                && (this.getHandleMan() == null ? other.getHandleMan() == null : this.getHandleMan().equals(other.getHandleMan()))
+                && (this.getReceiveMan() == null ? other.getReceiveMan() == null : this.getReceiveMan().equals(other.getReceiveMan()))
+                && (this.getReceiveTime() == null ? other.getReceiveTime() == null : this.getReceiveTime().equals(other.getReceiveTime()))
+                && (this.getReceiveNote() == null ? other.getReceiveNote() == null : this.getReceiveNote().equals(other.getReceiveNote()))
+                && (this.getReceivePhone() == null ? other.getReceivePhone() == null : this.getReceivePhone().equals(other.getReceivePhone()))
+                && (this.getCompanyAddress() == null ? other.getCompanyAddress() == null : this.getCompanyAddress().equals(other.getCompanyAddress()));
     }
 
     @Override

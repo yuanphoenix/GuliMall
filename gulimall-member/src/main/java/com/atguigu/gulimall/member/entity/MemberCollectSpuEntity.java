@@ -1,16 +1,16 @@
 package com.atguigu.gulimall.member.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.time.LocalDateTime;
 
 /**
  * 会员收藏的商品
+ *
  * @TableName ums_member_collect_spu
  */
-@TableName(value ="ums_member_collect_spu")
+@TableName(value = "ums_member_collect_spu")
 public class MemberCollectSpuEntity {
     /**
      * id
@@ -140,11 +140,11 @@ public class MemberCollectSpuEntity {
         }
         MemberCollectSpuEntity other = (MemberCollectSpuEntity) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getMemberId() == null ? other.getMemberId() == null : this.getMemberId().equals(other.getMemberId()))
-            && (this.getSpuId() == null ? other.getSpuId() == null : this.getSpuId().equals(other.getSpuId()))
-            && (this.getSpuName() == null ? other.getSpuName() == null : this.getSpuName().equals(other.getSpuName()))
-            && (this.getSpuImg() == null ? other.getSpuImg() == null : this.getSpuImg().equals(other.getSpuImg()))
-            && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()));
+                && (this.getMemberId() == null ? other.getMemberId() == null : this.getMemberId().equals(other.getMemberId()))
+                && (this.getSpuId() == null ? other.getSpuId() == null : this.getSpuId().equals(other.getSpuId()))
+                && (this.getSpuName() == null ? other.getSpuName() == null : this.getSpuName().equals(other.getSpuName()))
+                && (this.getSpuImg() == null ? other.getSpuImg() == null : this.getSpuImg().equals(other.getSpuImg()))
+                && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()));
     }
 
     @Override

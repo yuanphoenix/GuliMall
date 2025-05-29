@@ -5,17 +5,18 @@
 <mapper namespace="com.atguigu.gulimall.coupon.mapper.SeckillPromotionMapper">
 
     <resultMap id="BaseResultMap" type="com.atguigu.gulimall.coupon.entity.SeckillPromotionEntity">
-            <id property="id" column="id" />
-            <result property="title" column="title" />
-            <result property="startTime" column="start_time" />
-            <result property="endTime" column="end_time" />
-            <result property="status" column="status" />
-            <result property="createTime" column="create_time" />
-            <result property="userId" column="user_id" />
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="userId" column="user_id"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,title,start_time,end_time,status,create_time,
+        id
+        ,title,start_time,end_time,status,create_time,
         user_id
     </sql>
 </mapper>

@@ -1,16 +1,17 @@
 package com.atguigu.gulimall.coupon.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.math.BigDecimal;
 
 /**
  * 秒杀活动商品关联
+ *
  * @TableName sms_seckill_sku_relation
  */
-@TableName(value ="sms_seckill_sku_relation")
+@TableName(value = "sms_seckill_sku_relation")
 public class SeckillSkuRelationEntity {
     /**
      * id
@@ -178,13 +179,13 @@ public class SeckillSkuRelationEntity {
         }
         SeckillSkuRelationEntity other = (SeckillSkuRelationEntity) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getPromotionId() == null ? other.getPromotionId() == null : this.getPromotionId().equals(other.getPromotionId()))
-            && (this.getPromotionSessionId() == null ? other.getPromotionSessionId() == null : this.getPromotionSessionId().equals(other.getPromotionSessionId()))
-            && (this.getSkuId() == null ? other.getSkuId() == null : this.getSkuId().equals(other.getSkuId()))
-            && (this.getSeckillPrice() == null ? other.getSeckillPrice() == null : this.getSeckillPrice().equals(other.getSeckillPrice()))
-            && (this.getSeckillCount() == null ? other.getSeckillCount() == null : this.getSeckillCount().equals(other.getSeckillCount()))
-            && (this.getSeckillLimit() == null ? other.getSeckillLimit() == null : this.getSeckillLimit().equals(other.getSeckillLimit()))
-            && (this.getSeckillSort() == null ? other.getSeckillSort() == null : this.getSeckillSort().equals(other.getSeckillSort()));
+                && (this.getPromotionId() == null ? other.getPromotionId() == null : this.getPromotionId().equals(other.getPromotionId()))
+                && (this.getPromotionSessionId() == null ? other.getPromotionSessionId() == null : this.getPromotionSessionId().equals(other.getPromotionSessionId()))
+                && (this.getSkuId() == null ? other.getSkuId() == null : this.getSkuId().equals(other.getSkuId()))
+                && (this.getSeckillPrice() == null ? other.getSeckillPrice() == null : this.getSeckillPrice().equals(other.getSeckillPrice()))
+                && (this.getSeckillCount() == null ? other.getSeckillCount() == null : this.getSeckillCount().equals(other.getSeckillCount()))
+                && (this.getSeckillLimit() == null ? other.getSeckillLimit() == null : this.getSeckillLimit().equals(other.getSeckillLimit()))
+                && (this.getSeckillSort() == null ? other.getSeckillSort() == null : this.getSeckillSort().equals(other.getSeckillSort()));
     }
 
     @Override

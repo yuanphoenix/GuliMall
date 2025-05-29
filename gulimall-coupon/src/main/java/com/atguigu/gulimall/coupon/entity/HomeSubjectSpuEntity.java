@@ -1,15 +1,15 @@
 package com.atguigu.gulimall.coupon.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
  * 专题商品
+ *
  * @TableName sms_home_subject_spu
  */
-@TableName(value ="sms_home_subject_spu")
+@TableName(value = "sms_home_subject_spu")
 public class HomeSubjectSpuEntity {
     /**
      * id
@@ -120,10 +120,10 @@ public class HomeSubjectSpuEntity {
         }
         HomeSubjectSpuEntity other = (HomeSubjectSpuEntity) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
-            && (this.getSubjectId() == null ? other.getSubjectId() == null : this.getSubjectId().equals(other.getSubjectId()))
-            && (this.getSpuId() == null ? other.getSpuId() == null : this.getSpuId().equals(other.getSpuId()))
-            && (this.getSort() == null ? other.getSort() == null : this.getSort().equals(other.getSort()));
+                && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
+                && (this.getSubjectId() == null ? other.getSubjectId() == null : this.getSubjectId().equals(other.getSubjectId()))
+                && (this.getSpuId() == null ? other.getSpuId() == null : this.getSpuId().equals(other.getSpuId()))
+                && (this.getSort() == null ? other.getSort() == null : this.getSort().equals(other.getSort()));
     }
 
     @Override

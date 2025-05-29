@@ -5,15 +5,16 @@
 <mapper namespace="com.atguigu.gulimall.coupon.mapper.MemberPriceMapper">
 
     <resultMap id="BaseResultMap" type="com.atguigu.gulimall.coupon.entity.MemberPriceEntity">
-            <id property="id" column="id" />
-            <result property="skuId" column="sku_id" />
-            <result property="memberLevelId" column="member_level_id" />
-            <result property="memberLevelName" column="member_level_name" />
-            <result property="memberPrice" column="member_price" />
-            <result property="addOther" column="add_other" />
+        <id property="id" column="id"/>
+        <result property="skuId" column="sku_id"/>
+        <result property="memberLevelId" column="member_level_id"/>
+        <result property="memberLevelName" column="member_level_name"/>
+        <result property="memberPrice" column="member_price"/>
+        <result property="addOther" column="add_other"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,sku_id,member_level_id,member_level_name,member_price,add_other
+        id
+        ,sku_id,member_level_id,member_level_name,member_price,add_other
     </sql>
 </mapper>

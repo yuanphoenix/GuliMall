@@ -5,14 +5,15 @@
 <mapper namespace="com.atguigu.gulimall.coupon.mapper.SkuFullReductionMapper">
 
     <resultMap id="BaseResultMap" type="com.atguigu.gulimall.coupon.entity.SkuFullReductionEntity">
-            <id property="id" column="id" />
-            <result property="skuId" column="sku_id" />
-            <result property="fullPrice" column="full_price" />
-            <result property="reducePrice" column="reduce_price" />
-            <result property="addOther" column="add_other" />
+        <id property="id" column="id"/>
+        <result property="skuId" column="sku_id"/>
+        <result property="fullPrice" column="full_price"/>
+        <result property="reducePrice" column="reduce_price"/>
+        <result property="addOther" column="add_other"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,sku_id,full_price,reduce_price,add_other
+        id
+        ,sku_id,full_price,reduce_price,add_other
     </sql>
 </mapper>
