@@ -3,12 +3,14 @@ package com.atguigu.gulimall.product.service.impl;
 import com.atguigu.gulimall.product.entity.AttrAttrgroupRelationEntity;
 import com.atguigu.gulimall.product.entity.AttrGroupEntity;
 import com.atguigu.gulimall.product.entity.CategoryEntity;
+import com.atguigu.gulimall.product.mapper.AttrAttrgroupRelationMapper;
 import com.atguigu.gulimall.product.mapper.AttrGroupMapper;
 import com.atguigu.gulimall.product.mapper.CategoryMapper;
 import com.atguigu.gulimall.product.service.AttrAttrgroupRelationService;
 import com.atguigu.gulimall.product.vo.AttrResponseVo;
 import com.atguigu.gulimall.product.vo.AttrVo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.atguigu.gulimall.product.entity.AttrEntity;
@@ -18,9 +20,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import utils.PageDTO;
 import utils.PageUtils;
 
+import java.util.LinkedList;
 import java.util.Optional;
 
 /**
@@ -40,6 +44,8 @@ public class AttrServiceImpl extends ServiceImpl<AttrMapper, AttrEntity>
 
 
     private final AttrAttrgroupRelationService attrAttrgroupRelationService;
+    @Autowired
+    private AttrAttrgroupRelationMapper attrAttrgroupRelationMapper;
 
     @Autowired
     public AttrServiceImpl(AttrAttrgroupRelationService attrAttrgroupRelationService) {
@@ -70,19 +76,61 @@ public class AttrServiceImpl extends ServiceImpl<AttrMapper, AttrEntity>
         }
         wrapper.and(o -> o.eq(AttrEntity::getCatalogId, catalogId).or().like(AttrEntity::getAttrName, pageDTO.getKey()));
         IPage<AttrEntity> page = this.page(PageUtils.of(pageDTO), wrapper);
-        return new PageUtils<>(page).convertTo(src -> {
+
+
+        return new PageUtils<>(page).convertTo(attr -> {
             AttrResponseVo attrResponseVo = new AttrResponseVo();
-            BeanUtils.copyProperties(src, attrResponseVo);
-            Optional.ofNullable(attrAttrgroupRelationService.getOne(new LambdaQueryWrapper<AttrAttrgroupRelationEntity>().eq(AttrAttrgroupRelationEntity::getAttrId, src.getAttrId())))
+            BeanUtils.copyProperties(attr, attrResponseVo);
+            Optional.ofNullable(attrAttrgroupRelationService.getOne(new LambdaQueryWrapper<AttrAttrgroupRelationEntity>().eq(AttrAttrgroupRelationEntity::getAttrId, attr.getAttrId())))
                     .ifPresent(one -> {
                         AttrGroupEntity attrGroupEntity = attrGroupMapper.selectById(one.getAttrGroupId());
                         attrResponseVo.setGroupName(attrGroupEntity.getAttrGroupName());
 
-                        CategoryEntity categoryEntity = categoryMapper.selectById(src.getCatalogId());
+                        CategoryEntity categoryEntity = categoryMapper.selectById(attr.getCatalogId());
                         attrResponseVo.setCatalogName(categoryEntity.getName());
                     });
             return attrResponseVo;
         });
+    }
+
+    @Override
+    public AttrResponseVo getAttrResponseVo(Long id) {
+        AttrResponseVo attrResponseVo = new AttrResponseVo();
+        AttrEntity attrEntity = baseMapper.selectById(id);
+        BeanUtils.copyProperties(attrEntity, attrResponseVo);
+        Long catalogId = attrEntity.getCatalogId();
+        LinkedList<Long> catalogIds = new LinkedList<>();
+        while (catalogId != 0) {
+            catalogIds.addFirst(catalogId);
+            CategoryEntity categoryEntity = categoryMapper.selectById(catalogId);
+            attrResponseVo.setCatalogName(ObjectUtils.isEmpty(attrResponseVo.getCatalogName()) ? attrResponseVo.getCatalogName() : categoryEntity.getName());
+            catalogId = categoryEntity.getParentCid();
+        }
+        attrResponseVo.setCatalogPath(catalogIds);
+        AttrAttrgroupRelationEntity attrAttrgroupRelationEntity = attrAttrgroupRelationMapper.selectOne(new LambdaQueryWrapper<AttrAttrgroupRelationEntity>().eq(AttrAttrgroupRelationEntity::getAttrId, id));
+        if (attrAttrgroupRelationEntity != null) {
+            attrResponseVo.setAttrGroupId(attrAttrgroupRelationEntity.getAttrGroupId());
+        }
+
+
+        return attrResponseVo;
+    }
+
+    @Transactional
+    @Override
+    public boolean updateAttrVo(AttrVo attr) {
+        AttrEntity attrEntity = new AttrEntity();
+        BeanUtils.copyProperties(attr, attrEntity);
+        baseMapper.updateById(attrEntity);
+        AttrAttrgroupRelationEntity attrgroupRelationEntity = attrAttrgroupRelationMapper.selectOne(new LambdaQueryWrapper<AttrAttrgroupRelationEntity>().eq(AttrAttrgroupRelationEntity::getAttrId, attr.getAttrId()));
+
+        attrgroupRelationEntity = attrgroupRelationEntity == null ? new AttrAttrgroupRelationEntity() : attrgroupRelationEntity;
+
+        attrgroupRelationEntity.setAttrId(attr.getAttrId());
+        attrgroupRelationEntity.setAttrGroupId(attr.getAttrGroupId());
+
+        return attrAttrgroupRelationMapper.insertOrUpdate(attrgroupRelationEntity);
+
     }
 }
 

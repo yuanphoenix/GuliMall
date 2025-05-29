@@ -127,6 +127,7 @@ public class AttrEntity {
 
     /**
      * 属性图标
+     *
      */
     public void setIcon(String icon) {
         this.icon = icon;

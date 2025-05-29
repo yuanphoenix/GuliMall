@@ -4,9 +4,20 @@ import java.util.List;
 
 public class AttrResponseVo extends AttrVo {
     private String catalogName;
-    private List<Integer> catalogPath;
+    private List<Long> catalogPath;
     private String groupName;
+    private Long attrGroupId;
 
+
+    @Override
+    public Long getAttrGroupId() {
+        return attrGroupId;
+    }
+
+    @Override
+    public void setAttrGroupId(Long attrGroupId) {
+        this.attrGroupId = attrGroupId;
+    }
 
     public String getCatalogName() {
         return catalogName;
@@ -16,11 +27,11 @@ public class AttrResponseVo extends AttrVo {
         this.catalogName = catalogName;
     }
 
-    public List<Integer> getCatalogPath() {
+    public List<Long> getCatalogPath() {
         return catalogPath;
     }
 
-    public void setCatalogPath(List<Integer> catalogPath) {
+    public void setCatalogPath(List<Long> catalogPath) {
         this.catalogPath = catalogPath;
     }
 

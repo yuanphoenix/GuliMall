@@ -17,4 +17,8 @@ public interface AttrService extends IService<AttrEntity> {
     boolean saveVo(AttrVo attr);
 
     IPage<AttrResponseVo> getBaseList(Long catalogId, PageDTO pageDTO);
+
+    AttrResponseVo getAttrResponseVo(Long id);
+
+    boolean updateAttrVo(AttrVo attr);
 }

@@ -23,10 +23,10 @@ public class PageUtils<T> {
         return new Page<>(pageDTO.getPage(), pageDTO.getLimit());
     }
 
-    public <R> Page<R> convertTo(Function<? super T, ? extends R> mapper) {
+    public <E> Page<E> convertTo(Function<? super T, ? extends E> mapper) {
         List<T> records = this.page.getRecords();
-        List<R> list = records.stream().map(mapper).collect(Collectors.toList());
-        Page<R> rPage = new Page<>(page.getCurrent(), page.getSize(), page.getTotal());
+        List<E> list = records.stream().map(mapper).collect(Collectors.toList());
+        Page<E> rPage = new Page<>(page.getCurrent(), page.getSize(), page.getTotal());
         rPage.setRecords(list);
         return rPage;
     }

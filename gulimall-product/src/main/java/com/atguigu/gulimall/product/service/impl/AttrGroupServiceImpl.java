@@ -1,14 +1,23 @@
 package com.atguigu.gulimall.product.service.impl;
 
+import com.atguigu.gulimall.product.entity.CategoryEntity;
+import com.atguigu.gulimall.product.mapper.CategoryMapper;
+import com.atguigu.gulimall.product.vo.AttrResponseVo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.atguigu.gulimall.product.entity.AttrGroupEntity;
 import com.atguigu.gulimall.product.service.AttrGroupService;
 import com.atguigu.gulimall.product.mapper.AttrGroupMapper;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import utils.PageDTO;
 import utils.PageUtils;
+
+import javax.xml.catalog.CatalogManager;
+import java.util.LinkedList;
+import java.util.Optional;
 
 /**
  * @author tifa
@@ -18,6 +27,8 @@ import utils.PageUtils;
 @Service
 public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupMapper, AttrGroupEntity>
         implements AttrGroupService {
+    @Autowired
+    private CategoryMapper categoryMapper;
 
     @Override
     public IPage<AttrGroupEntity> queryPage(PageDTO attrGroupQueryDTO) {

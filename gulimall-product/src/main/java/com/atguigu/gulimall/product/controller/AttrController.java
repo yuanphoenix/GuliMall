@@ -1,7 +1,6 @@
 package com.atguigu.gulimall.product.controller;
 
 import com.atguigu.gulimall.product.entity.AttrEntity;
-import com.atguigu.gulimall.product.entity.AttrGroupEntity;
 import com.atguigu.gulimall.product.service.AttrService;
 import com.atguigu.gulimall.product.vo.AttrResponseVo;
 import com.atguigu.gulimall.product.vo.AttrVo;
@@ -48,7 +47,7 @@ public class AttrController {
      */
     @GetMapping("/info/{id}")
     public R info(@PathVariable("id") Long id) {
-        AttrEntity entity = attrService.getById(id);
+        AttrResponseVo entity = attrService.getAttrResponseVo(id);
         return R.ok().put("data", entity);
     }
 
@@ -65,8 +64,8 @@ public class AttrController {
      * 修改数据
      */
     @PostMapping("/update")
-    public R update(@RequestBody AttrEntity attr) {
-        boolean updated = attrService.updateById(attr);
+    public R update(@RequestBody AttrVo attr) {
+        boolean updated = attrService.updateAttrVo(attr);
         return updated ? R.ok() : R.error();
     }
 
