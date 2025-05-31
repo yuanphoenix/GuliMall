@@ -5,6 +5,7 @@ import com.atguigu.gulimall.product.entity.AttrEntity;
 import com.atguigu.gulimall.product.entity.AttrGroupEntity;
 import com.atguigu.gulimall.product.service.AttrAttrgroupRelationService;
 import com.atguigu.gulimall.product.service.AttrGroupService;
+import com.atguigu.gulimall.product.service.AttrService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,9 @@ import utils.R;
 public class AttrGroupController {
 
   @Autowired
+  private AttrService attrService;
+
+  @Autowired
   private AttrGroupService attrGroupService;
   @Autowired
   private AttrAttrgroupRelationService attrAttrgroupRelationService;
@@ -39,13 +43,13 @@ public class AttrGroupController {
   @GetMapping("/{attrgroupId}/noattr/relation")
   public R getNoAttrRelation(@PathVariable Long attrgroupId, @ModelAttribute PageDTO page) {
     IPage<AttrEntity> result = attrGroupService.getNoAttrRelationByGroupId(attrgroupId, page);
-    return R.ok().put("data", result);
+    return R.ok().put("page", result);
   }
 
 
   @GetMapping("/{attrgroupId}/attr/relation")
   public R listAttrRelationByGroupId(@PathVariable(name = "attrgroupId") Long attrgroupId) {
-    List<AttrEntity> entities = attrGroupService.listAttrRelationByGroupId(attrgroupId);
+    List<AttrEntity> entities = attrService.listAttrWithRelationByGroupId(attrgroupId);
     return R.ok().put("data", entities);
   }
 
@@ -70,7 +74,7 @@ public class AttrGroupController {
 
     IPage<AttrGroupEntity> attrGroupEntityIPage = attrGroupService.queryPage(attrGroupQueryDTO,
         catalogId);
-    return R.ok().put("data", attrGroupEntityIPage);
+    return R.ok().put("page", attrGroupEntityIPage);
   }
 
   /**
@@ -79,7 +83,7 @@ public class AttrGroupController {
   @GetMapping("/list/page")
   public R listPage(@ModelAttribute PageDTO attrGroupQueryDTO) {
     IPage<AttrGroupEntity> attrGroupEntityIPage = attrGroupService.queryPage(attrGroupQueryDTO);
-    return R.ok().put("data", attrGroupEntityIPage);
+    return R.ok().put("page", attrGroupEntityIPage);
   }
 
 

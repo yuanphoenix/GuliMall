@@ -26,4 +26,6 @@ public interface AttrService extends IService<AttrEntity> {
   IPage<AttrResponseVo> getSaleList(Long catalogId, PageDTO pageDTO);
 
   boolean removeAttrAndRelationByIds(List<Long> ids);
+
+  List<AttrEntity> listAttrWithRelationByGroupId(Long attrgroupId);
 }

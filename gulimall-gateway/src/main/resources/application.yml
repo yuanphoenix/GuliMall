@@ -30,6 +30,13 @@ spring:
           filters:
             - StripPrefix=1
 
+        - id: member-service
+          uri: lb://gulimall-member
+          predicates:
+            - Path=/api/member/**
+          filters:
+            - StripPrefix=1
+
         - id: oss-service
           uri: lb://gulimall-third-party
           predicates:

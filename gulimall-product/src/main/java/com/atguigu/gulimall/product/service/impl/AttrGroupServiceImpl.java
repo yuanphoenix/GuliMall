@@ -50,20 +50,6 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupMapper, AttrGroup
 
   }
 
-  @Override
-  public List<AttrEntity> listAttrRelationByGroupId(Long attrgroupId) {
-    List<AttrAttrgroupRelationEntity> attrAttrgroupRelationEntities = attrAttrgroupRelationMapper.selectList(
-        new LambdaQueryWrapper<AttrAttrgroupRelationEntity>().eq(
-            AttrAttrgroupRelationEntity::getAttrGroupId, attrgroupId));
-    List<Long> list = attrAttrgroupRelationEntities.stream()
-        .map(AttrAttrgroupRelationEntity::getAttrId).distinct().toList();
-    if (CollectionUtils.isEmpty(list)) {
-      return List.of();
-    }
-
-    return attrMapper.selectList(
-        new LambdaQueryWrapper<AttrEntity>().in(AttrEntity::getAttrId, list));
-  }
 
   @Override
   public IPage<AttrEntity> getNoAttrRelationByGroupId(Long attrgroupId, PageDTO page) {

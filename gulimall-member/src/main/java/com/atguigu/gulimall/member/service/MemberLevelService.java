@@ -1,7 +1,9 @@
 package com.atguigu.gulimall.member.service;
 
 import com.atguigu.gulimall.member.entity.MemberLevelEntity;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import utils.PageDTO;
 
 /**
  * @author tifa
@@ -10,4 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface MemberLevelService extends IService<MemberLevelEntity> {
 
+  IPage<MemberLevelEntity> listWithPage(PageDTO pageDTO);
 }

@@ -23,6 +23,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import utils.PageDTO;
 import utils.PageUtils;
@@ -145,6 +146,21 @@ public class AttrServiceImpl extends ServiceImpl<AttrMapper, AttrEntity>
     attrAttrgroupRelationMapper.delete(new LambdaQueryWrapper<AttrAttrgroupRelationEntity>().in(
         AttrAttrgroupRelationEntity::getAttrId, ids));
     return true;
+  }
+
+
+  @Override
+  public List<AttrEntity> listAttrWithRelationByGroupId(Long attrgroupId) {
+    List<AttrAttrgroupRelationEntity> attrAttrgroupRelationEntities = attrAttrgroupRelationMapper.selectList(
+        new LambdaQueryWrapper<AttrAttrgroupRelationEntity>().eq(
+            AttrAttrgroupRelationEntity::getAttrGroupId, attrgroupId));
+    List<Long> list = attrAttrgroupRelationEntities.stream()
+        .map(AttrAttrgroupRelationEntity::getAttrId).distinct().toList();
+    if (CollectionUtils.isEmpty(list)) {
+      return List.of();
+    }
+    return baseMapper.selectList(
+        new LambdaQueryWrapper<AttrEntity>().in(AttrEntity::getAttrId, list));
   }
 
   private IPage<AttrResponseVo> getAttrResponseVoIPage(Long catalogId, PageDTO pageDTO,

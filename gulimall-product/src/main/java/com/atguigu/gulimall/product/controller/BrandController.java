@@ -51,7 +51,7 @@ public class BrandController {
   @GetMapping("/list/page")
   public R listPage(@ModelAttribute PageDTO pageDTO) {
     IPage<BrandEntity> brandEntityIPage = brandService.listPage(pageDTO);
-    return R.ok().put("data", brandEntityIPage);
+    return R.ok().put("page", brandEntityIPage);
   }
 
 

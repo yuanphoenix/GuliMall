@@ -19,7 +19,6 @@ public interface AttrGroupService extends IService<AttrGroupEntity> {
 
   IPage<AttrGroupEntity> queryPage(PageDTO attrGroupQueryDTO, Long catelogId);
 
-  List<AttrEntity> listAttrRelationByGroupId(Long attrgroupId);
 
   IPage<AttrEntity> getNoAttrRelationByGroupId(Long attrgroupId, PageDTO page);
 }

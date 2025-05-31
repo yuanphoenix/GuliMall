@@ -33,10 +33,16 @@ public class AttrController {
   private AttrService attrService;
 
 
+  /**
+   * 获取某个分类下的销售属性
+   * @param catalogId
+   * @param pageDTO
+   * @return
+   */
   @GetMapping("/sale/list/{catalogId}")
   public R saleList(@PathVariable("catalogId") Long catalogId, @ModelAttribute PageDTO pageDTO) {
     IPage<AttrResponseVo> attrEntityIPage = attrService.getSaleList(catalogId, pageDTO);
-    return R.ok().put("data", attrEntityIPage);
+    return R.ok().put("page", attrEntityIPage);
   }
 
 
@@ -52,7 +58,7 @@ public class AttrController {
   @GetMapping("/base/list/{catalogId}")
   public R baseList(@PathVariable Long catalogId, @ModelAttribute PageDTO pageDTO) {
     IPage<AttrResponseVo> attrEntityIPage = attrService.getBaseList(catalogId, pageDTO);
-    return R.ok().put("data", attrEntityIPage);
+    return R.ok().put("page", attrEntityIPage);
   }
 
   /**
