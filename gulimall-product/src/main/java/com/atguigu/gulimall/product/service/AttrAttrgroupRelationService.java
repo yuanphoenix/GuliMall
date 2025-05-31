@@ -2,6 +2,7 @@ package com.atguigu.gulimall.product.service;
 
 import com.atguigu.gulimall.product.entity.AttrAttrgroupRelationEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
+import java.util.List;
 
 /**
  * @author tifa
@@ -10,4 +11,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface AttrAttrgroupRelationService extends IService<AttrAttrgroupRelationEntity> {
 
+  boolean checkAndSave(List<AttrAttrgroupRelationEntity> entity);
+
+  boolean removeRelationList(List<AttrAttrgroupRelationEntity> entityList);
 }

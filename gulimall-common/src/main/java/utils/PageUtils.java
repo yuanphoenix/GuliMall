@@ -20,7 +20,7 @@ public class PageUtils<T> {
 
 
     public static <T> IPage<T> of(PageDTO pageDTO) {
-        return new Page<>(pageDTO.getPage(), pageDTO.getLimit());
+        return Page.of(pageDTO.getPage(), pageDTO.getLimit());
     }
 
     public <E> Page<E> convertTo(Function<? super T, ? extends E> mapper) {

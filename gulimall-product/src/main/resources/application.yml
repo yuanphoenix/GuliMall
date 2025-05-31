@@ -18,8 +18,7 @@ spring:
 server:
   port: 10000
 mybatis-plus:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
   global-config:
     db-config:
       logic-delete-value: 0                 # 已删除
