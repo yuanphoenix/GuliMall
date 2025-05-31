@@ -9,7 +9,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @createDate 2025-05-08 21:07:54
  * @Entity com.atguigu.gulimall.coupon.entity.CouponSpuCategoryRelationEntity
  */
-public interface CouponSpuCategoryRelationMapper extends BaseMapper<CouponSpuCategoryRelationEntity> {
+public interface CouponSpuCategoryRelationMapper extends
+    BaseMapper<CouponSpuCategoryRelationEntity> {
 
 }
 

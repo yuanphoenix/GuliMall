@@ -12,8 +12,9 @@ import org.springframework.stereotype.Service;
  * @createDate 2025-05-08 21:18:35
  */
 @Service
-public class OrderReturnReasonServiceImpl extends ServiceImpl<OrderReturnReasonMapper, OrderReturnReasonEntity>
-        implements OrderReturnReasonService {
+public class OrderReturnReasonServiceImpl extends
+    ServiceImpl<OrderReturnReasonMapper, OrderReturnReasonEntity>
+    implements OrderReturnReasonService {
 
 }
 

@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.atguigu.gulimall.coupon.mapper.CouponHistoryMapper">
 
-    <resultMap id="BaseResultMap" type="com.atguigu.gulimall.coupon.entity.CouponHistoryEntity">
-        <id property="id" column="id"/>
-        <result property="couponId" column="coupon_id"/>
-        <result property="memberId" column="member_id"/>
-        <result property="memberNickName" column="member_nick_name"/>
-        <result property="getType" column="get_type"/>
-        <result property="createTime" column="create_time"/>
-        <result property="useType" column="use_type"/>
-        <result property="useTime" column="use_time"/>
-        <result property="orderId" column="order_id"/>
-        <result property="orderSn" column="order_sn"/>
-    </resultMap>
+  <resultMap id="BaseResultMap" type="com.atguigu.gulimall.coupon.entity.CouponHistoryEntity">
+    <id column="id" property="id"/>
+    <result column="coupon_id" property="couponId"/>
+    <result column="member_id" property="memberId"/>
+    <result column="member_nick_name" property="memberNickName"/>
+    <result column="get_type" property="getType"/>
+    <result column="create_time" property="createTime"/>
+    <result column="use_type" property="useType"/>
+    <result column="use_time" property="useTime"/>
+    <result column="order_id" property="orderId"/>
+    <result column="order_sn" property="orderSn"/>
+  </resultMap>
 
-    <sql id="Base_Column_List">
-        id
-        ,coupon_id,member_id,member_nick_name,get_type,create_time,
+  <sql id="Base_Column_List">
+    id
+    ,coupon_id,member_id,member_nick_name,get_type,create_time,
         use_type,use_time,order_id,order_sn
-    </sql>
+  </sql>
 </mapper>

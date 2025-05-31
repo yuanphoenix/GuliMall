@@ -12,8 +12,9 @@ import org.springframework.stereotype.Service;
  * @createDate 2025-05-08 21:20:50
  */
 @Service
-public class PurchaseDetailServiceImpl extends ServiceImpl<PurchaseDetailMapper, PurchaseDetailEntity>
-        implements PurchaseDetailService {
+public class PurchaseDetailServiceImpl extends
+    ServiceImpl<PurchaseDetailMapper, PurchaseDetailEntity>
+    implements PurchaseDetailService {
 
 }
 

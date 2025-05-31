@@ -3,7 +3,6 @@ package com.atguigu.gulimall.product.service;
 import com.atguigu.gulimall.product.entity.CategoryEntity;
 import com.atguigu.gulimall.product.vo.TreeVoRequest;
 import com.baomidou.mybatisplus.extension.service.IService;
-
 import java.util.List;
 
 /**
@@ -13,13 +12,13 @@ import java.util.List;
  */
 public interface CategoryService extends IService<CategoryEntity> {
 
-    List<CategoryEntity> listWithTree();
+  List<CategoryEntity> listWithTree();
 
-    boolean checkAndRemove(CategoryEntity category);
+  boolean checkAndRemove(CategoryEntity category);
 
-    boolean addNew(CategoryEntity category);
+  boolean addNew(CategoryEntity category);
 
-    boolean sort(TreeVoRequest treeVoRequest);
+  boolean sort(TreeVoRequest treeVoRequest);
 
-    boolean removeBatchByEntities(List<CategoryEntity> categoryEntityList);
+  boolean removeBatchByEntities(List<CategoryEntity> categoryEntityList);
 }

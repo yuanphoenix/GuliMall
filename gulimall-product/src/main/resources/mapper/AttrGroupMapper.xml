@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.atguigu.gulimall.product.mapper.AttrGroupMapper">
 
-    <resultMap id="BaseResultMap" type="com.atguigu.gulimall.product.entity.AttrGroupEntity">
-        <id property="attrGroupId" column="attr_group_id"/>
-        <result property="attrGroupName" column="attr_group_name"/>
-        <result property="sort" column="sort"/>
-        <result property="descript" column="descript"/>
-        <result property="icon" column="icon"/>
-        <result property="catalogId" column="catalog_id"/>
-    </resultMap>
+  <resultMap id="BaseResultMap" type="com.atguigu.gulimall.product.entity.AttrGroupEntity">
+    <id column="attr_group_id" property="attrGroupId"/>
+    <result column="attr_group_name" property="attrGroupName"/>
+    <result column="sort" property="sort"/>
+    <result column="descript" property="descript"/>
+    <result column="icon" property="icon"/>
+    <result column="catalog_id" property="catalogId"/>
+  </resultMap>
 
-    <sql id="Base_Column_List">
-        attr_group_id
-        ,attr_group_name,sort,descript,icon,catelog_id
-    </sql>
+  <sql id="Base_Column_List">
+    attr_group_id
+    ,attr_group_name,sort,descript,icon,catelog_id
+  </sql>
 </mapper>

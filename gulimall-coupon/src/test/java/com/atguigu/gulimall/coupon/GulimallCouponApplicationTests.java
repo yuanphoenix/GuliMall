@@ -8,12 +8,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class GulimallCouponApplicationTests {
 
-    @Autowired
-    CouponService couponService;
+  @Autowired
+  CouponService couponService;
 
-    @Test
-    void contextLoads() {
-        couponService.list().forEach(System.out::println);
-    }
+  @Test
+  void contextLoads() {
+    couponService.list().forEach(System.out::println);
+  }
 
 }

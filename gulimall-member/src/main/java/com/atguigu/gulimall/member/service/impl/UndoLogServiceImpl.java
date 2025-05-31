@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UndoLogServiceImpl extends ServiceImpl<UndoLogMapper, UndoLogEntity>
-        implements UndoLogService {
+    implements UndoLogService {
 
 }
 

@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.atguigu.gulimall.ware.mapper.WareSkuMapper">
 
-    <resultMap id="BaseResultMap" type="com.atguigu.gulimall.ware.entity.WareSkuEntity">
-        <id property="id" column="id"/>
-        <result property="skuId" column="sku_id"/>
-        <result property="wareId" column="ware_id"/>
-        <result property="stock" column="stock"/>
-        <result property="skuName" column="sku_name"/>
-        <result property="stockLocked" column="stock_locked"/>
-    </resultMap>
+  <resultMap id="BaseResultMap" type="com.atguigu.gulimall.ware.entity.WareSkuEntity">
+    <id column="id" property="id"/>
+    <result column="sku_id" property="skuId"/>
+    <result column="ware_id" property="wareId"/>
+    <result column="stock" property="stock"/>
+    <result column="sku_name" property="skuName"/>
+    <result column="stock_locked" property="stockLocked"/>
+  </resultMap>
 
-    <sql id="Base_Column_List">
-        id
-        ,sku_id,ware_id,stock,sku_name,stock_locked
-    </sql>
+  <sql id="Base_Column_List">
+    id
+    ,sku_id,ware_id,stock,sku_name,stock_locked
+  </sql>
 </mapper>

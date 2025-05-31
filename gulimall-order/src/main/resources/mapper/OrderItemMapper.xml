@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.atguigu.gulimall.order.mapper.OrderItemMapper">
 
-    <resultMap id="BaseResultMap" type="com.atguigu.gulimall.order.entity.OrderItemEntity">
-        <id property="id" column="id"/>
-        <result property="orderId" column="order_id"/>
-        <result property="orderSn" column="order_sn"/>
-        <result property="spuId" column="spu_id"/>
-        <result property="spuName" column="spu_name"/>
-        <result property="spuPic" column="spu_pic"/>
-        <result property="spuBrand" column="spu_brand"/>
-        <result property="categoryId" column="category_id"/>
-        <result property="skuId" column="sku_id"/>
-        <result property="skuName" column="sku_name"/>
-        <result property="skuPic" column="sku_pic"/>
-        <result property="skuPrice" column="sku_price"/>
-        <result property="skuQuantity" column="sku_quantity"/>
-        <result property="skuAttrsVals" column="sku_attrs_vals"/>
-        <result property="promotionAmount" column="promotion_amount"/>
-        <result property="couponAmount" column="coupon_amount"/>
-        <result property="integrationAmount" column="integration_amount"/>
-        <result property="realAmount" column="real_amount"/>
-        <result property="giftIntegration" column="gift_integration"/>
-        <result property="giftGrowth" column="gift_growth"/>
-    </resultMap>
+  <resultMap id="BaseResultMap" type="com.atguigu.gulimall.order.entity.OrderItemEntity">
+    <id column="id" property="id"/>
+    <result column="order_id" property="orderId"/>
+    <result column="order_sn" property="orderSn"/>
+    <result column="spu_id" property="spuId"/>
+    <result column="spu_name" property="spuName"/>
+    <result column="spu_pic" property="spuPic"/>
+    <result column="spu_brand" property="spuBrand"/>
+    <result column="category_id" property="categoryId"/>
+    <result column="sku_id" property="skuId"/>
+    <result column="sku_name" property="skuName"/>
+    <result column="sku_pic" property="skuPic"/>
+    <result column="sku_price" property="skuPrice"/>
+    <result column="sku_quantity" property="skuQuantity"/>
+    <result column="sku_attrs_vals" property="skuAttrsVals"/>
+    <result column="promotion_amount" property="promotionAmount"/>
+    <result column="coupon_amount" property="couponAmount"/>
+    <result column="integration_amount" property="integrationAmount"/>
+    <result column="real_amount" property="realAmount"/>
+    <result column="gift_integration" property="giftIntegration"/>
+    <result column="gift_growth" property="giftGrowth"/>
+  </resultMap>
 
-    <sql id="Base_Column_List">
-        id
-        ,order_id,order_sn,spu_id,spu_name,spu_pic,
+  <sql id="Base_Column_List">
+    id
+    ,order_id,order_sn,spu_id,spu_name,spu_pic,
         spu_brand,category_id,sku_id,sku_name,sku_pic,
         sku_price,sku_quantity,sku_attrs_vals,promotion_amount,coupon_amount,
         integration_amount,real_amount,gift_integration,gift_growth
-    </sql>
+  </sql>
 </mapper>

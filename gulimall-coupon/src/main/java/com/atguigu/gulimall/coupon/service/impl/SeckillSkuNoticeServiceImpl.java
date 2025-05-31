@@ -12,8 +12,9 @@ import org.springframework.stereotype.Service;
  * @createDate 2025-05-08 21:07:54
  */
 @Service
-public class SeckillSkuNoticeServiceImpl extends ServiceImpl<SeckillSkuNoticeMapper, SeckillSkuNoticeEntity>
-        implements SeckillSkuNoticeService {
+public class SeckillSkuNoticeServiceImpl extends
+    ServiceImpl<SeckillSkuNoticeMapper, SeckillSkuNoticeEntity>
+    implements SeckillSkuNoticeService {
 
 }
 

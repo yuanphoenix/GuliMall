@@ -4,9 +4,8 @@ import com.atguigu.gulimall.product.entity.AttrEntity;
 import com.atguigu.gulimall.product.entity.AttrGroupEntity;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import utils.PageDTO;
-
 import java.util.List;
+import utils.PageDTO;
 
 /**
  * @author tifa
@@ -16,11 +15,11 @@ import java.util.List;
 public interface AttrGroupService extends IService<AttrGroupEntity> {
 
 
-    IPage<AttrGroupEntity> queryPage(PageDTO attrGroupQueryDTO);
+  IPage<AttrGroupEntity> queryPage(PageDTO attrGroupQueryDTO);
 
-    IPage<AttrGroupEntity> queryPage(PageDTO attrGroupQueryDTO, Long catelogId);
+  IPage<AttrGroupEntity> queryPage(PageDTO attrGroupQueryDTO, Long catelogId);
 
-    List<AttrEntity> listAttrRelationByGroupId(Long attrgroupId);
+  List<AttrEntity> listAttrRelationByGroupId(Long attrgroupId);
 
-    IPage<AttrEntity> getNoAttrRelationByGroupId(Long attrgroupId, PageDTO page);
+  IPage<AttrEntity> getNoAttrRelationByGroupId(Long attrgroupId, PageDTO page);
 }

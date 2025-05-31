@@ -8,6 +8,6 @@ import utils.R;
 @FeignClient("gulimall-coupon")
 public interface CouponFeignService {
 
-    @GetMapping("/coupon/coupon/list")
-    public R list();
+  @GetMapping("/coupon/coupon/list")
+  public R list();
 }

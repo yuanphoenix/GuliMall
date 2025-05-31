@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class WareInfoServiceImpl extends ServiceImpl<WareInfoMapper, WareInfoEntity>
-        implements WareInfoService {
+    implements WareInfoService {
 
 }
 

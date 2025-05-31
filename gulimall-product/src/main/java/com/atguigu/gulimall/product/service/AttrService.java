@@ -5,9 +5,8 @@ import com.atguigu.gulimall.product.vo.AttrResponseVo;
 import com.atguigu.gulimall.product.vo.AttrVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import utils.PageDTO;
-
 import java.util.List;
+import utils.PageDTO;
 
 /**
  * @author tifa
@@ -16,15 +15,15 @@ import java.util.List;
  */
 public interface AttrService extends IService<AttrEntity> {
 
-    boolean saveVo(AttrVo attr);
+  boolean saveVo(AttrVo attr);
 
-    IPage<AttrResponseVo> getBaseList(Long catalogId, PageDTO pageDTO);
+  IPage<AttrResponseVo> getBaseList(Long catalogId, PageDTO pageDTO);
 
-    AttrResponseVo getAttrResponseVo(Long id);
+  AttrResponseVo getAttrResponseVo(Long id);
 
-    boolean updateAttrVo(AttrVo attr);
+  boolean updateAttrVo(AttrVo attr);
 
-    IPage<AttrResponseVo> getSaleList(Long catalogId, PageDTO pageDTO);
+  IPage<AttrResponseVo> getSaleList(Long catalogId, PageDTO pageDTO);
 
-    boolean removeAttrAndRelationByIds(List<Long> ids);
+  boolean removeAttrAndRelationByIds(List<Long> ids);
 }

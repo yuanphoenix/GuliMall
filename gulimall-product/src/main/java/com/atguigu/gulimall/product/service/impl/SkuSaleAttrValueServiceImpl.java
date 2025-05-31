@@ -12,8 +12,9 @@ import org.springframework.stereotype.Service;
  * @createDate 2025-05-08 20:51:50
  */
 @Service
-public class SkuSaleAttrValueServiceImpl extends ServiceImpl<SkuSaleAttrValueMapper, SkuSaleAttrValueEntity>
-        implements SkuSaleAttrValueService {
+public class SkuSaleAttrValueServiceImpl extends
+    ServiceImpl<SkuSaleAttrValueMapper, SkuSaleAttrValueEntity>
+    implements SkuSaleAttrValueService {
 
 }
 

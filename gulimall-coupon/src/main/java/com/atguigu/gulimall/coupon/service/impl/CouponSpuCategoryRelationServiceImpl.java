@@ -12,8 +12,9 @@ import org.springframework.stereotype.Service;
  * @createDate 2025-05-08 21:07:54
  */
 @Service
-public class CouponSpuCategoryRelationServiceImpl extends ServiceImpl<CouponSpuCategoryRelationMapper, CouponSpuCategoryRelationEntity>
-        implements CouponSpuCategoryRelationService {
+public class CouponSpuCategoryRelationServiceImpl extends
+    ServiceImpl<CouponSpuCategoryRelationMapper, CouponSpuCategoryRelationEntity>
+    implements CouponSpuCategoryRelationService {
 
 }
 

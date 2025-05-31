@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.atguigu.gulimall.product.mapper.BrandMapper">
 
-    <resultMap id="BaseResultMap" type="com.atguigu.gulimall.product.entity.BrandEntity">
-        <id property="brandId" column="brand_id"/>
-        <result property="name" column="name"/>
-        <result property="logo" column="logo"/>
-        <result property="descript" column="descript"/>
-        <result property="showStatus" column="show_status"/>
-        <result property="firstLetter" column="first_letter"/>
-        <result property="sort" column="sort"/>
-    </resultMap>
+  <resultMap id="BaseResultMap" type="com.atguigu.gulimall.product.entity.BrandEntity">
+    <id column="brand_id" property="brandId"/>
+    <result column="name" property="name"/>
+    <result column="logo" property="logo"/>
+    <result column="descript" property="descript"/>
+    <result column="show_status" property="showStatus"/>
+    <result column="first_letter" property="firstLetter"/>
+    <result column="sort" property="sort"/>
+  </resultMap>
 
-    <sql id="Base_Column_List">
-        brand_id
-        ,name,logo,descript,show_status,first_letter,
+  <sql id="Base_Column_List">
+    brand_id
+    ,name,logo,descript,show_status,first_letter,
         sort
-    </sql>
+  </sql>
 </mapper>

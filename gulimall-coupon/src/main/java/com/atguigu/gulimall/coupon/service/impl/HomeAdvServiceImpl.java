@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class HomeAdvServiceImpl extends ServiceImpl<HomeAdvMapper, HomeAdvEntity>
-        implements HomeAdvService {
+    implements HomeAdvService {
 
 }
 

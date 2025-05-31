@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CommentReplayServiceImpl extends ServiceImpl<CommentReplayMapper, CommentReplayEntity>
-        implements CommentReplayService {
+    implements CommentReplayService {
 
 }
 

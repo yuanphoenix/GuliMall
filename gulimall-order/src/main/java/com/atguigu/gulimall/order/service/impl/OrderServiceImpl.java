@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
-        implements OrderService {
+    implements OrderService {
 
 }
 

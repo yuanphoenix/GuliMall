@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.atguigu.gulimall.order.mapper.OrderReturnApplyMapper">
 
-    <resultMap id="BaseResultMap" type="com.atguigu.gulimall.order.entity.OrderReturnApplyEntity">
-        <id property="id" column="id"/>
-        <result property="orderId" column="order_id"/>
-        <result property="skuId" column="sku_id"/>
-        <result property="orderSn" column="order_sn"/>
-        <result property="createTime" column="create_time"/>
-        <result property="memberUsername" column="member_username"/>
-        <result property="returnAmount" column="return_amount"/>
-        <result property="returnName" column="return_name"/>
-        <result property="returnPhone" column="return_phone"/>
-        <result property="status" column="status"/>
-        <result property="handleTime" column="handle_time"/>
-        <result property="skuImg" column="sku_img"/>
-        <result property="skuName" column="sku_name"/>
-        <result property="skuBrand" column="sku_brand"/>
-        <result property="skuAttrsVals" column="sku_attrs_vals"/>
-        <result property="skuCount" column="sku_count"/>
-        <result property="skuPrice" column="sku_price"/>
-        <result property="skuRealPrice" column="sku_real_price"/>
-        <result property="reason" column="reason"/>
-        <result property="description述" column="description述"/>
-        <result property="descPics" column="desc_pics"/>
-        <result property="handleNote" column="handle_note"/>
-        <result property="handleMan" column="handle_man"/>
-        <result property="receiveMan" column="receive_man"/>
-        <result property="receiveTime" column="receive_time"/>
-        <result property="receiveNote" column="receive_note"/>
-        <result property="receivePhone" column="receive_phone"/>
-        <result property="companyAddress" column="company_address"/>
-    </resultMap>
+  <resultMap id="BaseResultMap" type="com.atguigu.gulimall.order.entity.OrderReturnApplyEntity">
+    <id column="id" property="id"/>
+    <result column="order_id" property="orderId"/>
+    <result column="sku_id" property="skuId"/>
+    <result column="order_sn" property="orderSn"/>
+    <result column="create_time" property="createTime"/>
+    <result column="member_username" property="memberUsername"/>
+    <result column="return_amount" property="returnAmount"/>
+    <result column="return_name" property="returnName"/>
+    <result column="return_phone" property="returnPhone"/>
+    <result column="status" property="status"/>
+    <result column="handle_time" property="handleTime"/>
+    <result column="sku_img" property="skuImg"/>
+    <result column="sku_name" property="skuName"/>
+    <result column="sku_brand" property="skuBrand"/>
+    <result column="sku_attrs_vals" property="skuAttrsVals"/>
+    <result column="sku_count" property="skuCount"/>
+    <result column="sku_price" property="skuPrice"/>
+    <result column="sku_real_price" property="skuRealPrice"/>
+    <result column="reason" property="reason"/>
+    <result column="description述" property="description述"/>
+    <result column="desc_pics" property="descPics"/>
+    <result column="handle_note" property="handleNote"/>
+    <result column="handle_man" property="handleMan"/>
+    <result column="receive_man" property="receiveMan"/>
+    <result column="receive_time" property="receiveTime"/>
+    <result column="receive_note" property="receiveNote"/>
+    <result column="receive_phone" property="receivePhone"/>
+    <result column="company_address" property="companyAddress"/>
+  </resultMap>
 
-    <sql id="Base_Column_List">
-        id
-        ,order_id,sku_id,order_sn,create_time,member_username,
+  <sql id="Base_Column_List">
+    id
+    ,order_id,sku_id,order_sn,create_time,member_username,
         return_amount,return_name,return_phone,status,handle_time,
         sku_img,sku_name,sku_brand,sku_attrs_vals,sku_count,
         sku_price,sku_real_price,reason,description述,desc_pics,
         handle_note,handle_man,receive_man,receive_time,receive_note,
         receive_phone,company_address
-    </sql>
+  </sql>
 </mapper>

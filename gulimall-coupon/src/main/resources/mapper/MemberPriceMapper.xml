@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.atguigu.gulimall.coupon.mapper.MemberPriceMapper">
 
-    <resultMap id="BaseResultMap" type="com.atguigu.gulimall.coupon.entity.MemberPriceEntity">
-        <id property="id" column="id"/>
-        <result property="skuId" column="sku_id"/>
-        <result property="memberLevelId" column="member_level_id"/>
-        <result property="memberLevelName" column="member_level_name"/>
-        <result property="memberPrice" column="member_price"/>
-        <result property="addOther" column="add_other"/>
-    </resultMap>
+  <resultMap id="BaseResultMap" type="com.atguigu.gulimall.coupon.entity.MemberPriceEntity">
+    <id column="id" property="id"/>
+    <result column="sku_id" property="skuId"/>
+    <result column="member_level_id" property="memberLevelId"/>
+    <result column="member_level_name" property="memberLevelName"/>
+    <result column="member_price" property="memberPrice"/>
+    <result column="add_other" property="addOther"/>
+  </resultMap>
 
-    <sql id="Base_Column_List">
-        id
-        ,sku_id,member_level_id,member_level_name,member_price,add_other
-    </sql>
+  <sql id="Base_Column_List">
+    id
+    ,sku_id,member_level_id,member_level_name,member_price,add_other
+  </sql>
 </mapper>

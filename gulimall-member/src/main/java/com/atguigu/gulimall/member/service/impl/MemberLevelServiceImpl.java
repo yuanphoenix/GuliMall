@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class MemberLevelServiceImpl extends ServiceImpl<MemberLevelMapper, MemberLevelEntity>
-        implements MemberLevelService {
+    implements MemberLevelService {
 
 }
 

@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.atguigu.gulimall.product.mapper.SkuImagesMapper">
 
-    <resultMap id="BaseResultMap" type="com.atguigu.gulimall.product.entity.SkuImagesEntity">
-        <id property="id" column="id"/>
-        <result property="skuId" column="sku_id"/>
-        <result property="imgUrl" column="img_url"/>
-        <result property="imgSort" column="img_sort"/>
-        <result property="defaultImg" column="default_img"/>
-    </resultMap>
+  <resultMap id="BaseResultMap" type="com.atguigu.gulimall.product.entity.SkuImagesEntity">
+    <id column="id" property="id"/>
+    <result column="sku_id" property="skuId"/>
+    <result column="img_url" property="imgUrl"/>
+    <result column="img_sort" property="imgSort"/>
+    <result column="default_img" property="defaultImg"/>
+  </resultMap>
 
-    <sql id="Base_Column_List">
-        id
-        ,sku_id,img_url,img_sort,default_img
-    </sql>
+  <sql id="Base_Column_List">
+    id
+    ,sku_id,img_url,img_sort,default_img
+  </sql>
 </mapper>

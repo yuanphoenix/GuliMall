@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.atguigu.gulimall.product.mapper.SkuSaleAttrValueMapper">
 
-    <resultMap id="BaseResultMap" type="com.atguigu.gulimall.product.entity.SkuSaleAttrValueEntity">
-        <id property="id" column="id"/>
-        <result property="skuId" column="sku_id"/>
-        <result property="attrId" column="attr_id"/>
-        <result property="attrName" column="attr_name"/>
-        <result property="attrValue" column="attr_value"/>
-        <result property="attrSort" column="attr_sort"/>
-    </resultMap>
+  <resultMap id="BaseResultMap" type="com.atguigu.gulimall.product.entity.SkuSaleAttrValueEntity">
+    <id column="id" property="id"/>
+    <result column="sku_id" property="skuId"/>
+    <result column="attr_id" property="attrId"/>
+    <result column="attr_name" property="attrName"/>
+    <result column="attr_value" property="attrValue"/>
+    <result column="attr_sort" property="attrSort"/>
+  </resultMap>
 
-    <sql id="Base_Column_List">
-        id
-        ,sku_id,attr_id,attr_name,attr_value,attr_sort
-    </sql>
+  <sql id="Base_Column_List">
+    id
+    ,sku_id,attr_id,attr_name,attr_value,attr_sort
+  </sql>
 </mapper>

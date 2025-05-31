@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SpuCommentServiceImpl extends ServiceImpl<SpuCommentMapper, SpuCommentEntity>
-        implements SpuCommentService {
+    implements SpuCommentService {
 
 }
 

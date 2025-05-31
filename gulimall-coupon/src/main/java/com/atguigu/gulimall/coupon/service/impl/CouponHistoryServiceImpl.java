@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CouponHistoryServiceImpl extends ServiceImpl<CouponHistoryMapper, CouponHistoryEntity>
-        implements CouponHistoryService {
+    implements CouponHistoryService {
 
 }
 

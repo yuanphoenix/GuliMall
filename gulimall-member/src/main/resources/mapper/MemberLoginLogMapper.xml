@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.atguigu.gulimall.member.mapper.MemberLoginLogMapper">
 
-    <resultMap id="BaseResultMap" type="com.atguigu.gulimall.member.entity.MemberLoginLogEntity">
-        <id property="id" column="id"/>
-        <result property="memberId" column="member_id"/>
-        <result property="createTime" column="create_time"/>
-        <result property="ip" column="ip"/>
-        <result property="city" column="city"/>
-        <result property="loginType" column="login_type"/>
-    </resultMap>
+  <resultMap id="BaseResultMap" type="com.atguigu.gulimall.member.entity.MemberLoginLogEntity">
+    <id column="id" property="id"/>
+    <result column="member_id" property="memberId"/>
+    <result column="create_time" property="createTime"/>
+    <result column="ip" property="ip"/>
+    <result column="city" property="city"/>
+    <result column="login_type" property="loginType"/>
+  </resultMap>
 
-    <sql id="Base_Column_List">
-        id
-        ,member_id,create_time,ip,city,login_type
-    </sql>
+  <sql id="Base_Column_List">
+    id
+    ,member_id,create_time,ip,city,login_type
+  </sql>
 </mapper>

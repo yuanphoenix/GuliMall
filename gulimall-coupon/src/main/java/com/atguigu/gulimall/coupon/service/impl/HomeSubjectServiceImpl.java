@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class HomeSubjectServiceImpl extends ServiceImpl<HomeSubjectMapper, HomeSubjectEntity>
-        implements HomeSubjectService {
+    implements HomeSubjectService {
 
 }
 

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class PurchaseServiceImpl extends ServiceImpl<PurchaseMapper, PurchaseEntity>
-        implements PurchaseService {
+    implements PurchaseService {
 
 }
 

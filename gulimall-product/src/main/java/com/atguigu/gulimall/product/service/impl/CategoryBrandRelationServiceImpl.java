@@ -17,28 +17,29 @@ import org.springframework.stereotype.Service;
  * @createDate 2025-05-08 20:51:50
  */
 @Service
-public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandRelationMapper, CategoryBrandRelationEntity>
-        implements CategoryBrandRelationService {
+public class CategoryBrandRelationServiceImpl extends
+    ServiceImpl<CategoryBrandRelationMapper, CategoryBrandRelationEntity>
+    implements CategoryBrandRelationService {
 
-    @Autowired
-    BrandMapper brandMapper;
-    @Autowired
-    CategoryMapper categoryMapper;
+  @Autowired
+  BrandMapper brandMapper;
+  @Autowired
+  CategoryMapper categoryMapper;
 
-    @Override
-    public boolean saveDetail(CategoryBrandRelationEntity categoryBrandRelation) {
-        Long brandId = categoryBrandRelation.getBrandId();
-        Long catalogId = categoryBrandRelation.getCatalogId();
-        if (brandId == null || catalogId == null) {
-            return false;
-        }
-
-        BrandEntity brandEntity = brandMapper.selectById(brandId);
-        CategoryEntity categoryEntity = categoryMapper.selectById(catalogId);
-        categoryBrandRelation.setBrandName(brandEntity.getName());
-        categoryBrandRelation.setCatalogName(categoryEntity.getName());
-        return save(categoryBrandRelation);
+  @Override
+  public boolean saveDetail(CategoryBrandRelationEntity categoryBrandRelation) {
+    Long brandId = categoryBrandRelation.getBrandId();
+    Long catalogId = categoryBrandRelation.getCatalogId();
+    if (brandId == null || catalogId == null) {
+      return false;
     }
+
+    BrandEntity brandEntity = brandMapper.selectById(brandId);
+    CategoryEntity categoryEntity = categoryMapper.selectById(catalogId);
+    categoryBrandRelation.setBrandName(brandEntity.getName());
+    categoryBrandRelation.setCatalogName(categoryEntity.getName());
+    return save(categoryBrandRelation);
+  }
 }
 
 

@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.atguigu.gulimall.member.mapper.GrowthChangeHistoryMapper">
 
-    <resultMap id="BaseResultMap" type="com.atguigu.gulimall.member.entity.GrowthChangeHistoryEntity">
-        <id property="id" column="id"/>
-        <result property="memberId" column="member_id"/>
-        <result property="createTime" column="create_time"/>
-        <result property="changeCount" column="change_count"/>
-        <result property="note" column="note"/>
-        <result property="sourceType" column="source_type"/>
-    </resultMap>
+  <resultMap id="BaseResultMap" type="com.atguigu.gulimall.member.entity.GrowthChangeHistoryEntity">
+    <id column="id" property="id"/>
+    <result column="member_id" property="memberId"/>
+    <result column="create_time" property="createTime"/>
+    <result column="change_count" property="changeCount"/>
+    <result column="note" property="note"/>
+    <result column="source_type" property="sourceType"/>
+  </resultMap>
 
-    <sql id="Base_Column_List">
-        id
-        ,member_id,create_time,change_count,note,source_type
-    </sql>
+  <sql id="Base_Column_List">
+    id
+    ,member_id,create_time,change_count,note,source_type
+  </sql>
 </mapper>

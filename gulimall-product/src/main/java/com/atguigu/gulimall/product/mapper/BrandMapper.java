@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @Entity com.atguigu.gulimall.product.entity.BrandEntity
  */
 public interface BrandMapper extends BaseMapper<BrandEntity> {
+
 }
 
 

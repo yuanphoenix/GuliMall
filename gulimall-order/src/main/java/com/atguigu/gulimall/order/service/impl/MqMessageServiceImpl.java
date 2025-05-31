@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class MqMessageServiceImpl extends ServiceImpl<MqMessageMapper, MqMessageEntity>
-        implements MqMessageService {
+    implements MqMessageService {
 
 }
 

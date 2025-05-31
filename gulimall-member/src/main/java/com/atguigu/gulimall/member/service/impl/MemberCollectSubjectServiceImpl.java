@@ -12,8 +12,9 @@ import org.springframework.stereotype.Service;
  * @createDate 2025-05-08 21:36:52
  */
 @Service
-public class MemberCollectSubjectServiceImpl extends ServiceImpl<MemberCollectSubjectMapper, MemberCollectSubjectEntity>
-        implements MemberCollectSubjectService {
+public class MemberCollectSubjectServiceImpl extends
+    ServiceImpl<MemberCollectSubjectMapper, MemberCollectSubjectEntity>
+    implements MemberCollectSubjectService {
 
 }
 

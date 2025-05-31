@@ -12,8 +12,9 @@ import org.springframework.stereotype.Service;
  * @createDate 2025-05-08 21:07:54
  */
 @Service
-public class HomeSubjectSpuServiceImpl extends ServiceImpl<HomeSubjectSpuMapper, HomeSubjectSpuEntity>
-        implements HomeSubjectSpuService {
+public class HomeSubjectSpuServiceImpl extends
+    ServiceImpl<HomeSubjectSpuMapper, HomeSubjectSpuEntity>
+    implements HomeSubjectSpuService {
 
 }
 

@@ -1,16 +1,15 @@
 package com.atguigu.gulimall.product;
 
 import com.aliyuncs.exceptions.ClientException;
+import java.io.FileNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.io.FileNotFoundException;
 
 @SpringBootTest
 class GulimallProductApplicationTests {
 
-    @Test
-    void contextLoads() throws ClientException, FileNotFoundException {
+  @Test
+  void contextLoads() throws ClientException, FileNotFoundException {
 //        String bucketName = "gulimall--tifa";
 //        String endpoint = "oss-cn-beijing.aliyuncs.com";
 //        String region = "cn-beijing";
@@ -37,6 +36,6 @@ class GulimallProductApplicationTests {
 //        for (OSSObjectSummary objectSummary : objectListing.getObjectSummaries()) {
 //            System.out.println(" - " + objectSummary.getKey() + " (大小 = " + objectSummary.getSize() + ")");
 //        }
-    }
+  }
 
 }

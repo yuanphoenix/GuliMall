@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class MemberPriceServiceImpl extends ServiceImpl<MemberPriceMapper, MemberPriceEntity>
-        implements MemberPriceService {
+    implements MemberPriceService {
 
 }
 

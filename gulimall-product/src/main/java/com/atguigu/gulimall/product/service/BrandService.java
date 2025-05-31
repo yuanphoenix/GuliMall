@@ -12,5 +12,5 @@ import utils.PageDTO;
  */
 public interface BrandService extends IService<BrandEntity> {
 
-    IPage<BrandEntity> listPage(PageDTO pageDTO);
+  IPage<BrandEntity> listPage(PageDTO pageDTO);
 }

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class RefundInfoServiceImpl extends ServiceImpl<RefundInfoMapper, RefundInfoEntity>
-        implements RefundInfoService {
+    implements RefundInfoService {
 
 }
 

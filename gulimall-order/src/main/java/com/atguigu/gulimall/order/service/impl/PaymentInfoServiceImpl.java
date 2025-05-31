@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class PaymentInfoServiceImpl extends ServiceImpl<PaymentInfoMapper, PaymentInfoEntity>
-        implements PaymentInfoService {
+    implements PaymentInfoService {
 
 }
 

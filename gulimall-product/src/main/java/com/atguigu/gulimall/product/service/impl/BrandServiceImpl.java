@@ -17,14 +17,16 @@ import utils.PageUtils;
  */
 @Service
 public class BrandServiceImpl extends ServiceImpl<BrandMapper, BrandEntity>
-        implements BrandService {
+    implements BrandService {
 
 
-    @Override
-    public IPage<BrandEntity> listPage(PageDTO pageDTO) {
-        String key = pageDTO.getKey();
-        return this.page(PageUtils.of(pageDTO), new LambdaQueryWrapper<BrandEntity>().or().like(BrandEntity::getName, key).or().like(BrandEntity::getDescript, key).or().like(BrandEntity::getFirstLetter, key));
-    }
+  @Override
+  public IPage<BrandEntity> listPage(PageDTO pageDTO) {
+    String key = pageDTO.getKey();
+    return this.page(PageUtils.of(pageDTO),
+        new LambdaQueryWrapper<BrandEntity>().or().like(BrandEntity::getName, key).or()
+            .like(BrandEntity::getDescript, key).or().like(BrandEntity::getFirstLetter, key));
+  }
 }
 
 

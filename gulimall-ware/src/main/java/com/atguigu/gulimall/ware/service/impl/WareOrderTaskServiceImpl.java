@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class WareOrderTaskServiceImpl extends ServiceImpl<WareOrderTaskMapper, WareOrderTaskEntity>
-        implements WareOrderTaskService {
+    implements WareOrderTaskService {
 
 }
 

@@ -6,7 +6,6 @@ import com.atguigu.gulimall.product.entity.AttrGroupEntity;
 import com.atguigu.gulimall.product.mapper.AttrAttrgroupRelationMapper;
 import com.atguigu.gulimall.product.mapper.AttrGroupMapper;
 import com.atguigu.gulimall.product.mapper.AttrMapper;
-import com.atguigu.gulimall.product.mapper.CategoryMapper;
 import com.atguigu.gulimall.product.service.AttrGroupService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;

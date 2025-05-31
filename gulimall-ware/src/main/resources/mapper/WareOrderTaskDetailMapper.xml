@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.atguigu.gulimall.ware.mapper.WareOrderTaskDetailMapper">
 
-    <resultMap id="BaseResultMap" type="com.atguigu.gulimall.ware.entity.WareOrderTaskDetailEntity">
-        <id property="id" column="id"/>
-        <result property="skuId" column="sku_id"/>
-        <result property="skuName" column="sku_name"/>
-        <result property="skuNum" column="sku_num"/>
-        <result property="taskId" column="task_id"/>
-        <result property="wareId" column="ware_id"/>
-        <result property="lockStatus" column="lock_status"/>
-    </resultMap>
+  <resultMap id="BaseResultMap" type="com.atguigu.gulimall.ware.entity.WareOrderTaskDetailEntity">
+    <id column="id" property="id"/>
+    <result column="sku_id" property="skuId"/>
+    <result column="sku_name" property="skuName"/>
+    <result column="sku_num" property="skuNum"/>
+    <result column="task_id" property="taskId"/>
+    <result column="ware_id" property="wareId"/>
+    <result column="lock_status" property="lockStatus"/>
+  </resultMap>
 
-    <sql id="Base_Column_List">
-        id
-        ,sku_id,sku_name,sku_num,task_id,ware_id,
+  <sql id="Base_Column_List">
+    id
+    ,sku_id,sku_name,sku_num,task_id,ware_id,
         lock_status
-    </sql>
+  </sql>
 </mapper>

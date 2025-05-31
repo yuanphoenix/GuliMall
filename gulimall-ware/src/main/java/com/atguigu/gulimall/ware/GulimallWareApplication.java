@@ -10,8 +10,8 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @EnableDiscoveryClient
 public class GulimallWareApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(GulimallWareApplication.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(GulimallWareApplication.class, args);
+  }
 
 }

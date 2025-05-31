@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SkuLadderServiceImpl extends ServiceImpl<SkuLadderMapper, SkuLadderEntity>
-        implements SkuLadderService {
+    implements SkuLadderService {
 
 }
 

@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.atguigu.gulimall.order.mapper.RefundInfoMapper">
 
-    <resultMap id="BaseResultMap" type="com.atguigu.gulimall.order.entity.RefundInfoEntity">
-        <id property="id" column="id"/>
-        <result property="orderReturnId" column="order_return_id"/>
-        <result property="refund" column="refund"/>
-        <result property="refundSn" column="refund_sn"/>
-        <result property="refundStatus" column="refund_status"/>
-        <result property="refundChannel" column="refund_channel"/>
-        <result property="refundContent" column="refund_content"/>
-    </resultMap>
+  <resultMap id="BaseResultMap" type="com.atguigu.gulimall.order.entity.RefundInfoEntity">
+    <id column="id" property="id"/>
+    <result column="order_return_id" property="orderReturnId"/>
+    <result column="refund" property="refund"/>
+    <result column="refund_sn" property="refundSn"/>
+    <result column="refund_status" property="refundStatus"/>
+    <result column="refund_channel" property="refundChannel"/>
+    <result column="refund_content" property="refundContent"/>
+  </resultMap>
 
-    <sql id="Base_Column_List">
-        id
-        ,order_return_id,refund,refund_sn,refund_status,refund_channel,
+  <sql id="Base_Column_List">
+    id
+    ,order_return_id,refund,refund_sn,refund_status,refund_channel,
         refund_content
-    </sql>
+  </sql>
 </mapper>

@@ -12,8 +12,9 @@ import org.springframework.stereotype.Service;
  * @createDate 2025-05-08 21:20:50
  */
 @Service
-public class WareOrderTaskDetailServiceImpl extends ServiceImpl<WareOrderTaskDetailMapper, WareOrderTaskDetailEntity>
-        implements WareOrderTaskDetailService {
+public class WareOrderTaskDetailServiceImpl extends
+    ServiceImpl<WareOrderTaskDetailMapper, WareOrderTaskDetailEntity>
+    implements WareOrderTaskDetailService {
 
 }
 
