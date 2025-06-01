@@ -26,9 +26,9 @@ spring:
         - id: product-service
           uri: lb://gulimall-product
           predicates:
-            - Path=/api/product/**
+            - Path=/api/renren-fast/product/**
           filters:
-            - StripPrefix=1
+            - StripPrefix=2
 
         - id: renren-fast
           uri: lb://renren-fast
@@ -41,9 +41,9 @@ spring:
         - id: member-service
           uri: lb://gulimall-member
           predicates:
-            - Path=/api/member/**
+            - Path=/api/renren-fast/member/**
           filters:
-            - StripPrefix=1
+            - StripPrefix=2
 
         - id: oss-service
           uri: lb://gulimall-third-party

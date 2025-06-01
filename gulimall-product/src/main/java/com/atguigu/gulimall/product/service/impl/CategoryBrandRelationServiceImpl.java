@@ -7,9 +7,12 @@ import com.atguigu.gulimall.product.mapper.BrandMapper;
 import com.atguigu.gulimall.product.mapper.CategoryBrandRelationMapper;
 import com.atguigu.gulimall.product.mapper.CategoryMapper;
 import com.atguigu.gulimall.product.service.CategoryBrandRelationService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 /**
  * @author tifa
@@ -33,12 +36,27 @@ public class CategoryBrandRelationServiceImpl extends
     if (brandId == null || catalogId == null) {
       return false;
     }
-
+    var relationList = getBaseMapper().selectList(
+        new LambdaQueryWrapper<CategoryBrandRelationEntity>().eq(
+                CategoryBrandRelationEntity::getBrandId, brandId)
+            .eq(CategoryBrandRelationEntity::getCatalogId, catalogId));
+    if (!relationList.isEmpty()) {
+      return true;
+    }
     BrandEntity brandEntity = brandMapper.selectById(brandId);
     CategoryEntity categoryEntity = categoryMapper.selectById(catalogId);
     categoryBrandRelation.setBrandName(brandEntity.getName());
     categoryBrandRelation.setCatalogName(categoryEntity.getName());
     return save(categoryBrandRelation);
+  }
+
+  @Override
+  public List<CategoryBrandRelationEntity> listByCategoryEntity(CategoryEntity categoryEntity) {
+    if (categoryEntity == null || ObjectUtils.isEmpty(categoryEntity.getCatId())) {
+      return List.of();
+    }
+    return getBaseMapper().selectList(new LambdaQueryWrapper<CategoryBrandRelationEntity>().eq(
+        CategoryBrandRelationEntity::getCatalogId, categoryEntity.getCatId()));
   }
 }
 

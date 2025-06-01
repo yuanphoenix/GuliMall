@@ -1,7 +1,9 @@
 package com.atguigu.gulimall.product.service;
 
 import com.atguigu.gulimall.product.entity.CategoryBrandRelationEntity;
+import com.atguigu.gulimall.product.entity.CategoryEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
+import java.util.List;
 
 /**
  * @author tifa
@@ -11,4 +13,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface CategoryBrandRelationService extends IService<CategoryBrandRelationEntity> {
 
   boolean saveDetail(CategoryBrandRelationEntity categoryBrandRelation);
+
+  List<CategoryBrandRelationEntity> listByCategoryEntity(CategoryEntity categoryEntity);
 }

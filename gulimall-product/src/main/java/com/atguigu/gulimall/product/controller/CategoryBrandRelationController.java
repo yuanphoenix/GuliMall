@@ -1,11 +1,13 @@
 package com.atguigu.gulimall.product.controller;
 
 import com.atguigu.gulimall.product.entity.CategoryBrandRelationEntity;
+import com.atguigu.gulimall.product.entity.CategoryEntity;
 import com.atguigu.gulimall.product.service.CategoryBrandRelationService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,12 +31,14 @@ public class CategoryBrandRelationController {
   @Autowired
   private CategoryBrandRelationService categoryBrandRelationService;
 
+
+
   /**
    * 获取所有数据
    */
-  @GetMapping("/list")
-  public R list() {
-    List<CategoryBrandRelationEntity> list = categoryBrandRelationService.list();
+  @GetMapping("/brands/list")
+  public R list(@ModelAttribute CategoryEntity categoryEntity) {
+    List<CategoryBrandRelationEntity> list = categoryBrandRelationService.listByCategoryEntity(categoryEntity);
     return R.ok().put("data", list);
   }
 
