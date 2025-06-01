@@ -2,8 +2,10 @@ package com.atguigu.gulimall.product.service;
 
 import com.atguigu.gulimall.product.entity.AttrEntity;
 import com.atguigu.gulimall.product.entity.AttrGroupEntity;
+import com.atguigu.gulimall.product.vo.AttrGroupResponseVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import java.util.List;
 import utils.PageDTO;
 
 /**
@@ -20,4 +22,6 @@ public interface AttrGroupService extends IService<AttrGroupEntity> {
 
 
   IPage<AttrEntity> getNoAttrRelationByGroupId(Long attrgroupId, PageDTO page);
+
+  List<AttrGroupResponseVo> getCatalogIdWithattr(Long catalogId);
 }

@@ -7,13 +7,19 @@ import com.atguigu.gulimall.product.mapper.AttrAttrgroupRelationMapper;
 import com.atguigu.gulimall.product.mapper.AttrGroupMapper;
 import com.atguigu.gulimall.product.mapper.AttrMapper;
 import com.atguigu.gulimall.product.service.AttrGroupService;
+import com.atguigu.gulimall.product.vo.AttrGroupResponseVo;
+import com.atguigu.gulimall.product.vo.AttrVo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import utils.PageDTO;
 import utils.PageUtils;
 
@@ -67,6 +73,40 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupMapper, AttrGroup
         .ifPresent(list -> wrapper.notIn(AttrEntity::getAttrId, list));
 
     return attrMapper.selectPage(PageUtils.of(page), wrapper);
+  }
+
+  @Override
+  public List<AttrGroupResponseVo> getCatalogIdWithattr(Long catalogId) {
+    if (ObjectUtils.isEmpty(catalogId)) {
+      return Collections.emptyList();
+    }
+    var groupEntites = getBaseMapper().selectList(
+        new LambdaQueryWrapper<AttrGroupEntity>().eq(AttrGroupEntity::getCatalogId, catalogId));
+    if (groupEntites.isEmpty()) {
+      return Collections.emptyList();
+    }
+
+    return groupEntites.stream().map(groupEntity -> {
+          AttrGroupResponseVo attrGroupResponseVo = new AttrGroupResponseVo();
+          List<Long> attrsId = attrAttrgroupRelationMapper.selectList(
+                  new LambdaQueryWrapper<AttrAttrgroupRelationEntity>().eq(
+                      AttrAttrgroupRelationEntity::getAttrGroupId, groupEntity.getAttrGroupId())).stream()
+              .map(AttrAttrgroupRelationEntity::getAttrId).distinct().toList();
+          if (attrsId.isEmpty()) {
+            return null;
+          }
+          List<AttrEntity> attrEntities = attrMapper.selectByIds(attrsId);
+          List<AttrVo> attrVos = attrEntities.stream().map(b -> {
+            AttrVo attrVo = new AttrVo();
+            BeanUtils.copyProperties(b, attrVo);
+            attrVo.setAttrGroupId(groupEntity.getAttrGroupId());
+            return attrVo;
+          }).toList();
+          attrGroupResponseVo.setAttrs(attrVos);
+          attrGroupResponseVo.setAttrEntity(groupEntity);
+          return attrGroupResponseVo;
+        })
+        .filter(Objects::nonNull).toList();
   }
 
 }

@@ -6,6 +6,8 @@ import com.atguigu.gulimall.product.entity.AttrGroupEntity;
 import com.atguigu.gulimall.product.service.AttrAttrgroupRelationService;
 import com.atguigu.gulimall.product.service.AttrGroupService;
 import com.atguigu.gulimall.product.service.AttrService;
+import com.atguigu.gulimall.product.vo.AttrGroupResponseVo;
+import com.atguigu.gulimall.product.vo.AttrResponseVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,12 @@ public class AttrGroupController {
   public R getNoAttrRelation(@PathVariable Long attrgroupId, @ModelAttribute PageDTO page) {
     IPage<AttrEntity> result = attrGroupService.getNoAttrRelationByGroupId(attrgroupId, page);
     return R.ok().put("page", result);
+  }
+
+  @GetMapping("/{catalogId}/withattr")
+  public R getCatalogIdWithattr(@PathVariable Long catalogId) {
+    List<AttrGroupResponseVo> data = attrGroupService.getCatalogIdWithattr(catalogId);
+    return R.ok().put("data", data);
   }
 
 

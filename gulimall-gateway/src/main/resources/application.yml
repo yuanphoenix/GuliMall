@@ -12,16 +12,12 @@ spring:
         password: "nacos"
     gateway:
       routes:
-        - id: test_route
-          uri: http://www.baidu.com
+        - id: oss-service
+          uri: lb://gulimall-third-party
           predicates:
-            - Query=url,baidu
-
-        - id: qq_route
-          uri: http://www.qq.com
-          predicates:
-            - Query=url,qq
-
+            - Path=/api/renren-fast/oss/**
+          filters:
+            - StripPrefix=2
 
         - id: product-service
           uri: lb://gulimall-product
@@ -30,14 +26,6 @@ spring:
           filters:
             - StripPrefix=2
 
-        - id: renren-fast
-          uri: lb://renren-fast
-          predicates:
-            - Path=/api/renren-fast/**
-          filters:
-            - StripPrefix=1
-
-
         - id: member-service
           uri: lb://gulimall-member
           predicates:
@@ -45,10 +33,10 @@ spring:
           filters:
             - StripPrefix=2
 
-        - id: oss-service
-          uri: lb://gulimall-third-party
+        - id: renren-fast
+          uri: lb://renren-fast
           predicates:
-            - Path=/api/oss/get_post_signature_for_oss_upload/**
+            - Path=/api/renren-fast/**
           filters:
             - StripPrefix=1
 

@@ -4,9 +4,16 @@ import com.aliyuncs.exceptions.ClientException;
 import java.io.FileNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.util.ObjectUtils;
 
 @SpringBootTest
 class GulimallProductApplicationTests {
+
+  @Test
+  void testUtils() {
+    System.out.println(ObjectUtils.isEmpty(10));
+
+  }
 
   @Test
   void contextLoads() throws ClientException, FileNotFoundException {
