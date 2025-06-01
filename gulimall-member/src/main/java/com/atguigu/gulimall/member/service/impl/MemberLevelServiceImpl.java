@@ -3,6 +3,7 @@ package com.atguigu.gulimall.member.service.impl;
 import com.atguigu.gulimall.member.entity.MemberLevelEntity;
 import com.atguigu.gulimall.member.mapper.MemberLevelMapper;
 import com.atguigu.gulimall.member.service.MemberLevelService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,8 @@ public class MemberLevelServiceImpl extends ServiceImpl<MemberLevelMapper, Membe
 
   @Override
   public IPage<MemberLevelEntity> listWithPage(PageDTO pageDTO) {
-    return page(PageUtils.of(pageDTO));
+  return   baseMapper.selectPage(PageUtils.of(pageDTO), new LambdaQueryWrapper<>());
+//    return page(PageUtils.of(pageDTO));
   }
 }
 

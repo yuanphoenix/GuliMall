@@ -17,6 +17,7 @@
       <groupId>com.atguigu.gulimall</groupId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
+
     <dependency>
       <artifactId>spring-boot-starter-web</artifactId>
       <groupId>org.springframework.boot</groupId>
@@ -38,6 +39,7 @@
   </dependencies>
   <dependencyManagement>
     <dependencies>
+
       <dependency>
         <artifactId>spring-cloud-dependencies</artifactId>
         <groupId>org.springframework.cloud</groupId>

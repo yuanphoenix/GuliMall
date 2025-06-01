@@ -39,17 +39,6 @@
       <groupId>com.aliyun.oss</groupId>
       <version>3.18.1</version>
     </dependency>
-    <!-- spring boot3 引入可选模块 -->
-    <dependency>
-      <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
-      <groupId>com.baomidou</groupId>
-    </dependency>
-
-    <!-- jdk 11+ 引入可选模块 -->
-    <dependency>
-      <artifactId>mybatis-plus-jsqlparser</artifactId>
-      <groupId>com.baomidou</groupId>
-    </dependency>
 
 
   </dependencies>
@@ -62,15 +51,6 @@
         <type>pom</type>
         <version>${spring-cloud.version}</version>
       </dependency>
-
-      <dependency>
-        <artifactId>mybatis-plus-bom</artifactId>
-        <groupId>com.baomidou</groupId>
-        <scope>import</scope>
-        <type>pom</type>
-        <version>3.5.9</version>
-      </dependency>
-
 
     </dependencies>
 
