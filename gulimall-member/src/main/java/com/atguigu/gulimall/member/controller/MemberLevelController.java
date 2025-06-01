@@ -3,7 +3,6 @@ package com.atguigu.gulimall.member.controller;
 import com.atguigu.gulimall.member.entity.MemberLevelEntity;
 import com.atguigu.gulimall.member.service.MemberLevelService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;

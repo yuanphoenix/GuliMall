@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <include resource="org/springframework/boot/logging/logback/base.xml"/>
+  <logger level="INFO" name="org.springframework.web"/>
+  <logger level="TRACE" name="org.springboot.sample"/>
+
+  <!-- 开发、测试环境 -->
+  <springProfile name="dev,test">
+    <logger level="INFO" name="org.springframework.web"/>
+    <logger level="INFO" name="org.springboot.sample"/>
+    <logger level="DEBUG" name="io.renren"/>
+  </springProfile>
+
+  <!-- 生产环境 -->
+  <springProfile name="prod">
+    <logger level="ERROR" name="org.springframework.web"/>
+    <logger level="ERROR" name="org.springboot.sample"/>
+    <logger level="ERROR" name="io.renren"/>
+  </springProfile>
+
+</configuration>

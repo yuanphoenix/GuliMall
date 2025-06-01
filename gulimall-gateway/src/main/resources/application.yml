@@ -30,6 +30,14 @@ spring:
           filters:
             - StripPrefix=1
 
+        - id: renren-fast
+          uri: lb://renren-fast
+          predicates:
+            - Path=/api/renren-fast/**
+          filters:
+            - StripPrefix=1
+
+
         - id: member-service
           uri: lb://gulimall-member
           predicates:

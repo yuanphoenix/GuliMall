@@ -35,6 +35,7 @@ public class AttrController {
 
   /**
    * 获取某个分类下的销售属性
+   *
    * @param catalogId
    * @param pageDTO
    * @return
