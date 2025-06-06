@@ -2,6 +2,7 @@ package com.atguigu.gulimall.product.controller;
 
 import com.atguigu.gulimall.product.entity.SpuInfoEntity;
 import com.atguigu.gulimall.product.service.SpuInfoService;
+import com.atguigu.gulimall.product.vo.spuinfo.SpuInfoVo;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,8 +50,8 @@ public class SpuInfoController {
    * 保存数据
    */
   @PostMapping("/save")
-  public R save(@RequestBody SpuInfoEntity spuInfo) {
-    boolean saved = spuInfoService.save(spuInfo);
+  public R save(@RequestBody SpuInfoVo spuInfoVo) {
+    boolean saved = spuInfoService.saveSpu(spuInfoVo);
     return saved ? R.ok() : R.error();
   }
 

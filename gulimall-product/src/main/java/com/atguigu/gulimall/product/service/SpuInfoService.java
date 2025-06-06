@@ -1,6 +1,7 @@
 package com.atguigu.gulimall.product.service;
 
 import com.atguigu.gulimall.product.entity.SpuInfoEntity;
+import com.atguigu.gulimall.product.vo.spuinfo.SpuInfoVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -10,4 +11,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface SpuInfoService extends IService<SpuInfoEntity> {
 
+  /**
+   * 这个是很复杂的前端上传商品的各种信息到后端。前端还涉及到了笛卡尔积的那个。
+   *
+   * @param spuInfoVo
+   * @return
+   */
+  boolean saveSpu(SpuInfoVo spuInfoVo);
 }
