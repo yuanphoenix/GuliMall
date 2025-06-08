@@ -4,6 +4,7 @@
 package com.atguigu.gulimall.product.vo.spuinfo;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -87,7 +88,7 @@ public class SpuInfoVo {
   }
 
   public List<String> getImages() {
-    return images;
+    return images == null ? Collections.emptyList() : images;
   }
 
   public void setBounds(Bounds bounds) {
@@ -103,7 +104,7 @@ public class SpuInfoVo {
   }
 
   public List<BaseAttrs> getBaseAttrs() {
-    return baseAttrs;
+    return baseAttrs == null ? Collections.emptyList() : baseAttrs;
   }
 
   public void setSkus(List<Skus> skus) {
@@ -111,7 +112,7 @@ public class SpuInfoVo {
   }
 
   public List<Skus> getSkus() {
-    return skus;
+    return skus == null ? Collections.emptyList() : skus;
   }
 
 }
