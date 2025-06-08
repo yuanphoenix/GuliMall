@@ -8,6 +8,7 @@ import com.atguigu.gulimall.product.entity.SkuSaleAttrValueEntity;
 import com.atguigu.gulimall.product.entity.SpuImagesEntity;
 import com.atguigu.gulimall.product.entity.SpuInfoDescEntity;
 import com.atguigu.gulimall.product.entity.SpuInfoEntity;
+import com.atguigu.gulimall.product.feign.CouponFeignService;
 import com.atguigu.gulimall.product.mapper.AttrMapper;
 import com.atguigu.gulimall.product.mapper.ProductAttrValueMapper;
 import com.atguigu.gulimall.product.mapper.SkuImagesMapper;
@@ -27,9 +28,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import to.SkuReducitionTo;
+import to.SpuBoundsTo;
+import utils.R;
 
 /**
  * @author tifa
@@ -40,23 +43,32 @@ import org.springframework.transaction.annotation.Transactional;
 public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity>
     implements SpuInfoService {
 
-  @Autowired
-  private SpuInfoDescMapper spuInfoDescMapper;
-  @Autowired
-  private SpuImagesMapper spuImagesMapper;
+  private final SpuInfoDescMapper spuInfoDescMapper;
+  private final SpuImagesMapper spuImagesMapper;
 
 
-  @Autowired
-  private AttrMapper attrMapper;
-  @Autowired
-  private ProductAttrValueMapper productAttrValueMapper;
-  @Autowired
-  private SkuInfoMapper skuInfoMapper;
-  @Autowired
-  private SkuImagesMapper skuImagesMapper;
-  @Autowired
-  private SkuSaleAttrValueMapper skuSaleAttrValueMapper;
+  private final AttrMapper attrMapper;
+  private final ProductAttrValueMapper productAttrValueMapper;
+  private final SkuInfoMapper skuInfoMapper;
+  private final SkuImagesMapper skuImagesMapper;
+  private final SkuSaleAttrValueMapper skuSaleAttrValueMapper;
 
+  private final CouponFeignService couponFeignService;
+
+  public SpuInfoServiceImpl(SpuInfoDescMapper spuInfoDescMapper, SpuImagesMapper spuImagesMapper,
+      AttrMapper attrMapper, ProductAttrValueMapper productAttrValueMapper,
+      SkuInfoMapper skuInfoMapper, SkuImagesMapper skuImagesMapper,
+      SkuSaleAttrValueMapper skuSaleAttrValueMapper, CouponFeignService couponFeignService) {
+
+    this.spuInfoDescMapper = spuInfoDescMapper;
+    this.spuImagesMapper = spuImagesMapper;
+    this.attrMapper = attrMapper;
+    this.productAttrValueMapper = productAttrValueMapper;
+    this.skuInfoMapper = skuInfoMapper;
+    this.skuImagesMapper = skuImagesMapper;
+    this.skuSaleAttrValueMapper = skuSaleAttrValueMapper;
+    this.couponFeignService = couponFeignService;
+  }
 
   @Transactional(rollbackFor = Exception.class)
   @Override
@@ -123,6 +135,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
     //sku的图片信息 sku_images
     List<SkuImagesEntity> skuImagesEntityList = new ArrayList<>();
     List<SkuSaleAttrValueEntity> skuSaleAttrValueEntityList = new ArrayList<>();
+    List<SkuReducitionTo> skuReducitionToList = new ArrayList<>();
     assert skuInfoEntityList.size() == skus.size();
     for (int i = 0; i < skuInfoEntityList.size(); i++) {
       Long skuId = skuInfoEntityList.get(i).getSkuId();
@@ -148,11 +161,29 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
             return skuSaleAttrValueEntity;
           }).toList());
 
+      SkuReducitionTo skuReducitionTo = new SkuReducitionTo();
+      BeanUtils.copyProperties(skuItem, skuReducitionTo);
+      skuReducitionTo.setSkuId(skuId);
+      skuReducitionToList.add(skuReducitionTo);
     }
     skuSaleAttrValueMapper.insert(skuSaleAttrValueEntityList);
     skuImagesMapper.insert(skuImagesEntityList);
 
-    //sku的优惠信息
+    //sku的优惠信息。积分。满减优惠
+    SpuBoundsTo spuBoundsTo = new SpuBoundsTo();
+    BeanUtils.copyProperties(spuBoundsTo, spuInfoVo.getBounds());
+    spuBoundsTo.setSpuId(spuInfoDescEntity.getSpuId());
+
+    R r = couponFeignService.saveBounds(spuBoundsTo);
+    if (r.getCode() != 0) {
+      throw new RuntimeException("远程调用saveBounds错误");
+    }
+
+    r = couponFeignService.saveSkuReduction(skuReducitionToList);
+
+    if (r.getCode() != 0) {
+      throw new RuntimeException("aveSkuReduction远程调用错误");
+    }
 
     return true;
   }

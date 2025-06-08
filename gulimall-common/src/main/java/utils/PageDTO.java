@@ -49,4 +49,15 @@ public class PageDTO {
   public void setOrder(String order) {
     this.order = order;
   }
+
+  @Override
+  public String toString() {
+    return "PageDTO{" +
+        "page=" + page +
+        ", limit=" + limit +
+        ", key='" + key + '\'' +
+        ", sidx='" + sidx + '\'' +
+        ", order='" + order + '\'' +
+        '}';
+  }
 }

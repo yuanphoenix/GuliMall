@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import to.SkuReducitionTo;
 import utils.R;
 
 /**
@@ -26,6 +27,13 @@ public class SkuFullReductionController {
 
   @Autowired
   private SkuFullReductionService skuFullReductionService;
+
+
+  @PostMapping("/saveInfoList")
+  R saveSkuReduction(@RequestBody List<SkuReducitionTo> skuReducitionToList) {
+    boolean b = skuFullReductionService.saveInfoList(skuReducitionToList);
+    return b ? R.ok() : R.error();
+  }
 
   /**
    * 获取所有数据
