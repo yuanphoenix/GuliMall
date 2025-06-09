@@ -9,5 +9,5 @@ import utils.R;
 public interface CouponFeignService {
 
   @GetMapping("/coupon/coupon/list")
-  public R list();
+  R list();
 }

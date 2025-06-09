@@ -8,6 +8,7 @@ import com.atguigu.gulimall.coupon.service.MemberPriceService;
 import com.atguigu.gulimall.coupon.service.SkuFullReductionService;
 import com.atguigu.gulimall.coupon.service.SkuLadderService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -50,17 +51,23 @@ public class SkuFullReductionServiceImpl extends
       SkuLadderEntity skuLadderEntity = new SkuLadderEntity();
       BeanUtils.copyProperties(skuReducitionTo, skuLadderEntity);
       skuLadderEntity.setAddOther(skuReducitionTo.getCountStatus());
-      skuLadderEntityList.add(skuLadderEntity);
+
+      if (skuLadderEntity.getFullCount() > 0) {
+        skuLadderEntityList.add(skuLadderEntity);
+      }
 
       SkuFullReductionEntity skuFullReductionEntity = new SkuFullReductionEntity();
       BeanUtils.copyProperties(skuReducitionTo, skuFullReductionEntity);
       skuFullReductionEntity.setAddOther(skuReducitionTo.getPriceStatus());
-      skuFullReductionEntityList.add(skuFullReductionEntity);
+//      满减
+      if (skuFullReductionEntity.getFullPrice().compareTo(BigDecimal.ZERO) > 0) {
+        skuFullReductionEntityList.add(skuFullReductionEntity);
+      }
 
       memberPriceEntityList.addAll(
-
           Optional.ofNullable(skuReducitionTo.getMemberPrice()).orElse(Collections.emptyList())
               .stream()
+              .filter(price -> price.getPrice().compareTo(BigDecimal.ZERO) > 0)
               .map(price -> {
                     MemberPriceEntity memberPriceEntity = new MemberPriceEntity();
                     memberPriceEntity.setSkuId(skuReducitionTo.getSkuId());

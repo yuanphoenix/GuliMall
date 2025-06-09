@@ -26,10 +26,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import to.SkuReducitionTo;
 import to.SpuBoundsTo;
 import utils.R;
@@ -73,7 +75,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
   @Transactional(rollbackFor = Exception.class)
   @Override
   public boolean saveSpu(SpuInfoVo spuInfoVo) {
-    if (spuInfoVo == null) {
+    if (Objects.isNull(spuInfoVo)) {
       return false;
     }
 
@@ -90,13 +92,15 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
     //保存SPU的图片集合 。操作spu_images
 
     List<String> images = spuInfoVo.getImages();
-    List<SpuImagesEntity> spuImagesEntityList = images.stream().map(imgUrl -> {
-      SpuImagesEntity spuImagesEntity = new SpuImagesEntity();
-      //这里的这个字段，只保存了图片的url以及图片涉及到的spu的id
-      spuInfoDescEntity.setSpuId(spuInfo.getId());
-      spuImagesEntity.setImgUrl(imgUrl);
-      return spuImagesEntity;
-    }).toList();
+    List<SpuImagesEntity> spuImagesEntityList = images.stream()
+        .filter(imgUrl -> !ObjectUtils.isEmpty(imgUrl))
+        .map(imgUrl -> {
+          SpuImagesEntity spuImagesEntity = new SpuImagesEntity();
+          //这里的这个字段，只保存了图片的url以及图片涉及到的spu的id
+          spuImagesEntity.setSpuId(spuInfo.getId());
+          spuImagesEntity.setImgUrl(imgUrl);
+          return spuImagesEntity;
+        }).toList();
     spuImagesMapper.insert(spuImagesEntityList);
     //保存SPU的规格参数  pms_product_attr_value
     List<BaseAttrs> baseAttrs = spuInfoVo.getBaseAttrs();
@@ -142,8 +146,10 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
       Skus skuItem = skus.get(i);
 
       skuImagesEntityList.addAll(
-          Optional.ofNullable(skuItem.getImages()).orElse(Collections.emptyList())
+          Optional.ofNullable(skuItem.getImages())
+              .orElse(Collections.emptyList())
               .stream()
+              .filter(imgUrl -> !ObjectUtils.isEmpty(imgUrl.getImgUrl()))
               .map(imageItem -> {
                 SkuImagesEntity skuImagesEntity = new SkuImagesEntity();
                 skuImagesEntity.setSkuId(skuId);
@@ -163,6 +169,15 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
 
       SkuReducitionTo skuReducitionTo = new SkuReducitionTo();
       BeanUtils.copyProperties(skuItem, skuReducitionTo);
+      //注意BeanUtils拷贝不了 List,需要手动去拷贝
+      skuReducitionTo.setMemberPrice(Optional.ofNullable(skuItem.getMemberPrice())
+          .orElse(Collections.emptyList())
+          .stream()
+          .map(temp -> {
+            to.MemberPrice memberPrice1 = new to.MemberPrice();
+            BeanUtils.copyProperties(temp, memberPrice1);
+            return memberPrice1;
+          }).toList());
       skuReducitionTo.setSkuId(skuId);
       skuReducitionToList.add(skuReducitionTo);
     }
@@ -171,7 +186,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
 
     //sku的优惠信息。积分。满减优惠
     SpuBoundsTo spuBoundsTo = new SpuBoundsTo();
-    BeanUtils.copyProperties(spuBoundsTo, spuInfoVo.getBounds());
+    BeanUtils.copyProperties(spuInfoVo.getBounds(), spuBoundsTo);
     spuBoundsTo.setSpuId(spuInfoDescEntity.getSpuId());
 
     R r = couponFeignService.saveBounds(spuBoundsTo);
