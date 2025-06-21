@@ -2,15 +2,19 @@ package com.atguigu.gulimall.product.controller;
 
 import com.atguigu.gulimall.product.entity.SpuInfoEntity;
 import com.atguigu.gulimall.product.service.SpuInfoService;
+import com.atguigu.gulimall.product.vo.SpuPageVo;
 import com.atguigu.gulimall.product.vo.spuinfo.SpuInfoVo;
-import java.util.List;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import utils.PageDTO;
+import utils.PageUtils;
 import utils.R;
 
 /**
@@ -22,7 +26,7 @@ import utils.R;
  * @since 2025-05-09
  */
 @RestController
-@RequestMapping("/product/spuInfo")
+@RequestMapping("/product/spuinfo")
 public class SpuInfoController {
 
   @Autowired
@@ -32,9 +36,9 @@ public class SpuInfoController {
    * 获取所有数据
    */
   @GetMapping("/list")
-  public R list() {
-    List<SpuInfoEntity> list = spuInfoService.list();
-    return R.ok().put("data", list);
+  public R list(@ModelAttribute SpuPageVo pageDTO) {
+    IPage<SpuInfoEntity> list = spuInfoService.pageWithCondition(pageDTO);
+    return R.ok().put("page", list);
   }
 
   /**

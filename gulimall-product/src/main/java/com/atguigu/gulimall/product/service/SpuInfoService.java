@@ -1,8 +1,11 @@
 package com.atguigu.gulimall.product.service;
 
 import com.atguigu.gulimall.product.entity.SpuInfoEntity;
+import com.atguigu.gulimall.product.vo.SpuPageVo;
 import com.atguigu.gulimall.product.vo.spuinfo.SpuInfoVo;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import utils.PageDTO;
 
 /**
  * @author tifa
@@ -18,4 +21,6 @@ public interface SpuInfoService extends IService<SpuInfoEntity> {
    * @return
    */
   boolean saveSpu(SpuInfoVo spuInfoVo);
+
+  IPage<SpuInfoEntity> pageWithCondition(SpuPageVo pageDTO);
 }

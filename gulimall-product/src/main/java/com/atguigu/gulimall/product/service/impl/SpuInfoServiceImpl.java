@@ -18,22 +18,27 @@ import com.atguigu.gulimall.product.mapper.SpuImagesMapper;
 import com.atguigu.gulimall.product.mapper.SpuInfoDescMapper;
 import com.atguigu.gulimall.product.mapper.SpuInfoMapper;
 import com.atguigu.gulimall.product.service.SpuInfoService;
+import com.atguigu.gulimall.product.vo.SpuPageVo;
 import com.atguigu.gulimall.product.vo.spuinfo.BaseAttrs;
 import com.atguigu.gulimall.product.vo.spuinfo.Images;
 import com.atguigu.gulimall.product.vo.spuinfo.Skus;
 import com.atguigu.gulimall.product.vo.spuinfo.SpuInfoVo;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import to.SkuReducitionTo;
 import to.SpuBoundsTo;
+import utils.PageUtils;
 import utils.R;
 
 /**
@@ -202,4 +207,24 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
 
     return true;
   }
+
+  @Override
+  public IPage<SpuInfoEntity> pageWithCondition(SpuPageVo pageDTO) {
+    //使用mybatis-plus中的conditon来避免传送多余的SQL语句。
+    return baseMapper.selectPage(PageUtils.of(pageDTO),
+        new LambdaQueryWrapper<SpuInfoEntity>()
+            .eq(!ObjectUtils.isEmpty(pageDTO.getBrandId()), SpuInfoEntity::getBrandId,
+                pageDTO.getBrandId())
+            .eq(!ObjectUtils.isEmpty(pageDTO.getCatalogId()), SpuInfoEntity::getCatalogId,
+                pageDTO.getCatalogId())
+            .eq(!ObjectUtils.isEmpty(pageDTO.getStatus()), SpuInfoEntity::getPublishStatus,
+                pageDTO.getStatus())
+            .and(!ObjectUtils.isEmpty(pageDTO.getKey()), w -> {
+              w.eq(NumberUtils.isCreatable(pageDTO.getKey()), SpuInfoEntity::getId, Long.parseLong(pageDTO.getKey()))
+                  .or()
+                  .like(SpuInfoEntity::getSpuName, pageDTO.getKey());
+            })
+    );
+  }
+
 }

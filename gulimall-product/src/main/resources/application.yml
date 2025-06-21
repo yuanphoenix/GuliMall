@@ -15,11 +15,14 @@ spring:
         import-check:
           enabled: false
 
+
 server:
   port: 10000
-mybatis-plus:
 
+mybatis-plus:
   global-config:
     db-config:
       logic-delete-value: 0                 # 已删除
       logic-not-delete-value: 1            # 未删除
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import utils.PageDTO;
+import utils.PageUtils;
 import utils.R;
 import valid.AddWithDefaultGroup;
 import valid.UpdateGroup;
@@ -50,7 +51,7 @@ public class BrandController {
    */
   @GetMapping("/list/page")
   public R listPage(@ModelAttribute PageDTO pageDTO) {
-    IPage<BrandEntity> brandEntityIPage = brandService.listPage(pageDTO);
+    IPage<BrandEntity> brandEntityIPage = brandService.page(PageUtils.of(pageDTO));
     return R.ok().put("page", brandEntityIPage);
   }
 

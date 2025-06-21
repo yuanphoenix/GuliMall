@@ -2,14 +2,18 @@ package com.atguigu.gulimall.product.controller;
 
 import com.atguigu.gulimall.product.entity.SkuInfoEntity;
 import com.atguigu.gulimall.product.service.SkuInfoService;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import utils.PageDTO;
+import utils.PageUtils;
 import utils.R;
 
 /**
@@ -31,8 +35,8 @@ public class SkuInfoController {
    * 获取所有数据
    */
   @GetMapping("/list")
-  public R list() {
-    List<SkuInfoEntity> list = skuInfoService.list();
+  public R list(@ModelAttribute PageDTO pageDTO) {
+    IPage<SkuInfoEntity> list = skuInfoService.page(PageUtils.of(pageDTO));
     return R.ok().put("data", list);
   }
 
