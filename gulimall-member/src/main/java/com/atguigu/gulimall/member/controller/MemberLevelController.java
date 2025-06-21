@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import utils.PageDTO;
+import utils.PageUtils;
 import utils.R;
 
 /**
@@ -34,7 +35,7 @@ public class MemberLevelController {
    */
   @GetMapping("/list")
   public R list(@ModelAttribute PageDTO pageDTO) {
-    IPage<MemberLevelEntity> list = memberLevelService.listWithPage(pageDTO);
+    IPage<MemberLevelEntity> list = memberLevelService.page(PageUtils.of(pageDTO));
     return R.ok().put("page", list);
   }
 

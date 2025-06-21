@@ -1,7 +1,10 @@
 package com.atguigu.gulimall.product.controller;
 
 import com.atguigu.gulimall.product.entity.SkuInfoEntity;
+import com.atguigu.gulimall.product.entity.SpuInfoEntity;
 import com.atguigu.gulimall.product.service.SkuInfoService;
+import com.atguigu.gulimall.product.service.SpuInfoService;
+import com.atguigu.gulimall.product.vo.SpuPageVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,19 +28,21 @@ import utils.R;
  * @since 2025-05-09
  */
 @RestController
-@RequestMapping("/product/skuInfo")
+@RequestMapping("/product/skuinfo")
 public class SkuInfoController {
 
   @Autowired
   private SkuInfoService skuInfoService;
 
+
+
   /**
    * 获取所有数据
    */
   @GetMapping("/list")
-  public R list(@ModelAttribute PageDTO pageDTO) {
-    IPage<SkuInfoEntity> list = skuInfoService.page(PageUtils.of(pageDTO));
-    return R.ok().put("data", list);
+  public R list(@ModelAttribute SpuPageVo pageDTO) {
+    IPage<SkuInfoEntity> list = skuInfoService.pageWithCondition(pageDTO);
+    return R.ok().put("page", list);
   }
 
   /**

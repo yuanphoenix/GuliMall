@@ -210,17 +210,21 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
 
   @Override
   public IPage<SpuInfoEntity> pageWithCondition(SpuPageVo pageDTO) {
+
     //使用mybatis-plus中的conditon来避免传送多余的SQL语句。
     return baseMapper.selectPage(PageUtils.of(pageDTO),
         new LambdaQueryWrapper<SpuInfoEntity>()
+
             .eq(!ObjectUtils.isEmpty(pageDTO.getBrandId()), SpuInfoEntity::getBrandId,
                 pageDTO.getBrandId())
             .eq(!ObjectUtils.isEmpty(pageDTO.getCatalogId()), SpuInfoEntity::getCatalogId,
                 pageDTO.getCatalogId())
             .eq(!ObjectUtils.isEmpty(pageDTO.getStatus()), SpuInfoEntity::getPublishStatus,
                 pageDTO.getStatus())
+
             .and(!ObjectUtils.isEmpty(pageDTO.getKey()), w -> {
-              w.eq(NumberUtils.isCreatable(pageDTO.getKey()), SpuInfoEntity::getId, Long.parseLong(pageDTO.getKey()))
+              w.eq(NumberUtils.isCreatable(pageDTO.getKey()), SpuInfoEntity::getId,
+                      Long.parseLong(pageDTO.getKey()))
                   .or()
                   .like(SpuInfoEntity::getSpuName, pageDTO.getKey());
             })

@@ -1,6 +1,8 @@
 package com.atguigu.gulimall.product.service;
 
 import com.atguigu.gulimall.product.entity.SkuInfoEntity;
+import com.atguigu.gulimall.product.vo.SpuPageVo;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -10,4 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface SkuInfoService extends IService<SkuInfoEntity> {
 
+  IPage<SkuInfoEntity> pageWithCondition(SpuPageVo pageDTO);
 }

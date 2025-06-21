@@ -19,11 +19,6 @@ import utils.PageUtils;
 public class MemberLevelServiceImpl extends ServiceImpl<MemberLevelMapper, MemberLevelEntity>
     implements MemberLevelService {
 
-  @Override
-  public IPage<MemberLevelEntity> listWithPage(PageDTO pageDTO) {
-  return   baseMapper.selectPage(PageUtils.of(pageDTO), new LambdaQueryWrapper<>());
-//    return page(PageUtils.of(pageDTO));
-  }
 }
 
 
