@@ -25,6 +25,12 @@ spring:
             - Path=/api/renren-fast/product/**
           filters:
             - StripPrefix=2
+        - id: ware-service
+          uri: lb://gulimall-ware
+          predicates:
+            - Path=/api/renren-fast/ware/**
+          filters:
+            - StripPrefix=2
 
         - id: member-service
           uri: lb://gulimall-member

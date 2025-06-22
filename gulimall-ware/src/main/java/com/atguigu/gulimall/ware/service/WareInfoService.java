@@ -1,7 +1,9 @@
 package com.atguigu.gulimall.ware.service;
 
 import com.atguigu.gulimall.ware.entity.WareInfoEntity;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import utils.PageDTO;
 
 /**
  * @author tifa
@@ -10,4 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface WareInfoService extends IService<WareInfoEntity> {
 
+  IPage<WareInfoEntity> pageWithCondition(PageDTO pageDTO);
 }

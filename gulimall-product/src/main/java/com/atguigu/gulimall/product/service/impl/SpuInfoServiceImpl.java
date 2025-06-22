@@ -224,7 +224,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
 
             .and(!ObjectUtils.isEmpty(pageDTO.getKey()), w -> {
               w.eq(NumberUtils.isCreatable(pageDTO.getKey()), SpuInfoEntity::getId,
-                      Long.parseLong(pageDTO.getKey()))
+                      NumberUtils.toLong(pageDTO.getKey()))
                   .or()
                   .like(SpuInfoEntity::getSpuName, pageDTO.getKey());
             })
