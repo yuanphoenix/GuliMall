@@ -2,6 +2,7 @@ package com.atguigu.gulimall.product.service;
 
 import com.atguigu.gulimall.product.entity.ProductAttrValueEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
+import java.util.List;
 
 /**
  * @author tifa
@@ -10,4 +11,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ProductAttrValueService extends IService<ProductAttrValueEntity> {
 
+  List<ProductAttrValueEntity> selectBySpuId(Long spuId);
+
+  boolean updateBySpuInfo(Long spuId, List<ProductAttrValueEntity> productAttrValueEntityList);
 }

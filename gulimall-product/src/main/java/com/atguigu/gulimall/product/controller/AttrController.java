@@ -1,7 +1,9 @@
 package com.atguigu.gulimall.product.controller;
 
 import com.atguigu.gulimall.product.entity.AttrEntity;
+import com.atguigu.gulimall.product.entity.ProductAttrValueEntity;
 import com.atguigu.gulimall.product.service.AttrService;
+import com.atguigu.gulimall.product.service.ProductAttrValueService;
 import com.atguigu.gulimall.product.vo.AttrResponseVo;
 import com.atguigu.gulimall.product.vo.AttrVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -32,6 +34,23 @@ public class AttrController {
   @Autowired
   private AttrService attrService;
 
+  @Autowired
+  private ProductAttrValueService productAttrValueService;
+
+  @GetMapping("/base/listforspu/{spuId}")
+  public R spuInfo(@PathVariable("spuId") Long spuId) {
+    List<ProductAttrValueEntity> data = productAttrValueService.selectBySpuId(spuId);
+
+    return R.ok().put("data", data);
+  }
+
+  @PostMapping("/update/{spuId}")
+  public R updateSpuInfo(@PathVariable("spuId") Long spuId,
+      @RequestBody List<ProductAttrValueEntity> productAttrValueEntityList) {
+    boolean success = productAttrValueService.updateBySpuInfo(spuId, productAttrValueEntityList);
+    return success ? R.ok() : R.error();
+
+  }
 
   /**
    * 获取某个分类下的销售属性
