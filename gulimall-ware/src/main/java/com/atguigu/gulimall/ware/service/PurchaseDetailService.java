@@ -1,6 +1,8 @@
 package com.atguigu.gulimall.ware.service;
 
 import com.atguigu.gulimall.ware.entity.PurchaseDetailEntity;
+import com.atguigu.gulimall.ware.vo.WarePageVo;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -10,4 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface PurchaseDetailService extends IService<PurchaseDetailEntity> {
 
+  IPage<PurchaseDetailEntity> pageWithCondition(WarePageVo warePageVo);
 }

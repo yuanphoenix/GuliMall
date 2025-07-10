@@ -1,6 +1,8 @@
 package com.atguigu.gulimall.ware.service;
 
 import com.atguigu.gulimall.ware.entity.WareSkuEntity;
+import com.atguigu.gulimall.ware.vo.WarePageVo;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -10,4 +12,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface WareSkuService extends IService<WareSkuEntity> {
 
+  IPage<WareSkuEntity> pageWithCondition(WarePageVo pageDTO);
+
+
+  void addStock(Long wareId, Long skuId, Integer skuNum);
 }

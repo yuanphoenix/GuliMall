@@ -17,4 +17,10 @@
     id
     ,sku_id,ware_id,stock,sku_name,stock_locked
   </sql>
+  <update id="addStock">
+    update `wms_ware_sku`
+    set stock=stock + #{skuNum}
+    where sku_id = #{skuId}
+      and ware_id = #{wareId};
+  </update>
 </mapper>

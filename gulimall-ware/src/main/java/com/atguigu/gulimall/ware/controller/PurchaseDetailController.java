@@ -2,14 +2,18 @@ package com.atguigu.gulimall.ware.controller;
 
 import com.atguigu.gulimall.ware.entity.PurchaseDetailEntity;
 import com.atguigu.gulimall.ware.service.PurchaseDetailService;
+import com.atguigu.gulimall.ware.vo.WarePageVo;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import utils.PageUtils;
 import utils.R;
 
 /**
@@ -21,7 +25,7 @@ import utils.R;
  * @since 2025-05-09
  */
 @RestController
-@RequestMapping("/ware/purchaseDetail")
+@RequestMapping("/ware/purchasedetail")
 public class PurchaseDetailController {
 
   @Autowired
@@ -31,9 +35,9 @@ public class PurchaseDetailController {
    * 获取所有数据
    */
   @GetMapping("/list")
-  public R list() {
-    List<PurchaseDetailEntity> list = purchaseDetailService.list();
-    return R.ok().put("data", list);
+  public R list(@ModelAttribute WarePageVo pageDTO) {
+    IPage<PurchaseDetailEntity> list = purchaseDetailService.pageWithCondition(pageDTO);
+    return R.ok().put("page", list);
   }
 
   /**

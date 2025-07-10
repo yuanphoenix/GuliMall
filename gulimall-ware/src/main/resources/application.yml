@@ -17,3 +17,7 @@ spring:
       config:
         import-check:
           enabled: false
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

@@ -1,4 +1,5 @@
-package com.atguigu.gulimall.product.config;
+package com.atguigu.gulimall.ware.config;
+
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;

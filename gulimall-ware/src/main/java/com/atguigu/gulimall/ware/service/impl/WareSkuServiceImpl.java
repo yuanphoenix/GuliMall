@@ -3,8 +3,14 @@ package com.atguigu.gulimall.ware.service.impl;
 import com.atguigu.gulimall.ware.entity.WareSkuEntity;
 import com.atguigu.gulimall.ware.mapper.WareSkuMapper;
 import com.atguigu.gulimall.ware.service.WareSkuService;
+import com.atguigu.gulimall.ware.vo.WarePageVo;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
+import utils.PageUtils;
 
 /**
  * @author tifa
@@ -15,6 +21,32 @@ import org.springframework.stereotype.Service;
 public class WareSkuServiceImpl extends ServiceImpl<WareSkuMapper, WareSkuEntity>
     implements WareSkuService {
 
+
+  @Override
+  public IPage<WareSkuEntity> pageWithCondition(WarePageVo pageDTO) {
+    return page(PageUtils.of(pageDTO), new LambdaQueryWrapper<WareSkuEntity>()
+        .eq(!ObjectUtils.isEmpty(pageDTO.getSkuId()), WareSkuEntity::getSkuId, pageDTO.getSkuId())
+        .eq(!ObjectUtils.isEmpty(pageDTO.getWareId()), WareSkuEntity::getWareId,
+            pageDTO.getWareId()));
+  }
+
+  @Transactional(rollbackFor = Exception.class)
+  @Override
+  public void addStock(Long wareId, Long skuId, Integer skuNum) {
+    var wareSkuEntities = baseMapper.selectOne(
+        new LambdaQueryWrapper<WareSkuEntity>().eq(WareSkuEntity::getWareId, wareId)
+            .eq(WareSkuEntity::getSkuId, skuId));
+    if (wareSkuEntities != null) {
+      baseMapper.addStock(wareId, skuId, skuNum);
+    } else {
+      WareSkuEntity wareSkuEntity = new WareSkuEntity();
+      wareSkuEntity.setWareId(wareId);
+      wareSkuEntity.setSkuId(skuId);
+      wareSkuEntity.setStock(skuNum);
+      save(wareSkuEntity);
+    }
+
+  }
 }
 
 
