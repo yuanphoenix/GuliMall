@@ -6,14 +6,14 @@ spring:
     name: gulimall-ware
 
   datasource:
-    username: root
-    password: root
-    url: jdbc:mysql://localhost:3306/gulimall_wms
+    username: tifa
+    password: rootPassword
+    url: jdbc:mysql://10.200.200.1:3306/gulimall_wms
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   cloud:
     nacos:
-      server-addr: 127.0.0.1:8848
+      server-addr: 10.200.200.1:8848
       config:
         import-check:
           enabled: false

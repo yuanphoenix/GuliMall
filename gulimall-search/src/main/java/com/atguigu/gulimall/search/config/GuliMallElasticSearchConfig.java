@@ -11,7 +11,7 @@ public class GuliMallElasticSearchConfig {
   @Bean
   public ElasticsearchClient esClient() {
     return ElasticsearchClient.of(b -> b
-        .host("http://127.0.0.1:9200")
+        .host("http://10.200.200.1:9200")
     );
   }
 

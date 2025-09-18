@@ -9,7 +9,7 @@ public class CodeGenerator {
 
 
   public static void main(String[] args) {
-    FastAutoGenerator.create("jdbc:mysql://localhost:3306/gulimall_wms", "root", "root")
+    FastAutoGenerator.create("jdbc:mysql://10.200.200.1:3306/gulimall_wms", "root", "root")
         .globalConfig(builder -> {
           builder.author("tifa") // 设置作者
               .enableSwagger() // 开启 swagger 模式

@@ -6,7 +6,7 @@ spring:
     name: gulimall-search
   cloud:
     nacos:
-      server-addr: 127.0.0.1:8848
+      server-addr: 10.200.200.1:8848
       config:
         import-check:
           enabled: false
