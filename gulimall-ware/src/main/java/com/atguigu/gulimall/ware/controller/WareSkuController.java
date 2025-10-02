@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import utils.PageDTO;
+import to.SkuHasStockTo;
 import utils.R;
 
 /**
@@ -30,6 +30,13 @@ public class WareSkuController {
 
   @Autowired
   private WareSkuService wareSkuService;
+
+
+  @PostMapping("/hasstock")
+  public R getSkuHasStock(@RequestBody List<Long> skuIds) {
+    List<SkuHasStockTo> list = wareSkuService.getSkuHasStock(skuIds);
+    return R.ok().put("data", list);
+  }
 
   /**
    * 获取所有数据

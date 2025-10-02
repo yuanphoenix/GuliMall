@@ -23,4 +23,6 @@ public interface SpuInfoService extends IService<SpuInfoEntity> {
   boolean saveSpu(SpuInfoVo spuInfoVo);
 
   IPage<SpuInfoEntity> pageWithCondition(SpuPageVo pageDTO);
+
+  void up(Long id);
 }

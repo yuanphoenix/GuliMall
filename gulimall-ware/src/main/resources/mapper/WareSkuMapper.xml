@@ -25,4 +25,15 @@
     where sku_id = #{skuId}
       and ware_id = #{wareId};
   </update>
+
+  <!-- 根据skuids 判断各个sku是否还有库存 -->
+  <select id="hasStock" resultType="to.SkuHasStockTo">
+    select sku_id as skuId ,SUM(stock-stock_locked)>0 as hasStock
+    from `wms_ware_sku`
+    where sku_id IN
+    <foreach collection="skuIds" item="id" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+    GROUP BY sku_id;
+  </select>
 </mapper>

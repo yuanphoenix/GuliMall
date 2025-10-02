@@ -13,10 +13,6 @@ class GulimallSearchApplicationTests {
   @Autowired
   private ElasticsearchClient esClient;
 
-  @Test
-  void contextLoads() {
-    System.out.println(esClient);
-  }
 
   class Product {
 

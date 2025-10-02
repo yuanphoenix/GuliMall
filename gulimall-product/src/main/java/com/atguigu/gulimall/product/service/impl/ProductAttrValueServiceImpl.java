@@ -44,6 +44,11 @@ public class ProductAttrValueServiceImpl extends
 
     return true;
   }
+
+  @Override
+  public List<ProductAttrValueEntity> selectSearchValueBySpuId(Long spuId) {
+    return baseMapper.selectSearchValueBySpuId(spuId);
+  }
 }
 
 

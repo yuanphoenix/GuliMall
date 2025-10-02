@@ -2,6 +2,8 @@ package com.atguigu.gulimall.product.mapper;
 
 import com.atguigu.gulimall.product.entity.ProductAttrValueEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @author tifa
@@ -10,6 +12,14 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @Entity com.atguigu.gulimall.product.entity.ProductAttrValueEntity
  */
 public interface ProductAttrValueMapper extends BaseMapper<ProductAttrValueEntity> {
+
+  /**
+   * 根据spuId查询可以被检索到的attr名称和值
+   *
+   * @param spuId
+   * @return
+   */
+  List<ProductAttrValueEntity> selectSearchValueBySpuId(@Param("spuId") Long spuId);
 
 }
 

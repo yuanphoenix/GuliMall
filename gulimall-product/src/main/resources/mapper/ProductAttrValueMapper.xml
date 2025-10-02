@@ -19,4 +19,13 @@
     ,spu_id,attr_id,attr_name,attr_value,attr_sort,
         quick_show
   </sql>
+  <select id="selectSearchValueBySpuId"
+          resultType="com.atguigu.gulimall.product.entity.ProductAttrValueEntity">
+    SELECT ppav.*
+    FROM pms_product_attr_value ppav
+           INNER JOIN pms_attr pa ON ppav.attr_id = pa.attr_id
+    WHERE pa.search_type = 1
+      AND ppav.spu_id = #{spuId};
+
+  </select>
 </mapper>

@@ -2,7 +2,9 @@ package com.atguigu.gulimall.ware.mapper;
 
 import com.atguigu.gulimall.ware.entity.WareSkuEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import to.SkuHasStockTo;
 
 /**
  * @author tifa
@@ -13,7 +15,11 @@ import org.apache.ibatis.annotations.Param;
 public interface WareSkuMapper extends BaseMapper<WareSkuEntity> {
 
   //多个参数一定要为每一个参数生成Param
-  void addStock(@Param("wareId") Long wareId, @Param("skuId") Long skuId, @Param("skuNum") Integer skuNum);
+  void addStock(@Param("wareId") Long wareId, @Param("skuId") Long skuId,
+      @Param("skuNum") Integer skuNum);
+
+  List<SkuHasStockTo> hasStock(@Param("skuIds") List<Long> skuIds);
+
 }
 
 

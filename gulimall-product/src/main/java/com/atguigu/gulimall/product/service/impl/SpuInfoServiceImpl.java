@@ -1,6 +1,8 @@
 package com.atguigu.gulimall.product.service.impl;
 
 import com.atguigu.gulimall.product.entity.AttrEntity;
+import com.atguigu.gulimall.product.entity.BrandEntity;
+import com.atguigu.gulimall.product.entity.CategoryEntity;
 import com.atguigu.gulimall.product.entity.ProductAttrValueEntity;
 import com.atguigu.gulimall.product.entity.SkuImagesEntity;
 import com.atguigu.gulimall.product.entity.SkuInfoEntity;
@@ -9,6 +11,8 @@ import com.atguigu.gulimall.product.entity.SpuImagesEntity;
 import com.atguigu.gulimall.product.entity.SpuInfoDescEntity;
 import com.atguigu.gulimall.product.entity.SpuInfoEntity;
 import com.atguigu.gulimall.product.feign.CouponFeignService;
+import com.atguigu.gulimall.product.feign.EsFeign;
+import com.atguigu.gulimall.product.feign.WareFeignService;
 import com.atguigu.gulimall.product.mapper.AttrMapper;
 import com.atguigu.gulimall.product.mapper.ProductAttrValueMapper;
 import com.atguigu.gulimall.product.mapper.SkuImagesMapper;
@@ -17,6 +21,10 @@ import com.atguigu.gulimall.product.mapper.SkuSaleAttrValueMapper;
 import com.atguigu.gulimall.product.mapper.SpuImagesMapper;
 import com.atguigu.gulimall.product.mapper.SpuInfoDescMapper;
 import com.atguigu.gulimall.product.mapper.SpuInfoMapper;
+import com.atguigu.gulimall.product.service.BrandService;
+import com.atguigu.gulimall.product.service.CategoryService;
+import com.atguigu.gulimall.product.service.ProductAttrValueService;
+import com.atguigu.gulimall.product.service.SkuInfoService;
 import com.atguigu.gulimall.product.service.SpuInfoService;
 import com.atguigu.gulimall.product.vo.SpuPageVo;
 import com.atguigu.gulimall.product.vo.spuinfo.BaseAttrs;
@@ -24,20 +32,30 @@ import com.atguigu.gulimall.product.vo.spuinfo.Images;
 import com.atguigu.gulimall.product.vo.spuinfo.Skus;
 import com.atguigu.gulimall.product.vo.spuinfo.SpuInfoVo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
+import to.SkuHasStockTo;
 import to.SkuReducitionTo;
 import to.SpuBoundsTo;
+import to.es.SkuEsModel;
+import to.es.SkuEsModel.Attrs;
 import utils.PageUtils;
 import utils.R;
 
@@ -50,22 +68,35 @@ import utils.R;
 public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity>
     implements SpuInfoService {
 
+  private static final Logger logger = LoggerFactory.getLogger(SpuInfoServiceImpl.class);
+
+  private final WareFeignService wareFeignService;
+
+  private final SkuInfoService skuInfoService;
+
   private final SpuInfoDescMapper spuInfoDescMapper;
   private final SpuImagesMapper spuImagesMapper;
 
 
+  private final BrandService brandService;
+
+  private final EsFeign esFeign;
+  private final CategoryService categoryService;
   private final AttrMapper attrMapper;
   private final ProductAttrValueMapper productAttrValueMapper;
   private final SkuInfoMapper skuInfoMapper;
   private final SkuImagesMapper skuImagesMapper;
   private final SkuSaleAttrValueMapper skuSaleAttrValueMapper;
-
+  private final ProductAttrValueService productAttrValueService;
   private final CouponFeignService couponFeignService;
 
   public SpuInfoServiceImpl(SpuInfoDescMapper spuInfoDescMapper, SpuImagesMapper spuImagesMapper,
       AttrMapper attrMapper, ProductAttrValueMapper productAttrValueMapper,
       SkuInfoMapper skuInfoMapper, SkuImagesMapper skuImagesMapper,
-      SkuSaleAttrValueMapper skuSaleAttrValueMapper, CouponFeignService couponFeignService) {
+      SkuSaleAttrValueMapper skuSaleAttrValueMapper, CouponFeignService couponFeignService,
+      SkuInfoService skuInfoService, BrandService brandService, CategoryService categoryService,
+      ProductAttrValueService productAttrValueService, WareFeignService wareFeignService,
+      EsFeign esFeign) {
 
     this.spuInfoDescMapper = spuInfoDescMapper;
     this.spuImagesMapper = spuImagesMapper;
@@ -75,6 +106,12 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
     this.skuImagesMapper = skuImagesMapper;
     this.skuSaleAttrValueMapper = skuSaleAttrValueMapper;
     this.couponFeignService = couponFeignService;
+    this.skuInfoService = skuInfoService;
+    this.brandService = brandService;
+    this.categoryService = categoryService;
+    this.productAttrValueService = productAttrValueService;
+    this.wareFeignService = wareFeignService;
+    this.esFeign = esFeign;
   }
 
   @Transactional(rollbackFor = Exception.class)
@@ -229,6 +266,72 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
                   .like(SpuInfoEntity::getSpuName, pageDTO.getKey());
             })
     );
+  }
+
+  /**
+   * 商品上架，就是将mysql中的数据安装一个数据模型转移到Es中。
+   *
+   * @param spuId
+   */
+  @Override
+  public void up(Long spuId) {
+
+    List<SkuEsModel> upProducts = new ArrayList<>();
+    //根据spuID上架许多sku，所以需要一个list
+    List<SkuInfoEntity> skuInfoEntityList = skuInfoService.getSkuBySpuId(spuId);
+
+    List<ProductAttrValueEntity> productAttrValueEntityList = productAttrValueService.selectSearchValueBySpuId(
+        spuId);
+
+    List<Attrs> attrsList = productAttrValueEntityList.stream().map(attr -> {
+      Attrs attrs = new Attrs();
+      BeanUtils.copyProperties(attr, attrs);
+      return attrs;
+    }).toList();
+
+    R skuHasStock = wareFeignService.getSkuHasStock(
+        skuInfoEntityList.stream().mapToLong(SkuInfoEntity::getSkuId).boxed().toList());
+
+    ObjectMapper objectMapper = new ObjectMapper();
+    List<SkuHasStockTo> skuHasStockTos = objectMapper.convertValue(skuHasStock.get("data"),
+        new TypeReference<>() {
+        });
+    Map<Long, Boolean> collect = skuHasStockTos.stream()
+        .collect(Collectors.toMap(SkuHasStockTo::getSkuId, SkuHasStockTo::getHasStock));
+    upProducts = skuInfoEntityList.stream().map(sku -> {
+      SkuEsModel skuEsModel = new SkuEsModel();
+      BeanUtils.copyProperties(sku, skuEsModel);
+      skuEsModel.setSkuPrice(sku.getPrice());
+      skuEsModel.setSkuImg(sku.getSkuDefaultImg());
+
+      skuEsModel.setHasStock(Boolean.TRUE.equals(collect.get(sku.getSkuId())));
+
+      skuEsModel.setHotScore(0L);
+
+      BrandEntity brand = brandService.getById(sku.getBrandId());
+      CategoryEntity category = categoryService.getById(sku.getCatalogId());
+      if (category != null) {
+        skuEsModel.setCatalogId(category.getCatId());
+        skuEsModel.setCatalogName(category.getName());
+      }
+      if (brand != null) {
+        skuEsModel.setBrandName(brand.getName());
+        skuEsModel.setBrandId(brand.getBrandId());
+        skuEsModel.setBrandImg(brand.getLogo());
+      }
+      skuEsModel.setAttrs(attrsList);
+      return skuEsModel;
+    }).toList();
+    R r = esFeign.productStatusUp(upProducts);
+    if (r.getCode() == 0) {
+      this.baseMapper.update(
+          new LambdaUpdateWrapper<SpuInfoEntity>().set(SpuInfoEntity::getPublishStatus, 1)
+              .eq(SpuInfoEntity::getId, spuId));
+      logger.info("上架成功");
+    } else {
+      //上架失败，考虑重复调用。接口幂等性，重试机制？
+      logger.error("上架失败");
+    }
   }
 
 }

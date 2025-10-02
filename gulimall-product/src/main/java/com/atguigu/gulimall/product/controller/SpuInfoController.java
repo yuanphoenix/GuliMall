@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import utils.PageDTO;
-import utils.PageUtils;
 import utils.R;
 
 /**
@@ -66,6 +64,19 @@ public class SpuInfoController {
   public R update(@RequestBody SpuInfoEntity spuInfo) {
     boolean updated = spuInfoService.updateById(spuInfo);
     return updated ? R.ok() : R.error();
+  }
+
+  /**
+   *
+   * 商品上架接口
+   *
+   * @param id
+   * @return
+   */
+  @PostMapping("/{spuid}/up")
+  public R up(@PathVariable("spuid") Long id) {
+    spuInfoService.up(id);
+    return R.ok();
   }
 
   /**

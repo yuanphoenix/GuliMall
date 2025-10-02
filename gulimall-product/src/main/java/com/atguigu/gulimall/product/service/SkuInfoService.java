@@ -4,6 +4,7 @@ import com.atguigu.gulimall.product.entity.SkuInfoEntity;
 import com.atguigu.gulimall.product.vo.SpuPageVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import java.util.List;
 
 /**
  * @author tifa
@@ -13,4 +14,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface SkuInfoService extends IService<SkuInfoEntity> {
 
   IPage<SkuInfoEntity> pageWithCondition(SpuPageVo pageDTO);
+
+  List<SkuInfoEntity> getSkuBySpuId(Long spuId);
 }

@@ -7,9 +7,11 @@ import com.atguigu.gulimall.ware.vo.WarePageVo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
+import to.SkuHasStockTo;
 import utils.PageUtils;
 
 /**
@@ -46,6 +48,17 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuMapper, WareSkuEntity
       save(wareSkuEntity);
     }
 
+  }
+
+  /**
+   * 根据skuid查询是否有库存
+   *
+   * @param skuIds 被查询的skuid列表
+   * @return
+   */
+  @Override
+  public List<SkuHasStockTo> getSkuHasStock(List<Long> skuIds) {
+    return this.baseMapper.hasStock(skuIds);
   }
 }
 
