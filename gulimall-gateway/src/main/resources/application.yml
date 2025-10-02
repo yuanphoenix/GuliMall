@@ -47,6 +47,11 @@ spring:
           filters:
             - StripPrefix=1
 
+        - id: gulimall-host
+          uri: lb://gulimall-product
+          predicates:
+            - Host=**.gulimall.com
+
   config:
     import:
       - nacos:gulimall-gateway.properties?refreshEnabled=true&group=DEFAULT_GROUP
