@@ -3,7 +3,10 @@ package com.atguigu.gulimall.product.service.impl;
 import com.atguigu.gulimall.product.entity.CategoryEntity;
 import com.atguigu.gulimall.product.mapper.CategoryMapper;
 import com.atguigu.gulimall.product.service.CategoryService;
+import com.atguigu.gulimall.product.vo.Catelog2Vo;
+import com.atguigu.gulimall.product.vo.Catelog2Vo.Catelog3Vo;
 import com.atguigu.gulimall.product.vo.TreeVoRequest;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import java.util.ArrayList;
@@ -11,7 +14,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -158,6 +163,43 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
         categoryEntityList.stream().map(CategoryEntity::getCatId).filter(Objects::nonNull).toList())
         >= 0;
 
+  }
+
+  @Override
+  public List<CategoryEntity> selectLevelOneCategorys() {
+    return this.baseMapper.selectList(
+        new LambdaQueryWrapper<CategoryEntity>().eq(CategoryEntity::getParentCid, 0));
+
+  }
+
+  @Override
+  public Map<String, List<Catelog2Vo>> getCatalogJson() {
+
+    List<CategoryEntity> categoryEntities = this.baseMapper.selectList(null);
+    //构建第一层
+    Map<String, List<Catelog2Vo>> result = categoryEntities.stream()
+        .filter(a -> a.getCatLevel() == 1).map(CategoryEntity::getCatId)
+        .collect(
+            Collectors.toMap(String::valueOf, a -> new ArrayList<Catelog2Vo>()));
+
+    var level2Map = categoryEntities.stream().filter(a -> a.getCatLevel() == 3).map(a -> {
+      Catelog3Vo catelog3Vo = new Catelog3Vo();
+      catelog3Vo.setId(String.valueOf(a.getCatId()));
+      catelog3Vo.setName(a.getName());
+      catelog3Vo.setCatalog2Id(String.valueOf(a.getParentCid()));
+      return catelog3Vo;
+    }).collect(Collectors.groupingBy(Catelog3Vo::getCatalog2Id));
+
+    categoryEntities.stream().filter(a -> a.getCatLevel() == 2).forEach(a -> {
+      Catelog2Vo catelog2Vo = new Catelog2Vo();
+      catelog2Vo.setCatalog1Id(String.valueOf(a.getParentCid()));
+      catelog2Vo.setId(String.valueOf(a.getCatId()));
+      catelog2Vo.setName(a.getName());
+      catelog2Vo.setCatalog3List(level2Map.getOrDefault(catelog2Vo.getId(), List.of()));
+      result.get(catelog2Vo.getCatalog1Id()).add(catelog2Vo);
+    });
+
+    return result;
   }
 
 

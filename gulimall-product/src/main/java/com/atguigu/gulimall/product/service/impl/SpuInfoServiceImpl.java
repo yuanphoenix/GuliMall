@@ -269,7 +269,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
   }
 
   /**
-   * 商品上架，就是将mysql中的数据安装一个数据模型转移到Es中。
+   * 商品上架，就是将mysql中的数据按照一个数据模型转移到Es中。
    *
    * @param spuId
    */
@@ -280,15 +280,18 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
     //根据spuID上架许多sku，所以需要一个list
     List<SkuInfoEntity> skuInfoEntityList = skuInfoService.getSkuBySpuId(spuId);
 
+    //获取这个spu涉及到的属性
     List<ProductAttrValueEntity> productAttrValueEntityList = productAttrValueService.selectSearchValueBySpuId(
         spuId);
 
+    //避免重复查询，一次性查询好
     List<Attrs> attrsList = productAttrValueEntityList.stream().map(attr -> {
       Attrs attrs = new Attrs();
       BeanUtils.copyProperties(attr, attrs);
       return attrs;
     }).toList();
 
+    //从ware微服务，拿到是否有库存的信息
     R skuHasStock = wareFeignService.getSkuHasStock(
         skuInfoEntityList.stream().mapToLong(SkuInfoEntity::getSkuId).boxed().toList());
 
@@ -298,14 +301,14 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
         });
     Map<Long, Boolean> collect = skuHasStockTos.stream()
         .collect(Collectors.toMap(SkuHasStockTo::getSkuId, SkuHasStockTo::getHasStock));
+
+
     upProducts = skuInfoEntityList.stream().map(sku -> {
       SkuEsModel skuEsModel = new SkuEsModel();
       BeanUtils.copyProperties(sku, skuEsModel);
       skuEsModel.setSkuPrice(sku.getPrice());
       skuEsModel.setSkuImg(sku.getSkuDefaultImg());
-
       skuEsModel.setHasStock(Boolean.TRUE.equals(collect.get(sku.getSkuId())));
-
       skuEsModel.setHotScore(0L);
 
       BrandEntity brand = brandService.getById(sku.getBrandId());
@@ -322,6 +325,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
       skuEsModel.setAttrs(attrsList);
       return skuEsModel;
     }).toList();
+    //上架es
     R r = esFeign.productStatusUp(upProducts);
     if (r.getCode() == 0) {
       this.baseMapper.update(

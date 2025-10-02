@@ -1,9 +1,11 @@
 package com.atguigu.gulimall.product.service;
 
 import com.atguigu.gulimall.product.entity.CategoryEntity;
+import com.atguigu.gulimall.product.vo.Catelog2Vo;
 import com.atguigu.gulimall.product.vo.TreeVoRequest;
 import com.baomidou.mybatisplus.extension.service.IService;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author tifa
@@ -21,4 +23,8 @@ public interface CategoryService extends IService<CategoryEntity> {
   boolean sort(TreeVoRequest treeVoRequest);
 
   boolean removeBatchByEntities(List<CategoryEntity> categoryEntityList);
+
+  List<CategoryEntity> selectLevelOneCategorys();
+
+  Map<String,  List<Catelog2Vo>> getCatalogJson();
 }
