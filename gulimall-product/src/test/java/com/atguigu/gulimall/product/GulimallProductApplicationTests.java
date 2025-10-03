@@ -4,17 +4,21 @@ import com.aliyuncs.exceptions.ClientException;
 import java.io.FileNotFoundException;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.util.ObjectUtils;
 
 @SpringBootTest
 class GulimallProductApplicationTests {
 
   @Autowired
   private StringRedisTemplate redisTemplate;
+
+  @Autowired
+  private RedissonClient redissonClient;
 
   @Test
   void testRedis() {
@@ -25,9 +29,12 @@ class GulimallProductApplicationTests {
 
 
   @Test
-  void testUtils() {
-    System.out.println(ObjectUtils.isEmpty(10));
-
+  void testRedission() throws InterruptedException {
+    RLock mylock = redissonClient.getLock("mylock");
+    mylock.lock();
+    Thread.sleep(50000);
+    mylock.unlock();
+    System.out.println("解锁啦");
   }
 
   @Test
