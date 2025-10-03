@@ -19,12 +19,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import utils.JsonUtils;
@@ -48,12 +50,14 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
   @Override
   public List<CategoryEntity> listWithTree() {
 
-    List<CategoryEntity> list = list();
-    for (var c : list) {
-      if (c.getSort() == null) {
-        c.setSort(0);
-      }
+    String s = redisTemplate.opsForValue().get("categoryTree");
+    if (!StringUtils.isEmpty(s)) {
+      return JsonUtils.convertJson2Object(s, new TypeReference<>() {
+      });
     }
+
+    List<CategoryEntity> list = baseMapper.selectList(null);
+    list.forEach(c -> c.setSort(c.getSort() == null ? 0 : c.getSort()));
     list.sort(Comparator.comparingInt(CategoryEntity::getSort));
     HashMap<Long, CategoryEntity> categoryMap = new HashMap<>();
     for (CategoryEntity category : list) {
@@ -67,7 +71,10 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
       categoryMap.get(category.getParentCid()).setLeaf(Boolean.FALSE);
     }
 
-    return list.stream().filter(e -> e.getCatLevel() == 1).toList();
+    List<CategoryEntity> result = list.stream().filter(e -> e.getCatLevel() == 1).toList();
+    redisTemplate.opsForValue()
+        .set("categoryTree", JsonUtils.convertObject2Json(result), Duration.ofHours(1));
+    return result;
   }
 
   @Override
@@ -193,15 +200,39 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
     /**
      * 为了跨平台，缓存中都保存JSON数据。
      */
-    String catalogJson = redisTemplate.opsForValue().get("catalogJson");
-    if (!StringUtils.isEmpty(catalogJson)) {
-      return JsonUtils.convertJson2Object(catalogJson, new TypeReference<>() {
-      });
+
+    while (true) {
+      String catalogJson = redisTemplate.opsForValue().get("catalogJson");
+
+      if (!StringUtils.isEmpty(catalogJson)) {
+        return JsonUtils.convertJson2Object(catalogJson, new TypeReference<>() {
+        });
+      }
+
+      String uuid = UUID.randomUUID().toString();
+      Boolean lock = redisTemplate.opsForValue().setIfAbsent("lock", uuid, Duration.ofSeconds(300));
+      if (Boolean.TRUE.equals(lock)) {
+        Map<String, List<Catelog2Vo>> catalogJsonFromDB = getCatalogJsonFromDB();
+        String json = JsonUtils.convertObject2Json(catalogJsonFromDB);
+        redisTemplate.opsForValue().set("catalogJson", json, Duration.ofHours(1));
+        String script = "if redis.call('get', KEYS[1]) == ARGV[1] then\n"
+            + "    return redis.call('del', KEYS[1])\n"
+            + "else\n"
+            + "    return 0\n"
+            + "end\n";
+        Long lock1 = redisTemplate.execute(new DefaultRedisScript<>(script, Long.class),
+            List.of("lock"),
+            uuid);
+        logger.warn(lock1 + "");
+        return catalogJsonFromDB;
+      } else {
+        try {
+          Thread.sleep(50);
+        } catch (InterruptedException e) {
+          throw new RuntimeException(e);
+        }
+      }
     }
-    Map<String, List<Catelog2Vo>> catalogJsonFromDB = getCatalogJsonFromDB();
-    String json = JsonUtils.convertObject2Json(catalogJsonFromDB);
-    redisTemplate.opsForValue().set("catalogJson", json, Duration.ofHours(1));
-    return catalogJsonFromDB;
   }
 
 
