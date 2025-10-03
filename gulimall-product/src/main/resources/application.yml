@@ -8,6 +8,13 @@ spring:
     password: rootPassword
     url: jdbc:mysql://10.200.200.1:3306/gulimall_pms
 
+    hikari:
+      minimum-idle: 10          # 最小空闲连接数
+      maximum-pool-size: 50     # 连接池最大连接数（根据并发量和数据库性能调节）
+      idle-timeout: 600000      # 空闲连接最大存活时间（10分钟）
+      max-lifetime: 1800000     # 连接最长存活时间（30分钟）
+      connection-timeout: 30000 # 等待连接的最大时长（30秒）
+
   cloud:
     nacos:
       server-addr: 10.200.200.1:8848

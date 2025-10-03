@@ -168,14 +168,18 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
   @Override
   public List<CategoryEntity> selectLevelOneCategorys() {
     return this.baseMapper.selectList(
-        new LambdaQueryWrapper<CategoryEntity>().eq(CategoryEntity::getParentCid, 0));
+        new LambdaQueryWrapper<CategoryEntity>().eq(CategoryEntity::getParentCid, 0)
+            .select(CategoryEntity::getCatId, CategoryEntity::getName));
 
   }
 
   @Override
   public Map<String, List<Catelog2Vo>> getCatalogJson() {
 
-    List<CategoryEntity> categoryEntities = this.baseMapper.selectList(null);
+    List<CategoryEntity> categoryEntities = this.baseMapper.selectList(
+        new LambdaQueryWrapper<CategoryEntity>().select(CategoryEntity::getCatId,
+            CategoryEntity::getName,
+            CategoryEntity::getParentCid, CategoryEntity::getCatLevel));
     //构建第一层
     Map<String, List<Catelog2Vo>> result = categoryEntities.stream()
         .filter(a -> a.getCatLevel() == 1).map(CategoryEntity::getCatId)
