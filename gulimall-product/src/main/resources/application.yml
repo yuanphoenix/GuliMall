@@ -24,9 +24,14 @@ spring:
 
   thymeleaf:
     cache: false
+  data:
+    redis:
+      host: 10.200.200.1
+      port: 6379
 
 server:
   port: 10000
+
 
 mybatis-plus:
   global-config:

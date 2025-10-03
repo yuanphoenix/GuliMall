@@ -12,6 +12,7 @@ public class PageUtils<T> {
 
 
   public PageUtils() {
+
   }
 
   public PageUtils(IPage<T> page) {

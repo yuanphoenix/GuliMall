@@ -7,7 +7,6 @@ import org.apache.http.HttpStatus;
 
 public class R extends HashMap<String, Object> {
 
-
   public static R ok() {
     R r = new R();
     r.put("code", 0);

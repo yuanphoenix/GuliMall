@@ -2,12 +2,27 @@ package com.atguigu.gulimall.product;
 
 import com.aliyuncs.exceptions.ClientException;
 import java.io.FileNotFoundException;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.util.ObjectUtils;
 
 @SpringBootTest
 class GulimallProductApplicationTests {
+
+  @Autowired
+  private StringRedisTemplate redisTemplate;
+
+  @Test
+  void testRedis() {
+    ValueOperations<String, String> stringStringValueOperations = redisTemplate.opsForValue();
+    stringStringValueOperations.set("hello", "world" + UUID.randomUUID());
+    System.out.println(stringStringValueOperations.get("hello"));
+  }
+
 
   @Test
   void testUtils() {

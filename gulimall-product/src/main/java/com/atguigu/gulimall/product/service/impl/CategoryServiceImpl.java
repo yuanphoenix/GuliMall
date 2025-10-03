@@ -1,5 +1,6 @@
 package com.atguigu.gulimall.product.service.impl;
 
+
 import com.atguigu.gulimall.product.entity.CategoryEntity;
 import com.atguigu.gulimall.product.mapper.CategoryMapper;
 import com.atguigu.gulimall.product.service.CategoryService;
@@ -9,6 +10,8 @@ import com.atguigu.gulimall.product.vo.TreeVoRequest;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.core.type.TypeReference;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -17,9 +20,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import utils.JsonUtils;
 
 /**
  * @author tifa
@@ -29,6 +37,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEntity>
     implements CategoryService {
+
+  private static final Logger logger = LoggerFactory.getLogger(CategoryServiceImpl.class);
+  private final StringRedisTemplate redisTemplate;
+
+  public CategoryServiceImpl(StringRedisTemplate redisTemplate) {
+    this.redisTemplate = redisTemplate;
+  }
 
   @Override
   public List<CategoryEntity> listWithTree() {
@@ -175,6 +190,27 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
 
   @Override
   public Map<String, List<Catelog2Vo>> getCatalogJson() {
+    /**
+     * 为了跨平台，缓存中都保存JSON数据。
+     */
+    String catalogJson = redisTemplate.opsForValue().get("catalogJson");
+    if (!StringUtils.isEmpty(catalogJson)) {
+      return JsonUtils.convertJson2Object(catalogJson, new TypeReference<>() {
+      });
+    }
+    Map<String, List<Catelog2Vo>> catalogJsonFromDB = getCatalogJsonFromDB();
+    String json = JsonUtils.convertObject2Json(catalogJsonFromDB);
+    redisTemplate.opsForValue().set("catalogJson", json, Duration.ofHours(1));
+    return catalogJsonFromDB;
+  }
+
+
+  /**
+   * 从数据库查询分类数据
+   *
+   * @return
+   */
+  public Map<String, List<Catelog2Vo>> getCatalogJsonFromDB() {
 
     List<CategoryEntity> categoryEntities = this.baseMapper.selectList(
         new LambdaQueryWrapper<CategoryEntity>().select(CategoryEntity::getCatId,
