@@ -4,6 +4,9 @@ server:
 spring:
   application:
     name: gulimall-search
+
+  thymeleaf:
+    cache: false
   cloud:
     nacos:
       server-addr: 10.200.200.1:8848

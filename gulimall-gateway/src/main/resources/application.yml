@@ -47,10 +47,15 @@ spring:
           filters:
             - StripPrefix=1
 
+        - id: gulimall-search-host
+          uri: lb://gulimall-search
+          predicates:
+            - Host=search.gulimall.com,*.search.gulimall.com
+
         - id: gulimall-host
           uri: lb://gulimall-product
           predicates:
-            - Host=**.gulimall.com
+            - Host=gulimall.com,*.gulimall.com
 
   config:
     import:
