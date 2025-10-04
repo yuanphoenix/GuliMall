@@ -19,16 +19,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import org.apache.commons.lang3.StringUtils;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import utils.JsonUtils;
 
 /**
@@ -42,16 +44,18 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
 
   private static final Logger logger = LoggerFactory.getLogger(CategoryServiceImpl.class);
   private final StringRedisTemplate redisTemplate;
+  private final RedissonClient redissonClient;
 
-  public CategoryServiceImpl(StringRedisTemplate redisTemplate) {
+  public CategoryServiceImpl(StringRedisTemplate redisTemplate, RedissonClient redissonClient) {
     this.redisTemplate = redisTemplate;
+    this.redissonClient = redissonClient;
   }
 
   @Override
   public List<CategoryEntity> listWithTree() {
 
     String s = redisTemplate.opsForValue().get("categoryTree");
-    if (!StringUtils.isEmpty(s)) {
+    if (!StringUtils.hasText(s)) {
       return JsonUtils.convertJson2Object(s, new TypeReference<>() {
       });
     }
@@ -187,53 +191,96 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
 
   }
 
+  @Cacheable(value = "#root.methodName", key = "'level1'")
   @Override
   public List<CategoryEntity> selectLevelOneCategorys() {
     return this.baseMapper.selectList(
         new LambdaQueryWrapper<CategoryEntity>().eq(CategoryEntity::getParentCid, 0)
             .select(CategoryEntity::getCatId, CategoryEntity::getName));
-
   }
 
+  /**
+   * 使用redisson来实现分布式锁
+   *
+   * @return
+   */
   @Override
   public Map<String, List<Catelog2Vo>> getCatalogJson() {
-    /**
-     * 为了跨平台，缓存中都保存JSON数据。
-     */
+    String catalogJson = redisTemplate.opsForValue().get("catalogJson");
+    if (StringUtils.hasText(catalogJson)) {
+      return JsonUtils.convertJson2Object(catalogJson, new TypeReference<>() {
+      });
+    }
 
-    while (true) {
-      String catalogJson = redisTemplate.opsForValue().get("catalogJson");
+    RLock catalock = redissonClient.getLock("catalogJsonLock");
 
-      if (!StringUtils.isEmpty(catalogJson)) {
+    try {
+      boolean b = catalock.tryLock(30, 10, TimeUnit.SECONDS);
+      if (!b) {
+        return getCatalogJsonFromDB();
+      }
+      catalogJson = redisTemplate.opsForValue().get("catalogJson");
+
+      if (StringUtils.hasText(catalogJson)) {
         return JsonUtils.convertJson2Object(catalogJson, new TypeReference<>() {
         });
       }
-
-      String uuid = UUID.randomUUID().toString();
-      Boolean lock = redisTemplate.opsForValue().setIfAbsent("lock", uuid, Duration.ofSeconds(300));
-      if (Boolean.TRUE.equals(lock)) {
-        Map<String, List<Catelog2Vo>> catalogJsonFromDB = getCatalogJsonFromDB();
-        String json = JsonUtils.convertObject2Json(catalogJsonFromDB);
-        redisTemplate.opsForValue().set("catalogJson", json, Duration.ofHours(1));
-        String script = "if redis.call('get', KEYS[1]) == ARGV[1] then\n"
-            + "    return redis.call('del', KEYS[1])\n"
-            + "else\n"
-            + "    return 0\n"
-            + "end\n";
-        Long lock1 = redisTemplate.execute(new DefaultRedisScript<>(script, Long.class),
-            List.of("lock"),
-            uuid);
-        logger.warn(lock1 + "");
-        return catalogJsonFromDB;
-      } else {
-        try {
-          Thread.sleep(50);
-        } catch (InterruptedException e) {
-          throw new RuntimeException(e);
-        }
+      Map<String, List<Catelog2Vo>> catalogJsonFromDB = getCatalogJsonFromDB();
+      redisTemplate.opsForValue()
+          .set("catalogJson", JsonUtils.convertObject2Json(catalogJsonFromDB), Duration.ofHours(1));
+      return catalogJsonFromDB;
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    } finally {
+      if (catalock.isHeldByCurrentThread()) {
+        catalock.unlock();
       }
     }
   }
+
+  //
+//  @Override
+
+  //使用redis实现锁
+
+//  public Map<String, List<Catelog2Vo>> getCatalogJson() {
+//    /**
+//     * 为了跨平台，缓存中都保存JSON数据。
+//     */
+//
+//    while (true) {
+//      String catalogJson = redisTemplate.opsForValue().get("catalogJson");
+//
+//      if (!StringUtils.hasText(catalogJson)) {
+//        return JsonUtils.convertJson2Object(catalogJson, new TypeReference<>() {
+//        });
+//      }
+//
+//      String uuid = UUID.randomUUID().toString();
+//      Boolean lock = redisTemplate.opsForValue().setIfAbsent("lock", uuid, Duration.ofSeconds(300));
+//      if (Boolean.TRUE.equals(lock)) {
+//        Map<String, List<Catelog2Vo>> catalogJsonFromDB = getCatalogJsonFromDB();
+//        String json = JsonUtils.convertObject2Json(catalogJsonFromDB);
+//        redisTemplate.opsForValue().set("catalogJson", json, Duration.ofHours(1));
+//        String script = "if redis.call('get', KEYS[1]) == ARGV[1] then\n"
+//            + "    return redis.call('del', KEYS[1])\n"
+//            + "else\n"
+//            + "    return 0\n"
+//            + "end\n";
+//        Long lock1 = redisTemplate.execute(new DefaultRedisScript<>(script, Long.class),
+//            List.of("lock"),
+//            uuid);
+//        logger.warn(lock1 + "");
+//        return catalogJsonFromDB;
+//      } else {
+//        try {
+//          Thread.sleep(50);
+//        } catch (InterruptedException e) {
+//          throw new RuntimeException(e);
+//        }
+//      }
+//    }
+//  }
 
 
   /**
