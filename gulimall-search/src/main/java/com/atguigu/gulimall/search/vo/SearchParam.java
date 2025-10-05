@@ -4,7 +4,7 @@ import java.util.List;
 
 public class SearchParam {
 
-  private String keyWord;//检索关键字
+  private String keyword;//检索关键字
   private String catalog3Id;//3级分类的Id
   private String sort;//排序的条件，这个条件会有很多种
 
@@ -15,12 +15,12 @@ public class SearchParam {
   private Integer pageNum;//分页的页码
 
 
-  public String getKeyWord() {
-    return keyWord;
+  public String getKeyword() {
+    return keyword;
   }
 
-  public void setKeyWord(String keyWord) {
-    this.keyWord = keyWord;
+  public void setKeyword(String keyword) {
+    this.keyword = keyword;
   }
 
   public String getCatalog3Id() {
@@ -77,5 +77,19 @@ public class SearchParam {
 
   public void setPageNum(Integer pageNum) {
     this.pageNum = pageNum;
+  }
+
+  @Override
+  public String toString() {
+    return "SearchParam{" +
+        "keyWord='" + keyword + '\'' +
+        ", catalog3Id='" + catalog3Id + '\'' +
+        ", sort='" + sort + '\'' +
+        ", hasStock=" + hasStock +
+        ", skuPrice='" + skuPrice + '\'' +
+        ", brandIds=" + brandIds +
+        ", attrs=" + attrs +
+        ", pageNum=" + pageNum +
+        '}';
   }
 }

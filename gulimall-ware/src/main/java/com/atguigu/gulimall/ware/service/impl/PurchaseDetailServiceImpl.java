@@ -24,6 +24,8 @@ public class PurchaseDetailServiceImpl extends
 
   @Override
   public IPage<PurchaseDetailEntity> pageWithCondition(WarePageVo warePageVo) {
+
+
     return page(PageUtils.of(warePageVo), new LambdaQueryWrapper<PurchaseDetailEntity>()
         .eq(!ObjectUtils.isEmpty(warePageVo.getWareId()), PurchaseDetailEntity::getWareId,
             warePageVo.getWareId())

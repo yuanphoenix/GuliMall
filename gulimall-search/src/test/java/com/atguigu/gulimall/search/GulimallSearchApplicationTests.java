@@ -2,10 +2,13 @@ package com.atguigu.gulimall.search;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.core.IndexResponse;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import to.es.SkuEsModel;
 
 @SpringBootTest
 class GulimallSearchApplicationTests {
@@ -53,9 +56,10 @@ class GulimallSearchApplicationTests {
 
   @Test
   public void testElasticsearchClientIndex() throws IOException {
-    esClient.indices().create(c -> c
-        .index("products")
-    );
+    String a = "445_";
+    String[] split = a.split("_",-1);
+    System.out.println(Arrays.toString(split));
+    System.out.println(split[1]);
   }
 
   @Test
@@ -67,5 +71,20 @@ class GulimallSearchApplicationTests {
         .document(product));
 
     System.out.println(response);
+  }
+
+
+  @Test
+  public void search() throws IOException {
+    SearchResponse<SkuEsModel> search = esClient.search(s ->
+            s.index("product").query(q ->
+                q.match(t ->
+                    t.field("skuTitle")
+                        .query("手机")
+                )
+
+            )
+        , SkuEsModel.class);
+    System.out.println(search);
   }
 }

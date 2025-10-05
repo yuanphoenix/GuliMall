@@ -168,5 +168,36 @@ public class SkuEsModel {
     public void setAttrValue(String attrValue) {
       this.attrValue = attrValue;
     }
+
+
+    @Override
+    public String toString() {
+      return "Attrs{" +
+          "attrId=" + attrId +
+          ", attrName='" + attrName + '\'' +
+          ", attrValue='" + attrValue + '\'' +
+          '}';
+    }
+  }
+
+
+  @Override
+  public String toString() {
+    return "SkuEsModel{" +
+        "skuId=" + skuId +
+        ", spuId=" + spuId +
+        ", skuTitle='" + skuTitle + '\'' +
+        ", skuPrice=" + skuPrice +
+        ", skuImg='" + skuImg + '\'' +
+        ", saleCount=" + saleCount +
+        ", hasStock=" + hasStock +
+        ", hotScore=" + hotScore +
+        ", brandId=" + brandId +
+        ", catalogId=" + catalogId +
+        ", brandName='" + brandName + '\'' +
+        ", brandImg='" + brandImg + '\'' +
+        ", catalogName='" + catalogName + '\'' +
+        ", attrs=" + attrs +
+        '}';
   }
 }

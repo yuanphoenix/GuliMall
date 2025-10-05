@@ -73,11 +73,21 @@ public class SearchResult {
     this.categoryVoList = categoryVoList;
   }
 
-  static class BrandVo {
+  public static class BrandVo {
 
     private Long brandId;
     private String brandName;
     private String brandImg;
+
+
+    @Override
+    public String toString() {
+      return "BrandVo{" +
+          "brandId=" + brandId +
+          ", brandName='" + brandName + '\'' +
+          ", brandImg='" + brandImg + '\'' +
+          '}';
+    }
 
     public Long getBrandId() {
       return brandId;
@@ -105,10 +115,19 @@ public class SearchResult {
   }
 
 
-  static class CategoryVo {
+  public static class CategoryVo {
 
     private Long catId;
     private String categoryName;
+
+
+    @Override
+    public String toString() {
+      return "CategoryVo{" +
+          "catId=" + catId +
+          ", categoryName='" + categoryName + '\'' +
+          '}';
+    }
 
     public Long getCatId() {
       return catId;
@@ -127,11 +146,21 @@ public class SearchResult {
     }
   }
 
-  static class AttrVo {
+  public static class AttrVo {
 
     private Long attrId;
     private String attrName;
     private List<String> attrValue;
+
+
+    @Override
+    public String toString() {
+      return "AttrVo{" +
+          "attrId=" + attrId +
+          ", attrName='" + attrName + '\'' +
+          ", attrValue=" + attrValue +
+          '}';
+    }
 
     public Long getAttrId() {
       return attrId;
@@ -158,4 +187,17 @@ public class SearchResult {
     }
   }
 
+
+  @Override
+  public String toString() {
+    return "SearchResult{" +
+        "esModels=" + esModels +
+        ", totalNum=" + totalNum +
+        ", currentPage=" + currentPage +
+        ", totalPage=" + totalPage +
+        ", brandVoList=" + brandVoList +
+        ", attrVoList=" + attrVoList +
+        ", categoryVoList=" + categoryVoList +
+        '}';
+  }
 }
