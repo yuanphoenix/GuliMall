@@ -1,6 +1,7 @@
 package to.es;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -53,6 +54,10 @@ public class SkuEsModel {
 
   public BigDecimal getSkuPrice() {
     return skuPrice;
+  }
+
+  public String getSkuPriceString() {
+    return new DecimalFormat("#0.00").format(getSkuPrice());
   }
 
   public void setSkuPrice(BigDecimal skuPrice) {

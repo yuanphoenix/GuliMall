@@ -72,7 +72,7 @@ public class SearchParam {
   }
 
   public Integer getPageNum() {
-    return pageNum;
+    return this.pageNum == null ? 1 : this.pageNum;
   }
 
   public void setPageNum(Integer pageNum) {

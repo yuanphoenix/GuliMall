@@ -124,7 +124,7 @@ public class MallSearchServiceImpl implements MallSearchService {
 
     // 3. 分页
     int page = searchParam.getPageNum() != null ? searchParam.getPageNum() : 1;
-    int size = 10; // 每页显示数量，可根据需要改
+    int size = EsConstant.pageNum; // 每页显示数量，可根据需要改
     int from = (page - 1) * size;
 
     // 4. 排序
@@ -160,6 +160,7 @@ public class MallSearchServiceImpl implements MallSearchService {
         .aggregations("brand_agg", a -> a
             .terms(t -> t.field("brandId").size(10))
             .aggregations("brand_name_agg", aa -> aa.terms(tt -> tt.field("brandName").size(10)))
+            .aggregations("brand_img_agg", aa -> aa.terms(tt -> tt.field("brandImg").size(10)))
         )
         .aggregations("catalog_agg", a -> a
             .terms(t -> t.field("catalogId").size(10))
@@ -192,7 +193,7 @@ public class MallSearchServiceImpl implements MallSearchService {
     try {
       SearchResponse<SkuEsModel> response = elasticsearchClient.search(searchRequest,
           SkuEsModel.class);
-      return buildSearchResult(response, searchParam.getPageNum(), 10);
+      return buildSearchResult(response, searchParam.getPageNum(), EsConstant.pageNum);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -231,6 +232,10 @@ public class MallSearchServiceImpl implements MallSearchService {
         var nameBucket = bucket.aggregations().get("brand_name_agg").sterms().buckets().array()
             .get(0);
         vo.setBrandName(nameBucket.key().stringValue());
+
+        var brandImgBucket = bucket.aggregations().get("brand_img_agg").sterms().buckets().array()
+            .get(0);
+        vo.setBrandImg(brandImgBucket.key().stringValue());
 
         return vo;
       }).toList();
