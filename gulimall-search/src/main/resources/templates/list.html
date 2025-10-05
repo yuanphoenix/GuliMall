@@ -401,8 +401,9 @@
     <a href="http://gulimall.com"><img src="/static/image/logo1.jpg" alt=""></a>
   </div>
   <div class="header_form">
-    <input type="text" placeholder="手机"/>
-    <a href="/static/#">搜索</a>
+    <input type="text" id="searchInput" placeholder="手机"/>
+    <a href="javascript:void(0)" th:onclick="|doSearch()|">搜索</a>
+
   </div>
   <div class="header_ico">
     <div class="header_gw">
@@ -789,7 +790,7 @@
               <ul>
                 <li th:each="brandItem:${result.getBrandVoList()}">
 
-                  <a href="/static/#">
+                  <a th:href="|javascript:searchProducts('brandId',${brandItem.getBrandId()})|">
                     <img th:src="${brandItem.getBrandImg()}" th:width="102" th:height="36" alt="">
                     <div th:text="${brandItem.getBrandName()}">
                       华为(HUAWEI)
@@ -824,7 +825,7 @@
               <ul>
                 <li th:each="category:${result.getCategoryVoList()}">
 
-                  <a href="/static/#">
+                  <a th:href="|javascript:searchProducts('catalog3Id',${category.getCatId()})|">
                     <div th:text="${category.getCategoryName()}">
                       华为(HUAWEI)
                     </div>
@@ -878,7 +879,10 @@
           </div>
           <div class="sl_value">
             <ul>
-              <li th:each="skuAttr:${attr.getAttrValue()}"><a href="/static/#" th:text="${skuAttr}">0-安卓（Android）</a>
+
+              <li th:each="skuAttr:${attr.getAttrValue()}"><a
+                  th:href="|javascript:searchProducts('attrs',${attr.getAttrId()}+'_'+ ${attr.getAttrValue()})|"
+                  th:text="${skuAttr}">0-安卓（Android）</a>
               </li>
             </ul>
           </div>
@@ -1083,19 +1087,43 @@
         <div class="filter">
           <!--综合排序-->
           <div class="filter_top">
-            <div class="filter_top_left">
-              <a href="/static/#">综合排序</a>
-              <a href="/static/#">销量</a>
-              <a href="/static/#">价格</a>
-              <a href="/static/#">评论分</a>
-              <a href="/static/#">上架时间</a>
+            <div class="filter_top_left"
+                 th:with="p = ${param.sort}, priceRange = ${param.skuPrice}">
+              <a sort="hotScore"
+                 th:class="${(!#strings.isEmpty(p) && #strings.startsWith(p,'hotScore') && #strings.endsWith(p,'desc')) ? 'sort_a desc' : 'sort_a'}"
+                 th:attr="style=${(#strings.isEmpty(p) || #strings.startsWith(p,'hotScore')) ?
+                                   'color: #fff; border-color: #e4393c; background: #e4393c;':'color: #333; border-color: #ccc; background: #fff;' }">
+                综合排序[[${(!#strings.isEmpty(p) && #strings.startsWith(p,'hotScore') &&
+                #strings.endsWith(p,'desc')) ?'↑':'↓' }]]</a>
+              <a sort="saleCount"
+                 th:class="${(!#strings.isEmpty(p) && #strings.startsWith(p,'saleCount') && #strings.endsWith(p,'desc')) ? 'sort_a desc' : 'sort_a'}"
+                 th:attr="style=${(!#strings.isEmpty(p) && #strings.startsWith(p,'saleCount')) ?
+                                   'color: #fff; border-color: #e4393c; background: #e4393c;':'color: #333; border-color: #ccc; background: #fff;' }">
+                销量[[${(!#strings.isEmpty(p) && #strings.startsWith(p,'saleCount') &&
+                #strings.endsWith(p,'desc'))?'↑':'↓' }]]</a>
+              <a sort="skuPrice"
+                 th:class="${(!#strings.isEmpty(p) && #strings.startsWith(p,'skuPrice') && #strings.endsWith(p,'desc')) ? 'sort_a desc' : 'sort_a'}"
+                 th:attr="style=${(!#strings.isEmpty(p) && #strings.startsWith(p,'skuPrice')) ?
+                                   'color: #fff; border-color: #e4393c; background: #e4393c;':'color: #333; border-color: #ccc; background: #fff;' }">
+                价格[[${(!#strings.isEmpty(p) && #strings.startsWith(p,'skuPrice') &&
+                #strings.endsWith(p,'desc'))?'↑':'↓' }]]</a>
+              <a sort="hotScore" class="sort_a">评论分</a>
+              <a sort="hotScore" class="sort_a">上架时间</a>
+              <input id="skuPriceFrom" type="number"
+                     th:value="${#strings.isEmpty(priceRange)?'':#strings.substringBefore(priceRange,'_')}"
+                     style="width: 100px; margin-left: 30px">
+              -
+              <input id="skuPriceTo" type="number"
+                     th:value="${#strings.isEmpty(priceRange)?'':#strings.substringAfter(priceRange,'_')}"
+                     style="width: 100px">
+              <button id="skuPriceSearchBtn">确定</button>
             </div>
             <div class="filter_top_right">
                             <span class="fp-text">
                                <b>1</b><em>/</em><i>169</i>
                            </span>
-              <a href="/static/#" class="prev"><</a>
-              <a href="/static/#" class="next"> > </a>
+              <a href="/static/search/#" class="prev"><</a>
+              <a href="/static/search/#" class="next"> > </a>
             </div>
           </div>
           <!--收货地址-->
@@ -1213,6 +1241,8 @@
 
           </div>
           <!--排序内容-->
+
+
           <div class="rig_tab">
             <div th:each="product:${result.getEsModels()}">
               <div class="ico">
@@ -1262,22 +1292,23 @@
           <div class="filter_page">
             <div class="page_wrap">
                             <span class="page_span1">
-                                <a href="/static/#">
+                                <a href="/static/#" th:if="${result.getCurrentPage()>1}">
                                     < 上一页
                                 </a>
                                 <a href="/static/#"
                                    style="border: 0;color:#ee2222;background: #fff">1</a>
                                 <a href="/static/#">2</a>
                                 <a href="/static/#">3</a>
+                                <a
+                                    style="border: 0;font-size: 20px;color: #999;background: #fff">...</a>
+                                <a href="/static/#" th:text="${result.getTotalPage()}">169</a>
                                 <a href="/static/#"
-                                   style="border: 0;font-size: 20px;color: #999;background: #fff">...</a>
-                                <a href="/static/#">169</a>
-                                <a href="/static/#">
+                                   th:if="${result.getCurrentPage()<result.getTotalPage()}">
                                     下一页 >
                                 </a>
                             </span>
               <span class="page_span2">
-                                <em>共<b>169</b>页&nbsp;&nbsp;到第</em>
+                                <em>共<b th:text="${result.getTotalPage()}">169</b>页&nbsp;&nbsp;到第</em>
                                 <input type="number" value="1">
                                 <em>页</em>
                                 <a href="/static/#">确定</a>
@@ -2061,6 +2092,76 @@
   }, function () {
     $(this).css("color", "#727272")
   })
+
+  function searchProducts(name, value) {
+    location.href = location.href + "&" + name + "=" + value;
+  }
+
+  function doSearch() {
+    const keyword = document.getElementById("searchInput").value.trim();
+    if (keyword) {
+      window.location.href = 'http://search.gulimall.com/list.html?keyword=' + encodeURIComponent(
+          keyword);
+    }
+
+  }
+
+  $(".sort_a").click(function () {
+    changeStyle(this);
+    let sort = $(this).attr("sort");
+    sort = $(this).hasClass("desc") ? sort + "_desc" : sort + "_asc";
+    location.href = replaceParamVal(location.href, "sort", sort, false);
+
+    return false;
+  });
+
+  function replaceParamVal(url, paramName, replaceVal, forceAdd) {
+    var oUrl = url.toString();
+    var nUrl;
+    if (oUrl.indexOf(paramName) != -1) {
+      if (forceAdd) {
+        if (oUrl.indexOf("?") != -1) {
+          nUrl = oUrl + "&" + paramName + "=" + replaceVal;
+        } else {
+          nUrl = oUrl + "?" + paramName + "=" + replaceVal;
+        }
+      } else {
+        var re = eval('/(' + paramName + '=)([^&]*)/gi');
+        nUrl = oUrl.replace(re, paramName + '=' + replaceVal);
+      }
+    } else {
+      if (oUrl.indexOf("?") != -1) {
+        nUrl = oUrl + "&" + paramName + "=" + replaceVal;
+      } else {
+        nUrl = oUrl + "?" + paramName + "=" + replaceVal;
+      }
+    }
+    return nUrl;
+  };
+
+  function changeStyle(ele) {
+    // location.href = replaceParamVal(href, "pageNum", pn,flase);
+    // color: #333; border-color: #ccc; background: #fff
+    // color: #fff; border-color: #e4393c; background: #e4393c
+    $(".sort_a").css({"color": "#333", "border-color": "#ccc", "background": "#fff"});
+    $(".sort_a").each(function () {
+      let text = $(this).text().replace("↓", "").replace("↑", "");
+      $(this).text(text);
+    })
+
+    $(ele).css({"color": "#FFF", "border-color": "#e4393c", "background": "#e4393c"});
+    $(ele).toggleClass("desc");
+
+    if ($(ele).hasClass("desc")) {
+      let text = $(ele).text().replace("↓", "").replace("↑", "");
+      text = text + "↓";
+      $(ele).text(text);
+    } else {
+      let text = $(ele).text().replace("↓", "").replace("↑", "");
+      text = text + "↑";
+      $(ele).text(text);
+    }
+  };
 </script>
 </body>
 </html>
