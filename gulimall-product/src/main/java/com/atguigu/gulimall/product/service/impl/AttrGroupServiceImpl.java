@@ -80,6 +80,8 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupMapper, AttrGroup
     if (ObjectUtils.isEmpty(catalogId)) {
       return Collections.emptyList();
     }
+
+    //查出来属性分组
     var groupEntites = getBaseMapper().selectList(
         new LambdaQueryWrapper<AttrGroupEntity>().eq(AttrGroupEntity::getCatalogId, catalogId));
     if (groupEntites.isEmpty()) {
@@ -88,6 +90,8 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupMapper, AttrGroup
 
     return groupEntites.stream().map(groupEntity -> {
           AttrGroupResponseVo attrGroupResponseVo = new AttrGroupResponseVo();
+
+          //根据关联表，查询出来属性分组下的规格参数（基本属性）
           List<Long> attrsId = attrAttrgroupRelationMapper.selectList(
                   new LambdaQueryWrapper<AttrAttrgroupRelationEntity>().eq(
                       AttrAttrgroupRelationEntity::getAttrGroupId, groupEntity.getAttrGroupId())).stream()
@@ -95,8 +99,10 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupMapper, AttrGroup
           if (attrsId.isEmpty()) {
             return null;
           }
+
+
           List<AttrEntity> attrEntities = attrMapper.selectByIds(attrsId);
-          List<AttrVo> attrVos = attrEntities.stream().map(b -> {
+          List<AttrVo> attrVos = attrEntities.stream().filter(a -> a.getAttrType() == 1).map(b -> {
             AttrVo attrVo = new AttrVo();
             BeanUtils.copyProperties(b, attrVo);
             attrVo.setAttrGroupId(groupEntity.getAttrGroupId());

@@ -1,5 +1,7 @@
 package to.es;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.List;
@@ -56,6 +58,7 @@ public class SkuEsModel {
     return skuPrice;
   }
 
+  @JsonProperty(access = JsonProperty.Access.READ_ONLY)
   public String getSkuPriceString() {
     return new DecimalFormat("#0.00").format(getSkuPrice());
   }

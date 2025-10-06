@@ -21,7 +21,7 @@ import utils.R;
  * @since 2025-05-09
  */
 @RestController
-@RequestMapping("/ware/wareOrderTask")
+@RequestMapping("/ware/wareordertask")
 public class WareOrderTaskController {
 
   @Autowired

@@ -49,7 +49,7 @@ public class SpuInfoController {
   }
 
   /**
-   * 保存数据
+   * 生产商品
    */
   @PostMapping("/save")
   public R save(@RequestBody SpuInfoVo spuInfoVo) {

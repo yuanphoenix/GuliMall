@@ -125,14 +125,15 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
     SpuInfoEntity spuInfo = new SpuInfoEntity();
     BeanUtils.copyProperties(spuInfoVo, spuInfo);
     save(spuInfo);
+
     //保存decript，这里面是图片介绍.操作  spu_info_desc
     List<String> decriptList = spuInfoVo.getDecript();
     SpuInfoDescEntity spuInfoDescEntity = new SpuInfoDescEntity();
     spuInfoDescEntity.setSpuId(spuInfo.getId());
     spuInfoDescEntity.setDecript(String.join(",", decriptList));
     spuInfoDescMapper.insert(spuInfoDescEntity);
-    //保存SPU的图片集合 。操作spu_images
 
+    //保存SPU的图片集合 。操作spu_images
     List<String> images = spuInfoVo.getImages();
     List<SpuImagesEntity> spuImagesEntityList = images.stream()
         .filter(imgUrl -> !ObjectUtils.isEmpty(imgUrl))
@@ -183,6 +184,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
     List<SkuSaleAttrValueEntity> skuSaleAttrValueEntityList = new ArrayList<>();
     List<SkuReducitionTo> skuReducitionToList = new ArrayList<>();
     assert skuInfoEntityList.size() == skus.size();
+
     for (int i = 0; i < skuInfoEntityList.size(); i++) {
       Long skuId = skuInfoEntityList.get(i).getSkuId();
       Skus skuItem = skus.get(i);
@@ -276,7 +278,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
   @Override
   public void up(Long spuId) {
 
-    List<SkuEsModel> upProducts = new ArrayList<>();
+    List<SkuEsModel> upProducts;
     //根据spuID上架许多sku，所以需要一个list
     List<SkuInfoEntity> skuInfoEntityList = skuInfoService.getSkuBySpuId(spuId);
 

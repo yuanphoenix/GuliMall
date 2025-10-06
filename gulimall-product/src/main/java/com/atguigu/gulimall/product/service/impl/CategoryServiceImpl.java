@@ -53,9 +53,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
 
   @Override
   public List<CategoryEntity> listWithTree() {
-
     String s = redisTemplate.opsForValue().get("categoryTree");
-    if (!StringUtils.hasText(s)) {
+    if (StringUtils.hasText(s)) {
       return JsonUtils.convertJson2Object(s, new TypeReference<>() {
       });
     }
