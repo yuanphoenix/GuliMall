@@ -37,7 +37,7 @@ import to.es.SkuEsModel;
 @Service
 public class MallSearchServiceImpl implements MallSearchService {
 
-  private static final Logger logger = LoggerFactory.getLogger(MallSearchServiceImpl.class);
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
   private final ElasticsearchClient elasticsearchClient;
 
   public MallSearchServiceImpl(ElasticsearchClient elasticsearchClient) {
@@ -46,9 +46,7 @@ public class MallSearchServiceImpl implements MallSearchService {
 
   @Override
   public SearchResult search(SearchParam searchParam) {
-
     logger.warn(searchParam.toString());
-
     List<Query> mutiQuery = new ArrayList<>();
     if (StringUtils.hasText(searchParam.getKeyword())) {
       mutiQuery.add(MatchPhraseQuery.of(mp ->
