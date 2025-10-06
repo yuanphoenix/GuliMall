@@ -3,7 +3,9 @@ package com.atguigu.gulimall.product.web;
 
 import com.atguigu.gulimall.product.entity.CategoryEntity;
 import com.atguigu.gulimall.product.service.CategoryService;
+import com.atguigu.gulimall.product.service.SkuInfoService;
 import com.atguigu.gulimall.product.vo.Catelog2Vo;
+import com.atguigu.gulimall.product.vo.SkuItemVo;
 import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -20,9 +22,11 @@ public class IndexController {
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   private final CategoryService categoryService;
+  private final SkuInfoService skuInfoService;
 
-  public IndexController(CategoryService categoryService) {
+  public IndexController(CategoryService categoryService, SkuInfoService skuInfoService) {
     this.categoryService = categoryService;
+    this.skuInfoService = skuInfoService;
   }
 
   @GetMapping({"/", "/index.html"})
@@ -39,8 +43,9 @@ public class IndexController {
    * @return
    */
   @GetMapping("/{skuId}.html")
-  public String skuItem(@PathVariable Long skuId) {
+  public String skuItem(@PathVariable("skuId") Long skuId) {
     logger.info("准备查询{}的详情", skuId);
+    SkuItemVo skuItemVo = skuInfoService.item(skuId);
     return "item";
   }
 
