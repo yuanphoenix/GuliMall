@@ -1,17 +1,27 @@
 package com.atguigu.gulimall.product.service.impl;
 
+import com.atguigu.gulimall.product.entity.SkuImagesEntity;
 import com.atguigu.gulimall.product.entity.SkuInfoEntity;
+import com.atguigu.gulimall.product.entity.SkuSaleAttrValueEntity;
+import com.atguigu.gulimall.product.entity.SpuInfoDescEntity;
 import com.atguigu.gulimall.product.mapper.SkuInfoMapper;
+import com.atguigu.gulimall.product.service.SkuImagesService;
 import com.atguigu.gulimall.product.service.SkuInfoService;
+import com.atguigu.gulimall.product.service.SkuSaleAttrValueService;
+import com.atguigu.gulimall.product.service.SpuInfoDescService;
 import com.atguigu.gulimall.product.vo.SkuItemVo;
+import com.atguigu.gulimall.product.vo.SkuItemVo.ItemSaleAttrVo;
 import com.atguigu.gulimall.product.vo.SpuPageVo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.lang3.StringUtils;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import utils.PageUtils;
@@ -25,6 +35,18 @@ import utils.PageUtils;
 public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfoEntity>
     implements SkuInfoService {
 
+  private final SpuInfoDescService spuInfoDescService;
+
+  private final SkuImagesService skuImagesService;
+
+  @Autowired
+  private SkuSaleAttrValueService skuSaleAttrValueService;
+
+  public SkuInfoServiceImpl(SpuInfoDescService spuInfoDescService,
+      SkuImagesService skuImagesService) {
+    this.spuInfoDescService = spuInfoDescService;
+    this.skuImagesService = skuImagesService;
+  }
 
   @Override
   public IPage<SkuInfoEntity> pageWithCondition(SpuPageVo pageDTO) {
@@ -68,6 +90,51 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfoEntity
 
   @Override
   public SkuItemVo item(Long skuId) {
+    SkuItemVo skuItemVo = new SkuItemVo();
+    SkuInfoEntity skuInfoEntity = baseMapper.selectById(skuId);
+    if (ObjectUtils.isEmpty(skuInfoEntity)) {
+      return null;
+    }
+    skuItemVo.setSkuInfoEntity(skuInfoEntity);
+    Long spuId = skuInfoEntity.getSpuId(); //拿到spuId
+    SpuInfoDescEntity one = spuInfoDescService.getOne(
+        new LambdaQueryWrapper<SpuInfoDescEntity>().eq(SpuInfoDescEntity::getSpuId, spuId));
+    skuItemVo.setDesp(one);
+
+    //我的数据库skuimage只有一个图片
+    List<SkuImagesEntity> list = skuImagesService.list(
+        new LambdaQueryWrapper<SkuImagesEntity>().eq(SkuImagesEntity::getSkuId, skuId));
+    skuItemVo.setImagesEntities(list);
+
+//销售属性
+
+    List<Long> skuids = baseMapper.selectList(
+        new LambdaQueryWrapper<SkuInfoEntity>().eq(SkuInfoEntity::getSpuId, spuId)
+            .select(SkuInfoEntity::getSkuId)).stream().map(SkuInfoEntity::getSkuId).toList();
+
+    List<SkuSaleAttrValueEntity> list1 = skuSaleAttrValueService.list(
+        new LambdaQueryWrapper<SkuSaleAttrValueEntity>().in(SkuSaleAttrValueEntity::getSkuId,
+            skuids));
+
+    Map<Long, List<SkuSaleAttrValueEntity>> collect = list1.stream()
+        .collect(Collectors.groupingBy(SkuSaleAttrValueEntity::getSkuId));
+    List<ItemSaleAttrVo> itemSaleAttrVoList = new ArrayList<>();
+    collect.forEach((k, v) -> {
+      ItemSaleAttrVo vo = new ItemSaleAttrVo();
+      vo.setAttrId(k);
+      vo.setAttrName(v.getFirst().getAttrName());
+      vo.setAttrValues(
+          v.stream().map(SkuSaleAttrValueEntity::getAttrValue).toList());
+      itemSaleAttrVoList.add(vo);
+    });
+
+    skuItemVo.setSaleAttrVos(itemSaleAttrVoList);
+
+
+
+    //spuid查到attrid，再根据attrid查到group的名字
+    skuItemVo.setGroupAttrVos();
+
     return null;
   }
 

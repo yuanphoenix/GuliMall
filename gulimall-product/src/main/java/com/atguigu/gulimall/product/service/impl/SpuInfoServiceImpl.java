@@ -120,7 +120,6 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
     if (Objects.isNull(spuInfoVo)) {
       return false;
     }
-
     //最外面的核心spu，要转为下面这个 SpuInfoEntity。  操作 spu_info
     SpuInfoEntity spuInfo = new SpuInfoEntity();
     BeanUtils.copyProperties(spuInfoVo, spuInfo);
@@ -155,6 +154,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
           .map(AttrEntity::getAttrName)
           .ifPresent(productAttrValueEntity::setAttrName);
       productAttrValueEntity.setSpuId(spuInfo.getId());
+      productAttrValueEntity.setAttrValue(baseAttr.getAttrValues());
       productAttrValueEntity.setQuickShow(baseAttr.getShowDesc());
       return productAttrValueEntity;
     }).toList();
@@ -303,7 +303,6 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
         });
     Map<Long, Boolean> collect = skuHasStockTos.stream()
         .collect(Collectors.toMap(SkuHasStockTo::getSkuId, SkuHasStockTo::getHasStock));
-
 
     upProducts = skuInfoEntityList.stream().map(sku -> {
       SkuEsModel skuEsModel = new SkuEsModel();
