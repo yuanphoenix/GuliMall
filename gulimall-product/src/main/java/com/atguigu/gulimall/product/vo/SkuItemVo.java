@@ -53,4 +53,12 @@ public class SkuItemVo {
     private String attrName;
     private String attrValues;
   }
+
+
+  @Data
+  public static class SpuItemBaseAttrTo {
+    private String groupName;
+    private String attrName;
+    private String attrValues;
+  }
 }

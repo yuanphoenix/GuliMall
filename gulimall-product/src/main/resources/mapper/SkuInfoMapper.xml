@@ -17,10 +17,4 @@
     <result column="price" property="price"/>
     <result column="sale_count" property="saleCount"/>
   </resultMap>
-
-  <sql id="Base_Column_List">
-    sku_id
-    ,spu_id,sku_name,sku_desc,catalog_id,brand_id,
-        sku_default_img,sku_title,sku_subtitle,price,sale_count
-  </sql>
 </mapper>

@@ -1,7 +1,12 @@
 package com.atguigu.gulimall.product;
 
 import com.aliyuncs.exceptions.ClientException;
+import com.atguigu.gulimall.product.mapper.SkuInfoMapper;
+import com.atguigu.gulimall.product.service.SkuInfoService;
+import com.atguigu.gulimall.product.vo.SkuItemVo.SpuItemBaseAttrTo;
+import com.atguigu.gulimall.product.vo.SkuItemVo.SpuItemBaseAttrVo;
 import java.io.FileNotFoundException;
+import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.redisson.api.RLock;
@@ -20,12 +25,22 @@ class GulimallProductApplicationTests {
   @Autowired
   private RedissonClient redissonClient;
 
+  @Autowired
+  private SkuInfoMapper skuInfoMapper;
+
   @Test
   void testRedis() {
     ValueOperations<String, String> stringStringValueOperations = redisTemplate.opsForValue();
     stringStringValueOperations.set("hello", "world" + UUID.randomUUID());
     System.out.println(stringStringValueOperations.get("hello"));
   }
+
+  @Test
+  void testMybatis() {
+    List<SpuItemBaseAttrTo> spuItemBaseAttrVos = skuInfoMapper.getspuItemBaseAttr(1L);
+    System.out.println(spuItemBaseAttrVos);
+  }
+
 
 
   @Test

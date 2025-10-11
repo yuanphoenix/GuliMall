@@ -11,16 +11,21 @@ import com.atguigu.gulimall.product.service.SkuSaleAttrValueService;
 import com.atguigu.gulimall.product.service.SpuInfoDescService;
 import com.atguigu.gulimall.product.vo.SkuItemVo;
 import com.atguigu.gulimall.product.vo.SkuItemVo.ItemSaleAttrVo;
+import com.atguigu.gulimall.product.vo.SkuItemVo.SpuBaseAttrVo;
+import com.atguigu.gulimall.product.vo.SkuItemVo.SpuItemBaseAttrTo;
+import com.atguigu.gulimall.product.vo.SkuItemVo.SpuItemBaseAttrVo;
 import com.atguigu.gulimall.product.vo.SpuPageVo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -130,12 +135,26 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfoEntity
 
     skuItemVo.setSaleAttrVos(itemSaleAttrVoList);
 
+    List<SpuItemBaseAttrVo> itemBaseAttrVos = convertTo2Vo(
+        baseMapper.getspuItemBaseAttr(spuId));
+    skuItemVo.setGroupAttrVos(itemBaseAttrVos);
+    return skuItemVo;
+  }
 
 
-    //spuid查到attrid，再根据attrid查到group的名字
-    skuItemVo.setGroupAttrVos();
-
-    return null;
+  private List<SpuItemBaseAttrVo> convertTo2Vo(List<SpuItemBaseAttrTo> spuItemBaseAttrTos) {
+    Map<String, SpuItemBaseAttrVo> map = new HashMap<>(25);
+    for (SpuItemBaseAttrTo s : spuItemBaseAttrTos) {
+      SpuItemBaseAttrVo orDefault = map.getOrDefault(s.getGroupName(), new SpuItemBaseAttrVo());
+      if (ObjectUtils.isEmpty(orDefault.getSpuBaseAttrVoList())) {
+        map.put(s.getGroupName(), orDefault);
+        orDefault.setSpuBaseAttrVoList(new ArrayList<>());
+      }
+      SpuBaseAttrVo spuBaseAttrVo = new SpuBaseAttrVo();
+      BeanUtils.copyProperties(s, spuBaseAttrVo);
+      orDefault.getSpuBaseAttrVoList().add(spuBaseAttrVo);
+    }
+    return new ArrayList<>(map.values());
   }
 
 }
