@@ -2,6 +2,7 @@ spring:
   application:
     name: gulimall-product
 
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: tifa
@@ -42,3 +43,9 @@ mybatis-plus:
       logic-not-delete-value: 1            # 未删除
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+gulimall:
+  thread:
+    core-pool-size: 50
+    max-pool-size: 200
+    keep-alive-time: 10

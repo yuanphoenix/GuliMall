@@ -21,9 +21,13 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.BeanUtils;
@@ -41,6 +45,8 @@ import utils.PageUtils;
 public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfoEntity>
     implements SkuInfoService {
 
+  private final ThreadPoolExecutor executor;
+
   private final SpuInfoDescService spuInfoDescService;
 
   private final SkuImagesService skuImagesService;
@@ -49,9 +55,10 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfoEntity
   private SkuSaleAttrValueService skuSaleAttrValueService;
 
   public SkuInfoServiceImpl(SpuInfoDescService spuInfoDescService,
-      SkuImagesService skuImagesService) {
+      SkuImagesService skuImagesService, ThreadPoolExecutor executor) {
     this.spuInfoDescService = spuInfoDescService;
     this.skuImagesService = skuImagesService;
+    this.executor = executor;
   }
 
   @Override
@@ -97,65 +104,92 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfoEntity
   @Override
   public SkuItemVo item(Long skuId) {
     SkuItemVo skuItemVo = new SkuItemVo();
-    SkuInfoEntity skuInfoEntity = baseMapper.selectById(skuId);
-    if (ObjectUtils.isEmpty(skuInfoEntity)) {
+    CompletableFuture<SkuInfoEntity> skuInfoFuture = CompletableFuture.supplyAsync(
+        () -> baseMapper.selectById(skuId), executor).thenApply(sku -> {
+      if (sku == null) {
+        log.error("sku实体为空");
+        throw new NoSuchElementException("sku没找到" + skuId);
+      }
+      skuItemVo.setSkuInfoEntity(sku);
+      return sku;
+    });
+
+    var imagesFuture = CompletableFuture.supplyAsync(() -> {
+      //我的数据库skuImage只有一个图片
+      return skuImagesService.list(
+          new LambdaQueryWrapper<SkuImagesEntity>().eq(SkuImagesEntity::getSkuId, skuId));
+    }, executor).thenAccept(skuItemVo::setImagesEntities).exceptionally(ex -> {
+      log.error("没能设置sku图片" + skuId, ex);
+      skuItemVo.setImagesEntities(Collections.emptyList());
       return null;
-    }
-    skuItemVo.setSkuInfoEntity(skuInfoEntity);
+    });
 
-    //拿到spuId
-    Long spuId = skuInfoEntity.getSpuId();
-    SpuInfoDescEntity one = spuInfoDescService.getOne(
-        new LambdaQueryWrapper<SpuInfoDescEntity>().eq(SpuInfoDescEntity::getSpuId, spuId));
-    skuItemVo.setDesp(one);
-
-    //我的数据库skuimage只有一个图片
-    List<SkuImagesEntity> list = skuImagesService.list(
-        new LambdaQueryWrapper<SkuImagesEntity>().eq(SkuImagesEntity::getSkuId, skuId));
-    skuItemVo.setImagesEntities(list);
-    //查出这个spu下一共有多少sku
-    List<Long> skuIds = baseMapper.selectList(
-        new LambdaQueryWrapper<SkuInfoEntity>().eq(SkuInfoEntity::getSpuId, spuId)
-            .select(SkuInfoEntity::getSkuId)).stream().map(SkuInfoEntity::getSkuId).toList();
-
-    //根据这些sku查出销售属性
-    List<SkuSaleAttrValueEntity> skuSaleAttrValueEntityList = skuSaleAttrValueService.list(
-        new LambdaQueryWrapper<SkuSaleAttrValueEntity>().in(SkuSaleAttrValueEntity::getSkuId,
-            skuIds));
-
-    //设置销售属性
-    List<ItemSaleAttrVo> itemSaleAttrVoList = new ArrayList<>();
-
-    skuSaleAttrValueEntityList.stream()
-        .collect(Collectors.groupingBy(SkuSaleAttrValueEntity::getAttrName))
-        .forEach((attrName, v) -> {
-          ItemSaleAttrVo saleAttrVo = new ItemSaleAttrVo();
-          saleAttrVo.setAttrId(v.getFirst().getAttrId());
-          saleAttrVo.setAttrName(attrName);
-          List<SaleAttrValueVo> attrValues = v.stream()
-              .collect(Collectors.groupingBy(SkuSaleAttrValueEntity::getAttrValue))
-              .entrySet().stream().
-              map(entry -> {
-                String attrValue = entry.getKey();
-                List<SkuSaleAttrValueEntity> group = entry.getValue();
-                SaleAttrValueVo saleAttrValueVo = new SaleAttrValueVo();
-                saleAttrValueVo.setAttrValue(attrValue);
-                saleAttrValueVo.setSkuIds(
-                    group.stream().map(SkuSaleAttrValueEntity::getSkuId)
-                        .toList());
-                return saleAttrValueVo;
-              }).toList();
-
-          saleAttrVo.setAttrValues(attrValues);
-          itemSaleAttrVoList.add(saleAttrVo);
+    var descFuture = skuInfoFuture.thenApplyAsync(skuInfoEntity -> spuInfoDescService.getOne(
+            new LambdaQueryWrapper<SpuInfoDescEntity>().eq(SpuInfoDescEntity::getSpuId,
+                skuInfoEntity.getSpuId())), executor)
+        .thenAccept(skuItemVo::setDesp)
+        .exceptionally(ex -> {
+          log.error("spu描述异常" + skuId, ex);
+          skuItemVo.setDesp(null);
+          return null;
         });
 
-    skuItemVo.setSaleAttrVos(itemSaleAttrVoList);
+    var saleAttrFuture = skuInfoFuture.thenAcceptAsync(skuInfoEntity -> {
+      //查出这个spu下一共有多少sku
+      List<Long> skuIds = baseMapper.selectList(
+          new LambdaQueryWrapper<SkuInfoEntity>().eq(SkuInfoEntity::getSpuId,
+                  skuInfoEntity.getSpuId())
+              .select(SkuInfoEntity::getSkuId)).stream().map(SkuInfoEntity::getSkuId).toList();
 
-    //设置基本属性
-    List<SpuItemBaseAttrVo> itemBaseAttrVos = convertToGroupedVO(
-        baseMapper.getspuItemBaseAttr(spuId));
-    skuItemVo.setGroupAttrVos(itemBaseAttrVos);
+      //根据这些sku查出销售属性
+      List<SkuSaleAttrValueEntity> skuSaleAttrValueEntityList = skuSaleAttrValueService.list(
+          new LambdaQueryWrapper<SkuSaleAttrValueEntity>().in(SkuSaleAttrValueEntity::getSkuId,
+              skuIds));
+
+      //设置销售属性
+      List<ItemSaleAttrVo> itemSaleAttrVoList = new ArrayList<>();
+      skuSaleAttrValueEntityList.stream()
+          .collect(Collectors.groupingBy(SkuSaleAttrValueEntity::getAttrName))
+          .forEach((attrName, group) -> {
+            ItemSaleAttrVo saleAttrVo = new ItemSaleAttrVo();
+            saleAttrVo.setAttrId(group.getFirst().getAttrId());
+            saleAttrVo.setAttrName(attrName);
+            List<SaleAttrValueVo> attrValues = group.stream()
+                .collect(Collectors.groupingBy(SkuSaleAttrValueEntity::getAttrValue))
+                .entrySet().stream().
+                map(entry -> {
+                  SaleAttrValueVo vvo = new SaleAttrValueVo();
+                  vvo.setAttrValue(entry.getKey());
+                  vvo.setSkuIds(
+                      entry.getValue().stream().map(SkuSaleAttrValueEntity::getSkuId)
+                          .toList());
+                  return vvo;
+                }).toList();
+
+            saleAttrVo.setAttrValues(attrValues);
+            itemSaleAttrVoList.add(saleAttrVo);
+          });
+
+      skuItemVo.setSaleAttrVos(itemSaleAttrVoList);
+
+    }, executor).exceptionally(ex -> {
+      log.error("销售属性失败" + skuId, ex);
+      skuItemVo.setSaleAttrVos(Collections.emptyList());
+      return null;
+    });
+
+    var baseAttrFuture = skuInfoFuture.thenAcceptAsync(skuInfoEntity -> {
+      //设置基本属性
+      List<SpuItemBaseAttrVo> itemBaseAttrVos = convertToGroupedVO(
+          baseMapper.getspuItemBaseAttr(skuInfoEntity.getSpuId()));
+      skuItemVo.setGroupAttrVos(itemBaseAttrVos);
+    }, executor).exceptionally(ex -> {
+      log.error("基础属性失败" + skuId, ex);
+      skuItemVo.setGroupAttrVos(Collections.emptyList());
+      return null;
+    });
+
+    CompletableFuture.allOf(descFuture, imagesFuture, saleAttrFuture, baseAttrFuture).join();
     return skuItemVo;
   }
 
