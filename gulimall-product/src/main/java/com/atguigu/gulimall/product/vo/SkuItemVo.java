@@ -40,15 +40,13 @@ public class SkuItemVo {
     private Long attrId;
     private String attrName;
     private List<SaleAttrValueVo> attrValues;
-    private Map<Long, List<Long>> skuIdMapSaleValueIds;
   }
 
   @Data
   public static class SaleAttrValueVo {
-    private List<Long> ids;
     //这个属性值，在属性值相同的情况下，必须是唯一的。
     private String attrValue;
-    private List<Long> skus;
+    private List<Long> skuIds;
   }
 
 

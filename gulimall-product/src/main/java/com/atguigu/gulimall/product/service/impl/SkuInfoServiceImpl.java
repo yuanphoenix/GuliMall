@@ -123,45 +123,36 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfoEntity
         new LambdaQueryWrapper<SkuSaleAttrValueEntity>().in(SkuSaleAttrValueEntity::getSkuId,
             skuIds));
 
-    List<Long> saleAttrTableId = skuSaleAttrValueEntityList.stream()
-        .filter(skuSaleAttrValueEntity -> skuSaleAttrValueEntity.getSkuId().equals(skuId))
-        .map(SkuSaleAttrValueEntity::getId).toList();
-
     //设置销售属性
-    Map<String, List<SkuSaleAttrValueEntity>> collect = skuSaleAttrValueEntityList.stream()
-        .collect(Collectors.groupingBy(SkuSaleAttrValueEntity::getAttrName));
-
     List<ItemSaleAttrVo> itemSaleAttrVoList = new ArrayList<>();
 
-    collect.forEach((attrName, v) -> {
-      ItemSaleAttrVo saleAttrVo = new ItemSaleAttrVo();
-      saleAttrVo.setAttrId(v.getFirst().getAttrId());
-      saleAttrVo.setAttrName(attrName);
-      saleAttrVo.setSkuIdMapSaleValueIds(Map.of(skuId, saleAttrTableId));
+    skuSaleAttrValueEntityList.stream()
+        .collect(Collectors.groupingBy(SkuSaleAttrValueEntity::getAttrName))
+        .forEach((attrName, v) -> {
+          ItemSaleAttrVo saleAttrVo = new ItemSaleAttrVo();
+          saleAttrVo.setAttrId(v.getFirst().getAttrId());
+          saleAttrVo.setAttrName(attrName);
+          List<SaleAttrValueVo> attrValues = v.stream()
+              .collect(Collectors.groupingBy(SkuSaleAttrValueEntity::getAttrValue))
+              .entrySet().stream().
+              map(entry -> {
+                String attrValue = entry.getKey();
+                List<SkuSaleAttrValueEntity> group = entry.getValue();
+                SaleAttrValueVo saleAttrValueVo = new SaleAttrValueVo();
+                saleAttrValueVo.setAttrValue(attrValue);
+                saleAttrValueVo.setSkuIds(
+                    group.stream().map(SkuSaleAttrValueEntity::getSkuId)
+                        .toList());
+                return saleAttrValueVo;
+              }).toList();
 
-      List<SaleAttrValueVo> list1 = v.stream()
-          .collect(Collectors.groupingBy(SkuSaleAttrValueEntity::getAttrValue))
-          .entrySet().stream().
-          map(entry -> {
-            String attrValue = entry.getKey();
-            List<SkuSaleAttrValueEntity> group = entry.getValue();
-            SaleAttrValueVo saleAttrValueVo = new SaleAttrValueVo();
-            saleAttrValueVo.setAttrValue(attrValue);
-            saleAttrValueVo.setIds(
-                group.stream().map(SkuSaleAttrValueEntity::getId).toList());
-            saleAttrValueVo.setSkus(
-                group.stream().map(SkuSaleAttrValueEntity::getSkuId)
-                    .toList());
-            return saleAttrValueVo;
-          }).toList();
-
-      saleAttrVo.setAttrValues(list1);
-
-      itemSaleAttrVoList.add(saleAttrVo);
-    });
+          saleAttrVo.setAttrValues(attrValues);
+          itemSaleAttrVoList.add(saleAttrVo);
+        });
 
     skuItemVo.setSaleAttrVos(itemSaleAttrVoList);
 
+    //设置基本属性
     List<SpuItemBaseAttrVo> itemBaseAttrVos = convertToGroupedVO(
         baseMapper.getspuItemBaseAttr(spuId));
     skuItemVo.setGroupAttrVos(itemBaseAttrVos);

@@ -616,12 +616,9 @@
             <dl>
               <dt th:text="选择+${skuattr.attrName}">选择颜色</dt>
               <dd th:each="attrValue:${skuattr.attrValues}">
-                <a th:attr="class= ${attrValue.getSkus().contains(skuItem.getSkuInfoEntity().getSkuId()) ? 'sku_attr_value checked': 'sku_attr_value'} ,skus=${attrValue.getSkus()}"
-
-
-                   href="#"
-                   th:text="${attrValue.getAttrValue()}">
-                  <!--                  <img src="/static/img/59ddfcb1Nc3edb8f1.jpg"/> 摩卡金-->
+                <a th:class="${attrValue.getSkuIds().contains(skuItem.getSkuInfoEntity().getSkuId()) ? 'sku_attr_value checked': 'sku_attr_value'}"
+                   th:attr="skus=${attrValue.getSkuIds()}">
+                  [[${attrValue.getAttrValue()}]]
                 </a>
               </dd>
             </dl>
@@ -1271,14 +1268,13 @@
   $(".sku_attr_value").click(function () {
     // 1、点击的元素添加上自定义的属性
     let skus = new Array();
-    let curr = JSON.parse($(this).attr("skus"));
 
     $(this).parent().parent().find(".sku_attr_value").removeClass("checked");
     $(this).addClass("checked");
     changeCheckedStyle();
 
     $("a[class='sku_attr_value checked']").each(function () {
-      skus.push(JSON.parse(  $(this).attr("skus")));
+      skus.push(JSON.parse($(this).attr("skus")));
     });
 
     let filterEle = skus[0];
