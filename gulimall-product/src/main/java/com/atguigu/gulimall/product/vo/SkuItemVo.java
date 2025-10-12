@@ -4,6 +4,7 @@ import com.atguigu.gulimall.product.entity.SkuImagesEntity;
 import com.atguigu.gulimall.product.entity.SkuInfoEntity;
 import com.atguigu.gulimall.product.entity.SpuInfoDescEntity;
 import java.util.List;
+import java.util.Map;
 import lombok.Data;
 
 /**
@@ -18,7 +19,9 @@ public class SkuItemVo {
   List<SkuImagesEntity> imagesEntities;
 
   Boolean hasStock = Boolean.TRUE;
+  //这是一个spu下所有sku共享的一个desp，主要是图片
   SpuInfoDescEntity desp;
+
 
   //有多少种销售属性组合
   List<ItemSaleAttrVo> saleAttrVos;
@@ -28,15 +31,24 @@ public class SkuItemVo {
   List<SpuItemBaseAttrVo> groupAttrVos;
 
   /**
-   * 销售属性
+   * 获取spu的所有销售属性
+   *
    */
   @Data
   public static class ItemSaleAttrVo {
 
     private Long attrId;
     private String attrName;
-    private List<String> attrValues;
+    private List<SaleAttrValueVo> attrValues;
+    private Map<Long, List<Long>> skuIdMapSaleValueIds;
+  }
 
+  @Data
+  public static class SaleAttrValueVo {
+    private List<Long> ids;
+    //这个属性值，在属性值相同的情况下，必须是唯一的。
+    private String attrValue;
+    private List<Long> skus;
   }
 
 

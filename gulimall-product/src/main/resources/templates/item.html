@@ -614,9 +614,13 @@
           <div class="box-attr clear" th:each="skuattr:${skuItem.getSaleAttrVos()}">
 
             <dl>
-              <dt th:text="${skuattr.attrName}">选择颜色</dt>
-              <dd th:each="value:${skuattr.attrValues}">
-                <a href="#" th:text="${value}">
+              <dt th:text="选择+${skuattr.attrName}">选择颜色</dt>
+              <dd th:each="attrValue:${skuattr.attrValues}">
+                <a th:attr="class= ${attrValue.getSkus().contains(skuItem.getSkuInfoEntity().getSkuId()) ? 'sku_attr_value checked': 'sku_attr_value'} ,skus=${attrValue.getSkus()}"
+
+
+                   href="#"
+                   th:text="${attrValue.getAttrValue()}">
                   <!--                  <img src="/static/img/59ddfcb1Nc3edb8f1.jpg"/> 摩卡金-->
                 </a>
               </dd>
@@ -1262,4 +1266,39 @@
 <script type="text/javascript">
 </script>
 
+<script>
+
+  $(".sku_attr_value").click(function () {
+    // 1、点击的元素添加上自定义的属性
+    let skus = new Array();
+    let curr = JSON.parse($(this).attr("skus"));
+
+    $(this).parent().parent().find(".sku_attr_value").removeClass("checked");
+    $(this).addClass("checked");
+    changeCheckedStyle();
+
+    $("a[class='sku_attr_value checked']").each(function () {
+      skus.push(JSON.parse(  $(this).attr("skus")));
+    });
+
+    let filterEle = skus[0];
+    for (let i = 1; i < skus.length; i++) {
+      filterEle = $(filterEle).filter(skus[i])[0];
+    }
+
+    location.href = "http://item.gulimall.com/" + filterEle + ".html";
+
+    return false;
+  });
+
+  $(function () {
+    changeCheckedStyle();
+  });
+
+  function changeCheckedStyle() {
+    $(".sku_attr_value").parent().css({"border": "solid 1px #ccc"});
+    $("a[class='sku_attr_value checked']").parent().css({"border": "solid 1px red"});
+  };
+
+</script>
 </html>

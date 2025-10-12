@@ -44,7 +44,6 @@ public class IndexController {
    */
   @GetMapping("/{skuId}.html")
   public String skuItem(@PathVariable("skuId") Long skuId, Model model) {
-    logger.info("准备查询{}的详情", skuId);
     SkuItemVo skuItemVo = skuInfoService.item(skuId);
     model.addAttribute("skuItem", skuItemVo);
     return "item";
