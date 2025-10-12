@@ -3,8 +3,8 @@ package com.atguigu.gulimall.product;
 import com.aliyuncs.exceptions.ClientException;
 import com.atguigu.gulimall.product.mapper.SkuInfoMapper;
 import com.atguigu.gulimall.product.service.SkuInfoService;
-import com.atguigu.gulimall.product.vo.SkuItemVo.SpuItemBaseAttrTo;
-import com.atguigu.gulimall.product.vo.SkuItemVo.SpuItemBaseAttrVo;
+import com.atguigu.gulimall.product.vo.SkuItemVo;
+import com.atguigu.gulimall.product.vo.SkuItemVo.SpuItemBaseAttrFlatDTO;
 import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.UUID;
@@ -27,6 +27,8 @@ class GulimallProductApplicationTests {
 
   @Autowired
   private SkuInfoMapper skuInfoMapper;
+  @Autowired
+  private SkuInfoService skuInfoService;
 
   @Test
   void testRedis() {
@@ -37,10 +39,15 @@ class GulimallProductApplicationTests {
 
   @Test
   void testMybatis() {
-    List<SpuItemBaseAttrTo> spuItemBaseAttrVos = skuInfoMapper.getspuItemBaseAttr(1L);
+    List<SpuItemBaseAttrFlatDTO> spuItemBaseAttrVos = skuInfoMapper.getspuItemBaseAttr(1L);
     System.out.println(spuItemBaseAttrVos);
   }
 
+  @Test
+  void testData() {
+    SkuItemVo item = skuInfoService.item(1L);
+    System.out.println(item);
+  }
 
 
   @Test

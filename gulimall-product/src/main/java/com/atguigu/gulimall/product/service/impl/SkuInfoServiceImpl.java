@@ -12,7 +12,7 @@ import com.atguigu.gulimall.product.service.SpuInfoDescService;
 import com.atguigu.gulimall.product.vo.SkuItemVo;
 import com.atguigu.gulimall.product.vo.SkuItemVo.ItemSaleAttrVo;
 import com.atguigu.gulimall.product.vo.SkuItemVo.SpuBaseAttrVo;
-import com.atguigu.gulimall.product.vo.SkuItemVo.SpuItemBaseAttrTo;
+import com.atguigu.gulimall.product.vo.SkuItemVo.SpuItemBaseAttrFlatDTO;
 import com.atguigu.gulimall.product.vo.SkuItemVo.SpuItemBaseAttrVo;
 import com.atguigu.gulimall.product.vo.SpuPageVo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -101,7 +101,9 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfoEntity
       return null;
     }
     skuItemVo.setSkuInfoEntity(skuInfoEntity);
-    Long spuId = skuInfoEntity.getSpuId(); //拿到spuId
+
+    //拿到spuId
+    Long spuId = skuInfoEntity.getSpuId();
     SpuInfoDescEntity one = spuInfoDescService.getOne(
         new LambdaQueryWrapper<SpuInfoDescEntity>().eq(SpuInfoDescEntity::getSpuId, spuId));
     skuItemVo.setDesp(one);
@@ -121,34 +123,44 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfoEntity
         new LambdaQueryWrapper<SkuSaleAttrValueEntity>().in(SkuSaleAttrValueEntity::getSkuId,
             skuids));
 
-    Map<Long, List<SkuSaleAttrValueEntity>> collect = list1.stream()
-        .collect(Collectors.groupingBy(SkuSaleAttrValueEntity::getSkuId));
+    //设置销售属性
+    Map<String, List<SkuSaleAttrValueEntity>> collect = list1.stream()
+        .collect(Collectors.groupingBy(SkuSaleAttrValueEntity::getAttrName));
     List<ItemSaleAttrVo> itemSaleAttrVoList = new ArrayList<>();
-    collect.forEach((k, v) -> {
+
+    collect.forEach((attrName, v) -> {
       ItemSaleAttrVo vo = new ItemSaleAttrVo();
-      vo.setAttrId(k);
-      vo.setAttrName(v.getFirst().getAttrName());
+      vo.setAttrName(attrName);
       vo.setAttrValues(
-          v.stream().map(SkuSaleAttrValueEntity::getAttrValue).toList());
+          v.stream().map(SkuSaleAttrValueEntity::getAttrValue).distinct().toList());
       itemSaleAttrVoList.add(vo);
     });
 
     skuItemVo.setSaleAttrVos(itemSaleAttrVoList);
 
-    List<SpuItemBaseAttrVo> itemBaseAttrVos = convertTo2Vo(
+    List<SpuItemBaseAttrVo> itemBaseAttrVos = convertToGroupedVO(
         baseMapper.getspuItemBaseAttr(spuId));
     skuItemVo.setGroupAttrVos(itemBaseAttrVos);
     return skuItemVo;
   }
 
 
-  private List<SpuItemBaseAttrVo> convertTo2Vo(List<SpuItemBaseAttrTo> spuItemBaseAttrTos) {
+  /**
+   *
+   * 因为从数据库查出来的是扁平SpuItemBaseAttrTo，所以需要这个方法转换一下
+   *
+   * @param spuItemBaseAttrFlatDTOS
+   * @return
+   */
+  private List<SpuItemBaseAttrVo> convertToGroupedVO(
+      List<SpuItemBaseAttrFlatDTO> spuItemBaseAttrFlatDTOS) {
     Map<String, SpuItemBaseAttrVo> map = new HashMap<>(25);
-    for (SpuItemBaseAttrTo s : spuItemBaseAttrTos) {
+    for (SpuItemBaseAttrFlatDTO s : spuItemBaseAttrFlatDTOS) {
       SpuItemBaseAttrVo orDefault = map.getOrDefault(s.getGroupName(), new SpuItemBaseAttrVo());
       if (ObjectUtils.isEmpty(orDefault.getSpuBaseAttrVoList())) {
         map.put(s.getGroupName(), orDefault);
         orDefault.setSpuBaseAttrVoList(new ArrayList<>());
+        orDefault.setGroupName(s.getGroupName());
       }
       SpuBaseAttrVo spuBaseAttrVo = new SpuBaseAttrVo();
       BeanUtils.copyProperties(s, spuBaseAttrVo);

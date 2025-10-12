@@ -17,6 +17,7 @@ public class SkuItemVo {
   SkuInfoEntity skuInfoEntity;
   List<SkuImagesEntity> imagesEntities;
 
+  Boolean hasStock = Boolean.TRUE;
   SpuInfoDescEntity desp;
 
   //有多少种销售属性组合
@@ -56,7 +57,8 @@ public class SkuItemVo {
 
 
   @Data
-  public static class SpuItemBaseAttrTo {
+  public static class SpuItemBaseAttrFlatDTO {
+
     private String groupName;
     private String attrName;
     private String attrValues;
