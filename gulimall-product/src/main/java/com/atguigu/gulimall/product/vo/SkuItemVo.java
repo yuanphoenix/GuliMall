@@ -45,7 +45,11 @@ public class SkuItemVo {
   @Data
   public static class SaleAttrValueVo {
     //这个属性值，在属性值相同的情况下，必须是唯一的。
+
+    /** 属性值内容（如“黑色”、“8GB+256GB”） */
     private String attrValue;
+
+    /** 拥有该属性值的所有 SKU ID 列表 */
     private List<Long> skuIds;
   }
 

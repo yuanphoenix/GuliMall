@@ -10,7 +10,6 @@ import com.atguigu.gulimall.product.service.AttrAttrgroupRelationService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -26,10 +25,13 @@ public class AttrAttrgroupRelationServiceImpl extends
     ServiceImpl<AttrAttrgroupRelationMapper, AttrAttrgroupRelationEntity>
     implements AttrAttrgroupRelationService {
 
-  @Autowired
-  private AttrMapper attrMapper;
-  @Autowired
-  private AttrGroupMapper groupMapper;
+  private final AttrMapper attrMapper;
+  private final AttrGroupMapper groupMapper;
+
+  public AttrAttrgroupRelationServiceImpl(AttrMapper attrMapper, AttrGroupMapper groupMapper) {
+    this.attrMapper = attrMapper;
+    this.groupMapper = groupMapper;
+  }
 
   @Override
   public boolean checkAndSave(List<AttrAttrgroupRelationEntity> entityList) {
