@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 import utils.R;
 
 /**
@@ -40,8 +39,10 @@ public class AuthController {
 
   @PostMapping("/regist")
   public String register(@Valid UserRegistVo vo) {
-    System.out.println(vo.toString());
-    return "redirect:http://auth.gulimall.com";
+
+    //调用其他微服务接口做注册
+    Boolean b = authService.registMember(vo);
+    return b ? "redirect:http://auth.gulimall.com" : "redirect:http://auth.gulimall.com/regist";
   }
 
 }

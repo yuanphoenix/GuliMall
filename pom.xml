@@ -7,6 +7,7 @@
   <groupId>com.atguigu.gulimall</groupId>
   <modelVersion>4.0.0</modelVersion>
   <modules>
+    <module>gulimall-auth-server</module>
     <module>gulimall-coupon</module>
     <module>gulimall-member</module>
     <module>gulimall-order</module>
