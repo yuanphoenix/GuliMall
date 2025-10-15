@@ -3,6 +3,8 @@ package com.atguigu.gulimall.member.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -28,11 +30,14 @@ public class MemberEntity {
   /**
    * 用户名
    */
+  @NotBlank(message = "用户名必须填写，不能为空")
   private String username;
 
   /**
    * 密码
    */
+  @NotBlank(message = "密码必须填写，不能为空")
+  @Min(6)
   private String password;
 
   /**
@@ -43,6 +48,7 @@ public class MemberEntity {
   /**
    * 手机号码
    */
+  @NotBlank(message = "手机号不能为空")
   private String mobile;
 
   /**

@@ -6240,7 +6240,7 @@ Cookie</span>是由网页服务器存放在您的访问设备上的文本文件�
         <input name="userName" maxlength="20" type="text" placeholder="您的用户名和登录名">
       </label>
       <div class="tips">
-
+        <div th:if="${errors!=null}" th:text="${errors.get('userName')}" style="color:  red"></div>
       </div>
     </div>
     <div class="register-box">
@@ -6249,6 +6249,7 @@ Cookie</span>是由网页服务器存放在您的访问设备上的文本文件�
                placeholder="建议至少使用两种字符组合">
       </label>
       <div class="tips">
+        <div th:if="${errors!=null}" th:text="${errors.get('password')}" style="color:  red"></div>
 
       </div>
     </div>
@@ -6267,7 +6268,7 @@ Cookie</span>是由网页服务器存放在您的访问设备上的文本文件�
                placeholder="建议使用常用手机">
       </label>
       <div class="tips">
-
+        <div th:if="${errors!=null}" th:text="${errors.get('phone')}" style="color:  red"></div>
       </div>
     </div>
     <div class="register-box">

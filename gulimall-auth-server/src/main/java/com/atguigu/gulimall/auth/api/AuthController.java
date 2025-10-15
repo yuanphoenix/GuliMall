@@ -33,16 +33,15 @@ public class AuthController {
   @ResponseBody
   @GetMapping("/sms/sendCode")
   public R sendCode(@NotEmpty @RequestParam("phone") String phone) {
-    return authService.sendCode(phone) ? R.ok() : R.error("验证码还有有效期内");
+    return authService.sendCode(phone) ? R.ok() : R.error("验证码还在有效期内");
   }
 
 
   @PostMapping("/regist")
   public String register(@Valid UserRegistVo vo) {
-
     //调用其他微服务接口做注册
-    Boolean b = authService.registMember(vo);
-    return b ? "redirect:http://auth.gulimall.com" : "redirect:http://auth.gulimall.com/regist";
+    return authService.registMember(vo) ? "redirect:http://auth.gulimall.com"
+        : "redirect:http://auth.gulimall.com/regist";
   }
 
 }

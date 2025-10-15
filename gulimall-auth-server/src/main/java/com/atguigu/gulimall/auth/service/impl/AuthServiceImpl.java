@@ -3,11 +3,8 @@ package com.atguigu.gulimall.auth.service.impl;
 import com.atguigu.gulimall.auth.feign.MemberFeign;
 import com.atguigu.gulimall.auth.service.AuthService;
 import com.atguigu.gulimall.auth.vo.UserRegistVo;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -43,12 +40,23 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public Boolean registMember(UserRegistVo userRegistVo) {
+    String code = userRegistVo.getCode();
+    String phone = userRegistVo.getPhone();
+    if (!org.apache.commons.lang3.StringUtils.equals(code,
+        stringRedisTemplate.opsForValue().get(phone))) {
+      return false;
+    }
+
     MemberTo memberTo = new MemberTo();
     memberTo.setMobile(userRegistVo.getPhone());
     memberTo.setPassword(userRegistVo.getPassword());
     memberTo.setUsername(userRegistVo.getUserName());
-    R save = memberFeign.save(memberTo);
-    return save != null && Objects.equals(save.getCode(), R.ok().getCode());
 
+    R save = memberFeign.save(memberTo);
+    if (save != null && save.getCode() == 0) {
+      stringRedisTemplate.delete(phone);
+      return true;
+    }
+    return false;
   }
 }

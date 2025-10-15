@@ -1,8 +1,14 @@
 package exception;
 
+/**
+ * @author tifa
+ */
+
 public enum BizCodeEnum {
   VALID_EXCEPTION(10001, "参数格式校验失败"),
-  UNKONE_EXCEPTION(10000, "系统未知异常");
+  UNKONE_EXCEPTION(10000, "系统未知异常"),
+  STYLE_EXCEPTION(10002, "格式错误");
+
   private Integer code;
   private String msg;
 

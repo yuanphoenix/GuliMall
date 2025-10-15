@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import to.MemberTo;
 import utils.R;
 
-@FeignClient("gulimall-auth")
+@FeignClient("gulimall-member")
 public interface MemberFeign {
 
   @PostMapping("/member/member/save")

@@ -9,6 +9,6 @@ public class IndexController {
 
   @GetMapping("/regist")
   public String register() {
-    return "reg";
+    return "regist";
   }
 }

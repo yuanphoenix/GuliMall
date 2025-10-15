@@ -3,6 +3,7 @@ package com.atguigu.gulimall.member.controller;
 import com.atguigu.gulimall.member.entity.MemberEntity;
 import com.atguigu.gulimall.member.feign.CouponFeignService;
 import com.atguigu.gulimall.member.service.MemberService;
+import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -60,8 +61,8 @@ public class MemberController {
    * 保存数据
    */
   @PostMapping("/save")
-  public R save(@RequestBody MemberEntity member) {
-    boolean saved = memberService.save(member);
+  public R save(@Valid @RequestBody MemberEntity member) {
+    boolean saved = memberService.saveMember(member);
     return saved ? R.ok() : R.error();
   }
 

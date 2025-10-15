@@ -12,7 +12,6 @@ import org.springframework.context.annotation.ComponentScan;
 @MapperScan("com.atguigu.gulimall.member.mapper")
 @EnableDiscoveryClient
 @ComponentScan(basePackageClasses = {GulimallMemberApplication.class, MybatisPlusConfig.class})
-
 @EnableFeignClients(basePackages = "com.atguigu.gulimall.member.feign")
 public class GulimallMemberApplication {
 

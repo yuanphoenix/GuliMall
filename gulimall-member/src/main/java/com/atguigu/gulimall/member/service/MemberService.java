@@ -10,4 +10,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface MemberService extends IService<MemberEntity> {
 
+
+  boolean saveMember(MemberEntity member);
 }
