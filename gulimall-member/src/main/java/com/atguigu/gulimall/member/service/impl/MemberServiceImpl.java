@@ -57,6 +57,17 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, MemberEntity>
     }
     return this.baseMapper.insert(member) == 1;
   }
+
+  @Override
+  public boolean checkLogin(MemberEntity member) {
+    MemberEntity trueMember = this.baseMapper.selectOne(
+        new LambdaQueryWrapper<MemberEntity>().eq(MemberEntity::getUsername, member.getUsername()));
+    if (trueMember == null) {
+      return false;
+    }
+    BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+    return bCryptPasswordEncoder.matches(member.getPassword(), trueMember.getPassword());
+  }
 }
 
 

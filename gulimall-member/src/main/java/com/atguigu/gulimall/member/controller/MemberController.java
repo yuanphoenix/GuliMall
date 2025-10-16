@@ -66,6 +66,14 @@ public class MemberController {
     return saved ? R.ok() : R.error();
   }
 
+
+  @PostMapping("/checkLogin")
+  public R checkLogin(@RequestBody MemberEntity member) {
+    boolean checked = memberService.checkLogin(member);
+    return checked ? R.ok() : R.error();
+  }
+
+
   /**
    * 修改数据
    */

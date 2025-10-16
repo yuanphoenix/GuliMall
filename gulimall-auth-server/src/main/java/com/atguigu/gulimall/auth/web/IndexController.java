@@ -2,6 +2,7 @@ package com.atguigu.gulimall.auth.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class IndexController {
@@ -11,4 +12,5 @@ public class IndexController {
   public String register() {
     return "regist";
   }
+
 }

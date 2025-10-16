@@ -2,6 +2,7 @@ package com.atguigu.gulimall.auth.service.impl;
 
 import com.atguigu.gulimall.auth.feign.MemberFeign;
 import com.atguigu.gulimall.auth.service.AuthService;
+import com.atguigu.gulimall.auth.vo.LoginVo;
 import com.atguigu.gulimall.auth.vo.UserRegistVo;
 import exception.BizCodeEnum;
 import exception.BizException;
@@ -60,4 +61,10 @@ public class AuthServiceImpl implements AuthService {
     }
     throw new BizException(BizCodeEnum.AUTH_SAVE_EXCEPTION);
   }
+
+  @Override
+  public Boolean login(LoginVo loginVo) {
+    return memberFeign.checkLogin(loginVo).getCode() == 0;
+  }
+
 }

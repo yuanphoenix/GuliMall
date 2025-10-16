@@ -1,6 +1,7 @@
 package com.atguigu.gulimall.auth.api;
 
 import com.atguigu.gulimall.auth.service.AuthService;
+import com.atguigu.gulimall.auth.vo.LoginVo;
 import com.atguigu.gulimall.auth.vo.UserRegistVo;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
@@ -21,6 +22,15 @@ public class AuthController {
 
   public AuthController(AuthService authService) {
     this.authService = authService;
+  }
+
+  @PostMapping("/login")
+  public String login(@Valid LoginVo loginVo) {
+    Boolean login = authService.login(loginVo);
+    if (login) {
+      return "redirect:http://gulimall.com";
+    }
+    return "redirect:http://auth.gulimall.com";
   }
 
 
