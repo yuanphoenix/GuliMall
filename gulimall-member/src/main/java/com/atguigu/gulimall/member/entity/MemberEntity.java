@@ -3,10 +3,10 @@ package com.atguigu.gulimall.member.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import org.hibernate.validator.constraints.Length;
 
 /**
  * 会员
@@ -37,7 +37,7 @@ public class MemberEntity {
    * 密码
    */
   @NotBlank(message = "密码必须填写，不能为空")
-  @Min(6)
+  @Length(min = 6, message = "密码长度不能小于6位")
   private String password;
 
   /**

@@ -3,6 +3,8 @@ package com.atguigu.gulimall.auth.service.impl;
 import com.atguigu.gulimall.auth.feign.MemberFeign;
 import com.atguigu.gulimall.auth.service.AuthService;
 import com.atguigu.gulimall.auth.vo.UserRegistVo;
+import exception.BizCodeEnum;
+import exception.BizException;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -31,7 +33,7 @@ public class AuthServiceImpl implements AuthService {
   public Boolean sendCode(String phone) {
     String s = stringRedisTemplate.opsForValue().get(phone);
     if (StringUtils.hasText(s)) {
-      return false;
+      throw new BizException(BizCodeEnum.CODE_TIME_EXCEPTION);
     }
     String code = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 6);
     stringRedisTemplate.opsForValue().set(phone, code, 5 * 60, TimeUnit.SECONDS);
@@ -44,9 +46,8 @@ public class AuthServiceImpl implements AuthService {
     String phone = userRegistVo.getPhone();
     if (!org.apache.commons.lang3.StringUtils.equals(code,
         stringRedisTemplate.opsForValue().get(phone))) {
-      return false;
+      throw new BizException(BizCodeEnum.CODE_EXCEPTION);
     }
-
     MemberTo memberTo = new MemberTo();
     memberTo.setMobile(userRegistVo.getPhone());
     memberTo.setPassword(userRegistVo.getPassword());
@@ -57,6 +58,6 @@ public class AuthServiceImpl implements AuthService {
       stringRedisTemplate.delete(phone);
       return true;
     }
-    return false;
+    throw new BizException(BizCodeEnum.AUTH_SAVE_EXCEPTION);
   }
 }

@@ -7,6 +7,10 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * 我的线程池
+ * @author tifa
+ */
 @Configuration
 public class MyThreadConfig {
 
