@@ -10,7 +10,9 @@ import com.atguigu.gulimall.product.vo.TreeVoRequest;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -26,12 +28,12 @@ import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import utils.JsonUtils;
 
 /**
  * @author tifa
@@ -46,16 +48,20 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
   private final StringRedisTemplate redisTemplate;
   private final RedissonClient redissonClient;
 
-  public CategoryServiceImpl(StringRedisTemplate redisTemplate, RedissonClient redissonClient) {
+  private final ObjectMapper objectMapper;
+
+  public CategoryServiceImpl(StringRedisTemplate redisTemplate, RedissonClient redissonClient,
+      ObjectMapper objectMapper) {
     this.redisTemplate = redisTemplate;
     this.redissonClient = redissonClient;
+    this.objectMapper = objectMapper;
   }
 
   @Override
   public List<CategoryEntity> listWithTree() {
     String s = redisTemplate.opsForValue().get("categoryTree");
     if (StringUtils.hasText(s)) {
-      return JsonUtils.convertJson2Object(s, new TypeReference<>() {
+      return objectMapper.convertValue(s, new TypeReference<List<CategoryEntity>>() {
       });
     }
 
@@ -63,10 +69,12 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
     list.forEach(c -> c.setSort(c.getSort() == null ? 0 : c.getSort()));
     list.sort(Comparator.comparingInt(CategoryEntity::getSort));
     HashMap<Long, CategoryEntity> categoryMap = new HashMap<>();
-    for (CategoryEntity category : list) {
+    for (
+        CategoryEntity category : list) {
       categoryMap.put(category.getCatId(), category);
     }
-    for (CategoryEntity category : list) {
+    for (
+        CategoryEntity category : list) {
       if (!categoryMap.containsKey(category.getParentCid())) {
         continue;
       }
@@ -75,8 +83,12 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
     }
 
     List<CategoryEntity> result = list.stream().filter(e -> e.getCatLevel() == 1).toList();
-    redisTemplate.opsForValue()
-        .set("categoryTree", JsonUtils.convertObject2Json(result), Duration.ofHours(1));
+    try {
+      redisTemplate.opsForValue().set("categoryTree",objectMapper.writeValueAsString(result), Duration.
+          ofHours(1));
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
+    }
     return result;
   }
 
@@ -207,7 +219,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
   public Map<String, List<Catelog2Vo>> getCatalogJson() {
     String catalogJson = redisTemplate.opsForValue().get("catalogJson");
     if (StringUtils.hasText(catalogJson)) {
-      return JsonUtils.convertJson2Object(catalogJson, new TypeReference<>() {
+      return objectMapper.convertValue(catalogJson, new TypeReference<>() {
       });
     }
 
@@ -221,14 +233,17 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
       catalogJson = redisTemplate.opsForValue().get("catalogJson");
 
       if (StringUtils.hasText(catalogJson)) {
-        return JsonUtils.convertJson2Object(catalogJson, new TypeReference<>() {
+        return objectMapper.convertValue(catalogJson,new TypeReference<>() {
+
         });
       }
       Map<String, List<Catelog2Vo>> catalogJsonFromDB = getCatalogJsonFromDB();
       redisTemplate.opsForValue()
-          .set("catalogJson", JsonUtils.convertObject2Json(catalogJsonFromDB), Duration.ofHours(1));
+          .set("catalogJson",objectMapper.writeValueAsString(catalogJsonFromDB),  Duration.ofHours(1));
       return catalogJsonFromDB;
     } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    } catch (JsonProcessingException e) {
       throw new RuntimeException(e);
     } finally {
       if (catalock.isHeldByCurrentThread()) {
@@ -237,10 +252,10 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
     }
   }
 
-  //
+//
 //  @Override
 
-  //使用redis实现锁
+//使用redis实现锁
 
 //  public Map<String, List<Catelog2Vo>> getCatalogJson() {
 //    /**

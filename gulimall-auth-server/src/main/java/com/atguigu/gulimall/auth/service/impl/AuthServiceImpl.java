@@ -4,13 +4,16 @@ import com.atguigu.gulimall.auth.feign.MemberFeign;
 import com.atguigu.gulimall.auth.service.AuthService;
 import com.atguigu.gulimall.auth.vo.LoginVo;
 import com.atguigu.gulimall.auth.vo.UserRegistVo;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import exception.BizCodeEnum;
 import exception.BizException;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import to.MemberEntityVo;
 import to.MemberTo;
 import utils.R;
 
@@ -20,6 +23,9 @@ import utils.R;
  */
 @Service
 public class AuthServiceImpl implements AuthService {
+
+  @Autowired
+  private ObjectMapper objectMapper;  // Spring Boot 注入的 ObjectMapper
 
   private final MemberFeign memberFeign;
 
@@ -63,8 +69,13 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public Boolean login(LoginVo loginVo) {
-    return memberFeign.checkLogin(loginVo).getCode() == 0;
+  public MemberEntityVo login(LoginVo loginVo) {
+    R r = memberFeign.checkLogin(loginVo);
+    if (r.getCode() == 0) {
+      MemberEntityVo data = objectMapper.convertValue(r.get("data"), MemberEntityVo.class);
+      return data;
+    }
+    return null;
   }
 
 }

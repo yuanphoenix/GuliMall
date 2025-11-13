@@ -20,6 +20,7 @@ import java.util.UUID;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.codec.binary.Base64;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,6 +30,9 @@ import utils.R;
 @RestController
 @RequestMapping("/oss")
 public class WebController {
+
+  @Autowired
+  private ObjectMapper mapper;
 
   //OSS基础信息 替换为实际的 bucket 名称、 region-id、host。
   String bucket = "gulimall--tifa";
@@ -166,7 +170,6 @@ public class WebController {
     // 步骤1：创建policy。
     String x_oss_credential = accesskeyid + "/" + date + "/" + region + "/oss/aliyun_v4_request";
 
-    ObjectMapper mapper = new ObjectMapper();
 
     Map<String, Object> policy = new HashMap<>();
     policy.put("expiration", generateExpiration(expire_time));

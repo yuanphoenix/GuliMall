@@ -1,6 +1,5 @@
 package com.atguigu.gulimall.member.service.impl;
 
-import com.atguigu.gulimall.member.entity.MemberEntity;
 import com.atguigu.gulimall.member.entity.MemberLevelEntity;
 import com.atguigu.gulimall.member.mapper.MemberMapper;
 import com.atguigu.gulimall.member.service.MemberLevelService;
@@ -10,9 +9,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import exception.BizCodeEnum;
 import exception.BizException;
 import java.time.LocalDateTime;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.atguigu.gulimall.member.entity.MemberEntity;
+import to.MemberEntityVo;
 
 /**
  * @author tifa
@@ -59,14 +61,17 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, MemberEntity>
   }
 
   @Override
-  public boolean checkLogin(MemberEntity member) {
+  public MemberEntityVo checkLogin(MemberEntity member) {
     MemberEntity trueMember = this.baseMapper.selectOne(
         new LambdaQueryWrapper<MemberEntity>().eq(MemberEntity::getUsername, member.getUsername()));
     if (trueMember == null) {
-      return false;
+      return null;
     }
+    MemberEntityVo memberEntityVo = new MemberEntityVo();
+    BeanUtils.copyProperties(trueMember, memberEntityVo);
     BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-    return bCryptPasswordEncoder.matches(member.getPassword(), trueMember.getPassword());
+    return bCryptPasswordEncoder.matches(member.getPassword(), trueMember.getPassword())
+        ? memberEntityVo : null;
   }
 }
 

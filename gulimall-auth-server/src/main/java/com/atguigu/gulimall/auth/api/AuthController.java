@@ -3,6 +3,7 @@ package com.atguigu.gulimall.auth.api;
 import com.atguigu.gulimall.auth.service.AuthService;
 import com.atguigu.gulimall.auth.vo.LoginVo;
 import com.atguigu.gulimall.auth.vo.UserRegistVo;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import to.MemberEntityVo;
 import utils.R;
 
 /**
@@ -25,9 +27,10 @@ public class AuthController {
   }
 
   @PostMapping("/login")
-  public String login(@Valid LoginVo loginVo) {
-    Boolean login = authService.login(loginVo);
-    if (login) {
+  public String login(@Valid LoginVo loginVo, HttpSession session) {
+    MemberEntityVo login = authService.login(loginVo);
+    if (login != null) {
+      session.setAttribute("login", login);
       return "redirect:http://gulimall.com";
     }
     return "redirect:http://auth.gulimall.com";

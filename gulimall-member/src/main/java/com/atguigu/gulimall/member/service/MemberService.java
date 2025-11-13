@@ -1,7 +1,8 @@
 package com.atguigu.gulimall.member.service;
 
-import com.atguigu.gulimall.member.entity.MemberEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.atguigu.gulimall.member.entity.MemberEntity;
+import to.MemberEntityVo;
 
 /**
  * @author tifa
@@ -13,5 +14,5 @@ public interface MemberService extends IService<MemberEntity> {
 
   boolean saveMember(MemberEntity member);
 
-  boolean checkLogin(MemberEntity member);
+  MemberEntityVo checkLogin(MemberEntity member);
 }

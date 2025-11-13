@@ -9,4 +9,4 @@ spring:
           enabled: false
 
 server:
-  port: 30000
+  port: 30009

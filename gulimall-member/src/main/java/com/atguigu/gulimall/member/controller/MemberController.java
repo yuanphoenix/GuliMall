@@ -1,8 +1,8 @@
 package com.atguigu.gulimall.member.controller;
 
-import com.atguigu.gulimall.member.entity.MemberEntity;
 import com.atguigu.gulimall.member.feign.CouponFeignService;
 import com.atguigu.gulimall.member.service.MemberService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.atguigu.gulimall.member.entity.MemberEntity;
+import to.MemberEntityVo;
 import utils.R;
 
 /**
@@ -31,6 +33,9 @@ public class MemberController {
 
   @Autowired
   private CouponFeignService couponFeignService;
+
+  @Autowired
+  private ObjectMapper objectMapper;
 
 
   @GetMapping("/test")
@@ -69,8 +74,9 @@ public class MemberController {
 
   @PostMapping("/checkLogin")
   public R checkLogin(@RequestBody MemberEntity member) {
-    boolean checked = memberService.checkLogin(member);
-    return checked ? R.ok() : R.error();
+    MemberEntityVo memberEntity = memberService.checkLogin(member);
+    System.out.println("打印一下mapper"+objectMapper);
+    return memberEntity != null ? R.ok().put("data", memberEntity) : R.error();
   }
 
 

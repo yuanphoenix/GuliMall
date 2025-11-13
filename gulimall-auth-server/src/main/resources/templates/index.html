@@ -5,6 +5,9 @@
   <link rel="stylesheet" type="text/css" href="/static/login/JD_sass/JD1.css"/>
   <script src="/static/login/JD_js/jquery-3.1.1.min.js" type="text/javascript"
           charset="utf-8"></script>
+  <script src="/static/login/qq/qc_jssdk.js" type="text/javascript" data-appid="102815584"
+          data-redirecturi="http://gulimall.com/test"
+          charset="utf-8"></script>
   <title>gulimall</title>
 </head>
 <body>
@@ -89,7 +92,7 @@
         <li>
           <a href="#">
             <img src="/static/login/JD_img/qq.png"/>
-            <span>QQ</span>
+            <span id="qqLoginBtn">QQ</span>
           </a>
         </li>
         <li class="f4"> |</li>
@@ -153,6 +156,10 @@
       act = this
     }
   }
+
+  QC.Login({
+    btnId: "qqLoginBtn"	//插入按钮的节点id
+  });
 
   var btn2 = document.getElementsByClassName('btn2')[0];
   var user = document.getElementsByClassName('user')[0];

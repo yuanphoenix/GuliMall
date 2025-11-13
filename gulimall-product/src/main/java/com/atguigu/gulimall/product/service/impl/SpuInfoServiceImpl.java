@@ -48,6 +48,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -90,13 +91,15 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
   private final ProductAttrValueService productAttrValueService;
   private final CouponFeignService couponFeignService;
 
+
+  private final ObjectMapper objectMapper;
   public SpuInfoServiceImpl(SpuInfoDescMapper spuInfoDescMapper, SpuImagesMapper spuImagesMapper,
       AttrMapper attrMapper, ProductAttrValueMapper productAttrValueMapper,
       SkuInfoMapper skuInfoMapper, SkuImagesMapper skuImagesMapper,
       SkuSaleAttrValueMapper skuSaleAttrValueMapper, CouponFeignService couponFeignService,
       SkuInfoService skuInfoService, BrandService brandService, CategoryService categoryService,
       ProductAttrValueService productAttrValueService, WareFeignService wareFeignService,
-      EsFeign esFeign) {
+      EsFeign esFeign, ObjectMapper objectMapper) {
 
     this.spuInfoDescMapper = spuInfoDescMapper;
     this.spuImagesMapper = spuImagesMapper;
@@ -112,6 +115,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
     this.productAttrValueService = productAttrValueService;
     this.wareFeignService = wareFeignService;
     this.esFeign = esFeign;
+    this.objectMapper = objectMapper;
   }
 
   @Transactional(rollbackFor = Exception.class)
@@ -297,7 +301,6 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
     R skuHasStock = wareFeignService.getSkuHasStock(
         skuInfoEntityList.stream().mapToLong(SkuInfoEntity::getSkuId).boxed().toList());
 
-    ObjectMapper objectMapper = new ObjectMapper();
     List<SkuHasStockTo> skuHasStockTos = objectMapper.convertValue(skuHasStock.get("data"),
         new TypeReference<>() {
         });
