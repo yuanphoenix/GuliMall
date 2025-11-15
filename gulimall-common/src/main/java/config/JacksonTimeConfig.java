@@ -31,7 +31,6 @@ public class JacksonTimeConfig {
     mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     mapper.findAndRegisterModules(); // 自动注册其他模块，兼容性更好
 
-    System.out.println("配置类自定义mapper" + mapper);
     return mapper;
   }
 }

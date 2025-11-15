@@ -75,7 +75,6 @@ public class MemberController {
   @PostMapping("/checkLogin")
   public R checkLogin(@RequestBody MemberEntity member) {
     MemberEntityVo memberEntity = memberService.checkLogin(member);
-    System.out.println("打印一下mapper"+objectMapper);
     return memberEntity != null ? R.ok().put("data", memberEntity) : R.error();
   }
 

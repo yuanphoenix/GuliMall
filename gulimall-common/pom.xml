@@ -90,11 +90,7 @@
     </dependency>
   </dependencies>
   <dependencyManagement>
-
-
     <dependencies>
-
-
       <dependency>
         <artifactId>mybatis-plus-bom</artifactId>
         <groupId>com.baomidou</groupId>
