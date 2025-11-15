@@ -7,13 +7,19 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+/**
+ * @author tifa
+ */
 @Configuration
 public class JacksonTimeConfig {
 
+  private Logger logger = LoggerFactory.getLogger(JacksonTimeConfig.class);
   private static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
   @Primary
@@ -30,7 +36,6 @@ public class JacksonTimeConfig {
     mapper.registerModule(javaTimeModule);
     mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     mapper.findAndRegisterModules(); // 自动注册其他模块，兼容性更好
-
     return mapper;
   }
 }

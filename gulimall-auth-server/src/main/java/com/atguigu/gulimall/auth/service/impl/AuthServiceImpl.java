@@ -24,16 +24,16 @@ import utils.R;
 @Service
 public class AuthServiceImpl implements AuthService {
 
-  @Autowired
-  private ObjectMapper objectMapper;  // Spring Boot 注入的 ObjectMapper
 
+  // Spring Boot 注入的 ObjectMapper
+  private final ObjectMapper objectMapper;
   private final MemberFeign memberFeign;
-
   private final StringRedisTemplate stringRedisTemplate;
-
-  public AuthServiceImpl(StringRedisTemplate stringRedisTemplate, MemberFeign memberFeign) {
+  public AuthServiceImpl(StringRedisTemplate stringRedisTemplate, MemberFeign memberFeign,
+      ObjectMapper objectMapper) {
     this.stringRedisTemplate = stringRedisTemplate;
     this.memberFeign = memberFeign;
+    this.objectMapper = objectMapper;
   }
 
   @Override
