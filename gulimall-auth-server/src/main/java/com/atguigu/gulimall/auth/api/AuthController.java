@@ -3,6 +3,7 @@ package com.atguigu.gulimall.auth.api;
 import com.atguigu.gulimall.auth.service.AuthService;
 import com.atguigu.gulimall.auth.vo.LoginVo;
 import com.atguigu.gulimall.auth.vo.UserRegistVo;
+import constant.LoginConstant;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
@@ -30,7 +31,7 @@ public class AuthController {
   public String login(@Valid LoginVo loginVo, HttpSession session) {
     MemberEntityVo login = authService.login(loginVo);
     if (login != null) {
-      session.setAttribute("login", login);
+      session.setAttribute(LoginConstant.LOGIN.getValue(), login);
       return "redirect:http://gulimall.com";
     }
     return "redirect:http://auth.gulimall.com";
