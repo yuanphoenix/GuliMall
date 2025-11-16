@@ -1,8 +1,9 @@
 package com.atguigu.gulimall.auth.web;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class IndexController {
@@ -13,4 +14,12 @@ public class IndexController {
     return "regist";
   }
 
+  @GetMapping("/")
+  public String index(HttpServletRequest request, Model model) {
+    Object login = request.getSession().getAttribute("login");
+    if (login != null) {
+      return "redirect:http://gulimall.com";
+    }
+    return "index";
+  }
 }

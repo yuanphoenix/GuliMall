@@ -63,10 +63,12 @@
     </b>
     <ul>
       <li>
-        <a href="/static/#" class="li_2">你好，请登录</a>
+        <a href="http://auth.gulimall.com" class="li_2" th:if="${session.login==null}">你好，请登录</a>
+        <a  class="li_2" th:if="${session.login != null}">欢迎: [[${session.login.username}]]</a>
       </li>
       <li>
-        <a href="/static/#">免费注册</a>
+        <a href="http://auth.gulimall.com/regist" th:if="${session.login==null}"
+           class="li_2">免费注册</a>
       </li>
       <span>|</span>
       <li>

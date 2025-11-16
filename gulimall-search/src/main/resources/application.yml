@@ -7,6 +7,11 @@ spring:
 
   thymeleaf:
     cache: false
+
+  data:
+    redis:
+      host: 10.200.200.1
+      port: 6379
   cloud:
     nacos:
       server-addr: 10.200.200.1:8848

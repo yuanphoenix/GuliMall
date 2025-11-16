@@ -58,8 +58,11 @@
         </li>
       </ul>
       <ul class="header_ul_right">
-        <li style="border: 0;"><a class="aa" href="../登录页面\index.html">你好，请登录</a></li>
-        <li><a href="../注册页面\index.html" style="color: red;">免费注册</a> |</li>
+        <li style="border: 0;"><a class="aa" href="http://auth.gulimall.com"
+                                  th:if="${session.login==null}">你好，请登录</a></li>
+        <li><a href="http://auth.gulimall.com/regist" th:if="${session.login==null}"
+               style="color: red;">免费注册</a> |
+        </li>
         <li><a class="aa" href="javascript:;">我的订单</a> |</li>
         <li class="jingdong"><a href="javascript:;">我的京东</a><span
             class="glyphicon glyphicon-menu-down">|</span>
