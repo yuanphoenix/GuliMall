@@ -57,6 +57,11 @@ spring:
           predicates:
             - Host=search.gulimall.com,*.search.gulimall.com
 
+        - id: gulimall-cart
+          uri: lb://gulimall-cart
+          predicates:
+            - Host=cart.gulimall.com
+
         - id: gulimall-host
           uri: lb://gulimall-product
           predicates:
@@ -66,5 +71,5 @@ spring:
     import:
       - nacos:gulimall-gateway.properties?refreshEnabled=true&group=DEFAULT_GROUP
 server:
-  port: 88
+  port: 34567
 
