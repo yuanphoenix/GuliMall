@@ -332,7 +332,7 @@
     <joda.time.version>2.9.9</joda.time.version>
     <jwt.version>0.12.6</jwt.version>
     <kaptcha.version>0.0.9</kaptcha.version>
-    <lombok.version>1.18.32</lombok.version>
+    <lombok.version>1.18.42</lombok.version>
     <mssql.version>4.0</mssql.version>
     <mybatisplus.version>3.3.1</mybatisplus.version>
     <oracle.version>11.2.0.3</oracle.version>
