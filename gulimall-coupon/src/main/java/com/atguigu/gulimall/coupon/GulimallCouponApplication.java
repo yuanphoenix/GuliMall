@@ -12,9 +12,8 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan(basePackageClasses = {GulimallCouponApplication.class, JacksonTimeConfig.class})
 @EnableDiscoveryClient
 public class GulimallCouponApplication {
-
-  public static void main(String[] args) {
-    SpringApplication.run(GulimallCouponApplication.class, args);
-  }
+    public static void main(String[] args) {
+        SpringApplication.run(GulimallCouponApplication.class, args);
+    }
 
 }
