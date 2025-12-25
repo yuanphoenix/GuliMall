@@ -1,10 +1,9 @@
 package com.atguigu.gulimall.gulimallcart.vo;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.math.BigDecimal;
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 购物车

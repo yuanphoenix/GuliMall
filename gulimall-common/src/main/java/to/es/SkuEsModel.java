@@ -9,6 +9,7 @@ import java.util.List;
 /**
  * 商品在es中存储的内容。
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SkuEsModel {
 
   private Long skuId;

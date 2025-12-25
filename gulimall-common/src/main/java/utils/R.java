@@ -1,9 +1,12 @@
 package utils;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import exception.BizCodeEnum;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.http.HttpStatus;
+import org.springframework.beans.factory.ObjectProvider;
 
 public class R extends HashMap<String, Object> {
 
@@ -53,5 +56,9 @@ public class R extends HashMap<String, Object> {
   public R put(String key, Object value) {
     super.put(key, value);
     return this;
+  }
+
+  public <T> T getData(TypeReference<T> typeReference) {
+    return new ObjectMapper().convertValue(this.get("data"), typeReference);
   }
 }
