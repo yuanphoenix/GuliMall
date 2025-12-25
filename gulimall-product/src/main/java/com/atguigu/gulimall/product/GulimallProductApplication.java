@@ -15,11 +15,11 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @MapperScan("com.atguigu.gulimall.product.mapper")
 @EnableDiscoveryClient
-@ComponentScan(basePackageClasses = {GulimallProductApplication.class, MybatisPlusConfig.class})
+@ComponentScan(basePackageClasses = {MybatisPlusConfig.class,GulimallProductApplication.class})
 public class GulimallProductApplication {
 
-  public static void main(String[] args) {
-    SpringApplication.run(GulimallProductApplication.class, args);
-  }
+    public static void main(String[] args) {
+        SpringApplication.run(GulimallProductApplication.class, args);
+    }
 
 }

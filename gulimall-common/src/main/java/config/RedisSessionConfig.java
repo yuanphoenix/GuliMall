@@ -23,15 +23,16 @@ public class RedisSessionConfig {
 
   @Bean
   public RedisSerializer<Object> springSessionDefaultRedisSerializer(ObjectMapper objectMapper) {
-    GenericJackson2JsonRedisSerializer genericJackson2JsonRedisSerializer = new GenericJackson2JsonRedisSerializer(
-        objectMapper);
-    return genericJackson2JsonRedisSerializer;
+      return new GenericJackson2JsonRedisSerializer(
+          objectMapper);
   }
 
   @Bean
   public RedisSerializer<String> redisKeySerializer() {
     return new StringRedisSerializer();
   }
+
+
   @Primary
   @Bean
   public CookieSerializer cookieSerializer() {

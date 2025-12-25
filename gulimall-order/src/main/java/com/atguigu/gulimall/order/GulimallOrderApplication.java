@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @MapperScan("com.atguigu.gulimall.order.mapper")
-@ComponentScan(basePackageClasses = {GulimallOrderApplication.class, JacksonTimeConfig.class})
+@ComponentScan(basePackageClasses = {JacksonTimeConfig.class, GulimallOrderApplication.class})
 @EnableDiscoveryClient
 public class GulimallOrderApplication {
 

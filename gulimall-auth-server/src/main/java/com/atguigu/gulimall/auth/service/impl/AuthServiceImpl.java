@@ -72,8 +72,7 @@ public class AuthServiceImpl implements AuthService {
   public MemberEntityVo login(LoginVo loginVo) {
     R r = memberFeign.checkLogin(loginVo);
     if (r.getCode() == 0) {
-      MemberEntityVo data = objectMapper.convertValue(r.get("data"), MemberEntityVo.class);
-      return data;
+        return objectMapper.convertValue(r.get("data"), MemberEntityVo.class);
     }
     return null;
   }

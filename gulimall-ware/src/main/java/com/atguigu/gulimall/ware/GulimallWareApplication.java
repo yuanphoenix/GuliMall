@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication
 @MapperScan("com.atguigu.gulimall.ware.mapper")
 @EnableDiscoveryClient
-@ComponentScan(basePackageClasses = { GulimallWareApplication.class,MybatisPlusConfig.class})
+@ComponentScan(basePackageClasses = {MybatisPlusConfig.class, GulimallWareApplication.class})
 public class GulimallWareApplication {
 
   public static void main(String[] args) {

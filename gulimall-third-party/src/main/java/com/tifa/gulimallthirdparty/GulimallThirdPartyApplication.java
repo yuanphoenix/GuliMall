@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@ComponentScan(basePackageClasses = {GulimallThirdPartyApplication.class, MybatisPlusConfig.class})
+@ComponentScan(basePackageClasses = {MybatisPlusConfig.class})
 public class GulimallThirdPartyApplication {
 
   public static void main(String[] args) {

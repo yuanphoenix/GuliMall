@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @MapperScan("com.atguigu.gulimall.coupon.mapper")
-@ComponentScan(basePackageClasses = {GulimallCouponApplication.class, JacksonTimeConfig.class})
+@ComponentScan(basePackageClasses = { JacksonTimeConfig.class, GulimallCouponApplication.class})
 @EnableDiscoveryClient
 public class GulimallCouponApplication {
     public static void main(String[] args) {

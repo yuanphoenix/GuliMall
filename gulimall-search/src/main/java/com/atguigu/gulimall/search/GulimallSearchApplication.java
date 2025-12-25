@@ -11,7 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableCustomRedisHttpSession
 @EnableDiscoveryClient
 @SpringBootApplication
-@ComponentScan(basePackageClasses = {GulimallSearchApplication.class, JacksonTimeConfig.class})
+@ComponentScan(basePackageClasses = { JacksonTimeConfig.class, GulimallSearchApplication.class})
 public class GulimallSearchApplication {
 
   public static void main(String[] args) {
