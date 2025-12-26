@@ -6,5 +6,5 @@ import to.MemberEntityVo;
 public interface CartService {
 
 
-   SkuInfoEntity addCart(MemberEntityVo member, Long skuId);
+   SkuInfoEntity addCart(MemberEntityVo member, Long skuId, Long num);
 }

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class R extends HashMap<String, Object> {
 
@@ -56,9 +57,5 @@ public class R extends HashMap<String, Object> {
   public R put(String key, Object value) {
     super.put(key, value);
     return this;
-  }
-
-  public <T> T getData(TypeReference<T> typeReference) {
-    return new ObjectMapper().convertValue(this.get("data"), typeReference);
   }
 }

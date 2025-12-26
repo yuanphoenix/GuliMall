@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import to.MemberEntityVo;
 
 @Slf4j
@@ -35,17 +36,20 @@ public class CartWebController {
   }
 
   @GetMapping("/addCart/{skuId}.html")
-  public String addCart(@PathVariable Long skuId, HttpSession session, Model model) {
+  public String addCart(@PathVariable Long skuId,
+      @RequestParam(required = false, value = "num", defaultValue = "1") Long num,
+      HttpSession session, Model model) {
+
     Object attribute = session.getAttribute(LoginConstant.LOGIN.getValue());
     if (attribute == null) {
       return "redirect:http://auth.gulimall.com";
     }
     //添加到购物车
     MemberEntityVo member = objectMapper.convertValue(attribute, MemberEntityVo.class);
-
-    SkuInfoEntity skuEsModel = cartService.addCart(member, skuId);
+    SkuInfoEntity skuEsModel = cartService.addCart(member, skuId, num);
     log.info(skuEsModel.toString());
     model.addAttribute("skuInfo", skuEsModel);
+    model.addAttribute("skuNum", num);
     return "success";
 
   }
