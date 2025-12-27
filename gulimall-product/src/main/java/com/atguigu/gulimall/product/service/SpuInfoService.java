@@ -5,7 +5,6 @@ import com.atguigu.gulimall.product.vo.SpuPageVo;
 import com.atguigu.gulimall.product.vo.spuinfo.SpuInfoVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import utils.PageDTO;
 
 /**
  * @author tifa

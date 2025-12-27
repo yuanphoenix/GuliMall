@@ -1,7 +1,9 @@
 package constant;
 
 public enum LoginConstant {
-  LOGIN("login");
+  LOGIN("login"),
+
+  BACK_URL("login:return:");
 
   LoginConstant(String value) {
     this.value = value;

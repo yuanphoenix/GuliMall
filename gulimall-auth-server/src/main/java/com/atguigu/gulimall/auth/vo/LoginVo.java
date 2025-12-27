@@ -13,4 +13,5 @@ public class LoginVo {
   private String username;
   @NotEmpty
   private String password;
+  private String backurl;
 }

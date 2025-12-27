@@ -1,5 +1,6 @@
 package com.atguigu.gulimall.member.service.impl;
 
+import com.atguigu.gulimall.member.entity.MemberEntity;
 import com.atguigu.gulimall.member.entity.MemberLevelEntity;
 import com.atguigu.gulimall.member.mapper.MemberMapper;
 import com.atguigu.gulimall.member.service.MemberLevelService;
@@ -13,7 +14,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.atguigu.gulimall.member.entity.MemberEntity;
 import to.MemberEntityVo;
 
 /**

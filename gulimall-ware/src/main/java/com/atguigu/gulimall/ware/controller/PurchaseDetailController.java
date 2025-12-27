@@ -4,7 +4,6 @@ import com.atguigu.gulimall.ware.entity.PurchaseDetailEntity;
 import com.atguigu.gulimall.ware.service.PurchaseDetailService;
 import com.atguigu.gulimall.ware.vo.WarePageVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import utils.PageUtils;
 import utils.R;
 
 /**

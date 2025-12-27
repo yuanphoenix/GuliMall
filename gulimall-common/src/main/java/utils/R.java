@@ -1,13 +1,9 @@
 package utils;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import exception.BizCodeEnum;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.http.HttpStatus;
-import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class R extends HashMap<String, Object> {
 

@@ -1,6 +1,5 @@
 package to.es;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -9,7 +8,6 @@ import java.util.List;
 /**
  * 商品在es中存储的内容。
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class SkuEsModel {
 
   private Long skuId;

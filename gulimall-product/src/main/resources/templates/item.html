@@ -1268,16 +1268,21 @@
 </script>
 
 <script>
-
-  $("#addCart").click(function () {
-    let num = $("#nums").val();
-    let skuId = $("#addCart").data("sku-id")
-    window.location.href = "http://cart.gulimall.com/addCart/" + skuId + ".html?num=" + num;
-  })
+  const $addCart = $("#addCart");
+  const $nums = $("#nums")
+  $addCart.on("click", function () {
+    const num = $nums.val();
+    const skuId = $addCart.data("sku-id")
+    const url = new URL(
+        `http://cart.gulimall.com/addCart/${skuId}.html`
+    );
+    url.searchParams.set("num", num);
+    window.location.href = url.toString();
+  });
 
   $(".sku_attr_value").click(function () {
     // 1、点击的元素添加上自定义的属性
-    let skus = new Array();
+    let skus = [];
 
     $(this).parent().parent().find(".sku_attr_value").removeClass("checked");
     $(this).addClass("checked");
@@ -1304,7 +1309,7 @@
   function changeCheckedStyle() {
     $(".sku_attr_value").parent().css({"border": "solid 1px #ccc"});
     $("a[class='sku_attr_value checked']").parent().css({"border": "solid 1px red"});
-  };
+  }
 
 </script>
 </html>

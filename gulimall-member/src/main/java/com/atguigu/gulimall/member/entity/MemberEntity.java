@@ -3,6 +3,7 @@ package com.atguigu.gulimall.member.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,6 +14,7 @@ import org.hibernate.validator.constraints.Length;
  *
  * @TableName ums_member
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 @TableName(value = "ums_member")
 public class MemberEntity {
 

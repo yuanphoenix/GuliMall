@@ -9,7 +9,6 @@ import exception.BizCodeEnum;
 import exception.BizException;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;

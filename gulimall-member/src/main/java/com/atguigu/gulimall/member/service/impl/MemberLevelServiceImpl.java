@@ -3,12 +3,8 @@ package com.atguigu.gulimall.member.service.impl;
 import com.atguigu.gulimall.member.entity.MemberLevelEntity;
 import com.atguigu.gulimall.member.mapper.MemberLevelMapper;
 import com.atguigu.gulimall.member.service.MemberLevelService;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
-import utils.PageDTO;
-import utils.PageUtils;
 
 /**
  * @author tifa

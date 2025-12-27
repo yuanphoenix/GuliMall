@@ -4,7 +4,6 @@ import com.atguigu.gulimall.product.entity.SkuImagesEntity;
 import com.atguigu.gulimall.product.entity.SkuInfoEntity;
 import com.atguigu.gulimall.product.entity.SpuInfoDescEntity;
 import java.util.List;
-import java.util.Map;
 import lombok.Data;
 
 /**

@@ -1,7 +1,7 @@
 package com.atguigu.gulimall.member.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.atguigu.gulimall.member.entity.MemberEntity;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
  * @author tifa

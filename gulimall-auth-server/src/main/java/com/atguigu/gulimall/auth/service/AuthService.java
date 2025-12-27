@@ -12,5 +12,11 @@ public interface AuthService {
   Boolean registMember(UserRegistVo memberTo);
 
 
+  /**
+   * 用户登录接口
+   *
+   * @param loginVo
+   * @return
+   */
   MemberEntityVo login(LoginVo loginVo);
 }

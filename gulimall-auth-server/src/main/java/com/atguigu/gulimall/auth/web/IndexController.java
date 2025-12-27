@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class IndexController {
 
 
-    @GetMapping("/regist")
-    public String register() {
-        return "regist";
-    }
+  @GetMapping("/regist")
+  public String register() {
+    return "regist";
+  }
 
 }

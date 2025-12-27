@@ -4,9 +4,12 @@ import com.atguigu.gulimall.auth.service.AuthService;
 import com.atguigu.gulimall.auth.vo.LoginVo;
 import com.atguigu.gulimall.auth.vo.UserRegistVo;
 import constant.LoginConstant;
+import constant.PathConstant;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +26,9 @@ public class AuthController {
 
   private final AuthService authService;
 
+  @Autowired
+  private StringRedisTemplate redisTemplate;
+
   public AuthController(AuthService authService) {
     this.authService = authService;
   }
@@ -32,9 +38,16 @@ public class AuthController {
     MemberEntityVo login = authService.login(loginVo);
     if (login != null) {
       session.setAttribute(LoginConstant.LOGIN.getValue(), login);
-      return "redirect:http://gulimall.com";
+      String backurl = redisTemplate.opsForValue()
+          .get(LoginConstant.BACK_URL.getValue() + loginVo.getBackurl());
+      if (loginVo.getBackurl() != null && backurl != null) {
+        redisTemplate.delete(LoginConstant.BACK_URL.getValue() + loginVo.getBackurl());
+        return PathConstant.REDIRECT + backurl;
+      }
+
+      return PathConstant.REDIRECT + "http://gulimall.com";
     }
-    return "redirect:http://auth.gulimall.com";
+    return PathConstant.REDIRECT + "http://auth.gulimall.com";
   }
 
 

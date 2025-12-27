@@ -1,6 +1,5 @@
 package com.atguigu.gulimall.product.vo;
 
-import com.atguigu.gulimall.product.entity.AttrEntity;
 import com.atguigu.gulimall.product.entity.AttrGroupEntity;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import java.util.ArrayList;

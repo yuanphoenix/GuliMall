@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8"/>
   <link rel="stylesheet" type="text/css" href="/static/login/JD_sass/JD1.css"/>
@@ -74,6 +74,7 @@
           </li>
           <li>
             <img src="/static/login/JD_img/user_06.png" class="err_img2"/>
+            <input th:if="${param.state!=null}" type="hidden" name="backurl" th:value="${param.state}">
             <input type="password" name="password" placeholder=" 密码" class="password"/>
           </li>
           <li class="bri">

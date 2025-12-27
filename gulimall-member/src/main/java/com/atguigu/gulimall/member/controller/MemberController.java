@@ -1,5 +1,6 @@
 package com.atguigu.gulimall.member.controller;
 
+import com.atguigu.gulimall.member.entity.MemberEntity;
 import com.atguigu.gulimall.member.feign.CouponFeignService;
 import com.atguigu.gulimall.member.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.atguigu.gulimall.member.entity.MemberEntity;
 import to.MemberEntityVo;
 import utils.R;
 

@@ -3,7 +3,6 @@ package com.atguigu.gulimall.product.service;
 import com.atguigu.gulimall.product.entity.ProductAttrValueEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
 import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
 /**
  * @author tifa

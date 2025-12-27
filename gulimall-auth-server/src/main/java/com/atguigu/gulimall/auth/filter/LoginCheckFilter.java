@@ -10,8 +10,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
-import session.CustomRedisSession;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class LoginCheckFilter implements Filter {
 
   @Override
