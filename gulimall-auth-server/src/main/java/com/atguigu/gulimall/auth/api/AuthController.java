@@ -1,53 +1,23 @@
 package com.atguigu.gulimall.auth.api;
 
 import com.atguigu.gulimall.auth.service.AuthService;
-import com.atguigu.gulimall.auth.vo.LoginVo;
-import com.atguigu.gulimall.auth.vo.UserRegistVo;
-import constant.LoginConstant;
-import constant.PathConstant;
-import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import to.MemberEntityVo;
+import org.springframework.web.bind.annotation.RestController;
 import utils.R;
 
 /**
  * @author tifa
  */
-@Controller
+@RestController
 public class AuthController {
 
   private final AuthService authService;
 
-  @Autowired
-  private StringRedisTemplate redisTemplate;
-
   public AuthController(AuthService authService) {
     this.authService = authService;
-  }
-
-  @PostMapping("/login")
-  public String login(@Valid LoginVo loginVo, HttpSession session) {
-    MemberEntityVo login = authService.login(loginVo);
-    if (login != null) {
-      session.setAttribute(LoginConstant.LOGIN.getValue(), login);
-      String backurl = redisTemplate.opsForValue()
-          .get(LoginConstant.BACK_URL.getValue() + loginVo.getBackurl());
-      if (loginVo.getBackurl() != null && backurl != null) {
-        redisTemplate.delete(LoginConstant.BACK_URL.getValue() + loginVo.getBackurl());
-        return PathConstant.REDIRECT + backurl;
-      }
-
-      return PathConstant.REDIRECT + "http://gulimall.com";
-    }
-    return PathConstant.REDIRECT + "http://auth.gulimall.com";
   }
 
 
@@ -57,18 +27,9 @@ public class AuthController {
    * @param phone 手机号
    * @return R
    */
-  @ResponseBody
   @GetMapping("/sms/sendCode")
   public R sendCode(@NotEmpty @RequestParam("phone") String phone) {
     return authService.sendCode(phone) ? R.ok() : R.error("验证码还在有效期内");
-  }
-
-
-  @PostMapping("/regist")
-  public String register(@Valid UserRegistVo vo) {
-    //调用其他微服务接口做注册
-    return authService.registMember(vo) ? "redirect:http://auth.gulimall.com"
-        : "redirect:http://auth.gulimall.com/regist";
   }
 
 }

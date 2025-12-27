@@ -2,11 +2,10 @@ package com.atguigu.gulimall.gulimallcart.service.impl;
 
 import com.atguigu.gulimall.gulimallcart.feign.SkuFeignService;
 import com.atguigu.gulimall.gulimallcart.service.CartService;
+import com.atguigu.gulimall.gulimallcart.vo.CartItem;
 import com.atguigu.gulimall.gulimallcart.vo.SkuInfoEntity;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -20,29 +19,42 @@ public class CartServiceImpl implements CartService {
   private final StringRedisTemplate redisTemplate;
   private final SkuFeignService skuFeignService;
   private final ObjectMapper objectMapper;
+  private final Gson gson;
 
   public CartServiceImpl(StringRedisTemplate redisTemplate, SkuFeignService skuFeignService,
-      ObjectMapper objectMapper) {
+      ObjectMapper objectMapper, Gson gson) {
     this.redisTemplate = redisTemplate;
     this.skuFeignService = skuFeignService;
     this.objectMapper = objectMapper;
+    this.gson = gson;
   }
 
 
   @Override
-  public SkuInfoEntity addCart(MemberEntityVo member, Long skuId, Long num) {
+  public CartItem addCart(MemberEntityVo member, Long skuId, Integer num) {
     R info = skuFeignService.info(skuId);
     if (info == null) {
       return null;
     }
-    Map<String, String> map = new HashMap<>();
+    var skuEntity = objectMapper.convertValue(info.get("data"), SkuInfoEntity.class);
+    Object object = redisTemplate.boundHashOps("cart:" + member.getId())
+        .get(skuEntity.getSkuId().toString());
+    CartItem cartItem = new CartItem();
+    cartItem.setTitle(skuEntity.getSkuTitle());
+    cartItem.setSkuId(skuId);
+    cartItem.setChecked(true);
+    cartItem.setImage(skuEntity.getSkuDefaultImg());
+    cartItem.setPrice(skuEntity.getPrice());
+    if (object != null) {
+//      如果用户已经加过购物车了，那么只要更新数量就可以
+      cartItem = gson.fromJson(object.toString(), CartItem.class);
+      cartItem.setCount(cartItem.getCount() + num);
+    } else {
+      cartItem.setCount(num);
+    }
 
-    map.put("skuId", skuId.toString());
-    map.put("num", num.toString());
-    redisTemplate.opsForHash().putAll("cart:" + member.getId().toString(), map);
-    var skuEntity = objectMapper.convertValue(info.get("data"), new TypeReference<SkuInfoEntity>() {
-    });
-    skuEntity.setNums(num);
-    return skuEntity;
+    redisTemplate.boundHashOps("cart:" + member.getId())
+        .put(String.valueOf(skuId), gson.toJson(cartItem));
+    return cartItem;
   }
 }

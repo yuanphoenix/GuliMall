@@ -1,7 +1,7 @@
 package com.atguigu.gulimall.gulimallcart.web;
 
 import com.atguigu.gulimall.gulimallcart.service.CartService;
-import com.atguigu.gulimall.gulimallcart.vo.SkuInfoEntity;
+import com.atguigu.gulimall.gulimallcart.vo.CartItem;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import constant.LoginConstant;
 import jakarta.servlet.http.HttpSession;
@@ -34,13 +34,14 @@ public class CartWebController {
 
   @GetMapping("/addCart/{skuId}.html")
   public String addCart(@PathVariable Long skuId,
-      @RequestParam(required = false, value = "num", defaultValue = "1") Long num,
+      @RequestParam(required = false, value = "num", defaultValue = "1") Integer num,
       HttpSession session, Model model) {
+//    不可以强转，获得是一个map
     Object attribute = session.getAttribute(LoginConstant.LOGIN.getValue());
     //添加到购物车
     MemberEntityVo member = objectMapper.convertValue(attribute, MemberEntityVo.class);
-    SkuInfoEntity skuInfo = cartService.addCart(member, skuId, num);
-    model.addAttribute("skuInfo", skuInfo);
+    CartItem cartItem = cartService.addCart(member, skuId, num);
+    model.addAttribute("skuInfo", cartItem);
     model.addAttribute("skuNum", num);
     return "success";
 

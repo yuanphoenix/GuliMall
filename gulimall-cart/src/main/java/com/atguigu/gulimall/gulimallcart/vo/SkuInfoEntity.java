@@ -1,14 +1,11 @@
 package com.atguigu.gulimall.gulimallcart.vo;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.math.BigDecimal;
 import lombok.Data;
 
 /**
- * sku信息
- *
+ * sku信息 这里是从product服务获取的信息
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 public class SkuInfoEntity {
 
@@ -28,7 +25,6 @@ public class SkuInfoEntity {
    */
   private String skuName;
 
-  private Long nums;
 
   /**
    * sku介绍描述

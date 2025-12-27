@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * 我的线程池
+ *
  * @author tifa
  */
 @Configuration
@@ -18,10 +19,13 @@ public class MyThreadConfig {
   @Bean
   public ThreadPoolExecutor threadPoolExecutor(
       ThreadPoolConfigProperties threadPoolConfigProperties) {
-    return new ThreadPoolExecutor(threadPoolConfigProperties.getCorePoolSize(),
+    return new ThreadPoolExecutor(
+        threadPoolConfigProperties.getCorePoolSize(),
         threadPoolConfigProperties.getMaxPoolSize(),
-        threadPoolConfigProperties.getKeepAliveTime(), TimeUnit.SECONDS,
+        threadPoolConfigProperties.getKeepAliveTime(),
+        TimeUnit.SECONDS,
         new LinkedBlockingQueue<>(100000),
-        Executors.defaultThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
+        Executors.defaultThreadFactory(),
+        new ThreadPoolExecutor.AbortPolicy());
   }
 }

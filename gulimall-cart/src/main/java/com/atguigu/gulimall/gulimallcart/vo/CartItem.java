@@ -1,31 +1,85 @@
 package com.atguigu.gulimall.gulimallcart.vo;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.math.BigDecimal;
 import java.util.List;
-import lombok.Getter;
-import lombok.Setter;
 
-@Setter
-class CartItem {
-    @Getter
-    private Long skuId;
-    @Getter
-    private String title;
-    @Getter
-    private Boolean checked;
-    @Getter
-    private String image;
-    @Getter
-    private List<String> skuAttr;
-    @Getter
-    private BigDecimal price;
-    @Getter
-    private Integer count; //计数
-    private BigDecimal totalPrice;
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class CartItem {
 
-    public BigDecimal getTotalPrice() {
-        return this.price.multiply(new BigDecimal(this.count));
-    }
+  private Long skuId;
+  private String title;
+  private Boolean checked;
+  private String image;
+  private List<String> skuAttr;
+  private BigDecimal price;
+  private Integer count; //计数
 
+  private BigDecimal totalPrice;
+
+  public BigDecimal getTotalPrice() {
+    return this.price.multiply(new BigDecimal(this.count));
+  }
+
+
+  public Long getSkuId() {
+    return skuId;
+  }
+
+  public void setSkuId(Long skuId) {
+    this.skuId = skuId;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
+  }
+
+  public Boolean getChecked() {
+    return checked;
+  }
+
+  public void setChecked(Boolean checked) {
+    this.checked = checked;
+  }
+
+  public String getImage() {
+    return image;
+  }
+
+  public void setImage(String image) {
+    this.image = image;
+  }
+
+  public List<String> getSkuAttr() {
+    return skuAttr;
+  }
+
+  public void setSkuAttr(List<String> skuAttr) {
+    this.skuAttr = skuAttr;
+  }
+
+  public BigDecimal getPrice() {
+    return price;
+  }
+
+  public void setPrice(BigDecimal price) {
+    this.price = price;
+  }
+
+  public Integer getCount() {
+    return count;
+  }
+
+  public void setCount(Integer count) {
+    this.count = count;
+  }
+
+  public void setTotalPrice(BigDecimal totalPrice) {
+    this.totalPrice = totalPrice;
+  }
 }

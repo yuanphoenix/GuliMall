@@ -13,8 +13,14 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 public class MyCacheConfig {
 
-
   //TODO 这里的源码太乱了，我啃不动，只能照着抄这样子。
+
+  /**
+   * 定制 Spring Cache 在 Redis 中的行为
+   * 当你在 Spring Boot 中用 @Cacheable 注解时，缓存行为就会用这个配置。
+   *
+   * @return
+   */
   @Bean
   RedisCacheConfiguration redisCacheConfiguration() {
     return RedisCacheConfiguration.defaultCacheConfig()
