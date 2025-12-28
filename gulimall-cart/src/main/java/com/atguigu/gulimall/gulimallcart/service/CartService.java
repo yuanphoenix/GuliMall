@@ -7,4 +7,6 @@ public interface CartService {
 
 
    CartItem addCart(MemberEntityVo member, Long skuId, Integer num);
+
+   CartItem getCartItemBySkuId(Long memberId, Long skuId);
 }

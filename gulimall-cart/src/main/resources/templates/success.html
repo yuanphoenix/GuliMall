@@ -62,7 +62,7 @@
 
 <div class="main">
 
-  <div class="success-wrap">
+  <div th:if="${skuInfo!=null}" class="success-wrap">
     <div class="w" id="result">
       <div class="m succeed-box">
         <div class="mc success-cont">
@@ -103,7 +103,9 @@
       </div>
     </div>
   </div>
-
+<div th:if="${skuInfo==null}" class="success-wrap">
+  <a href="http://gulimall.com">购物车没有内容，去首页看看吧</a>
+</div>
 </div>
 </body>
 <script type="text/javascript" src="/static/js/success.js"></script>

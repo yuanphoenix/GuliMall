@@ -47,8 +47,8 @@ public class CartServiceImpl implements CartService {
     cartItem.setPrice(skuEntity.getPrice());
     if (object != null) {
 //      如果用户已经加过购物车了，那么只要更新数量就可以
-      cartItem = gson.fromJson(object.toString(), CartItem.class);
-      cartItem.setCount(cartItem.getCount() + num);
+      var oldCartItem = gson.fromJson(object.toString(), CartItem.class);
+      cartItem.setCount(oldCartItem.getCount() + num);
     } else {
       cartItem.setCount(num);
     }
@@ -57,4 +57,14 @@ public class CartServiceImpl implements CartService {
         .put(String.valueOf(skuId), gson.toJson(cartItem));
     return cartItem;
   }
+
+  @Override
+  public CartItem getCartItemBySkuId(Long memberId, Long skuId) {
+    Object object = redisTemplate.boundHashOps("cart:" + memberId).get(skuId.toString());
+    if (object != null) {
+      return new Gson().fromJson(object.toString(), CartItem.class);
+    }
+    return null;
+  }
+
 }

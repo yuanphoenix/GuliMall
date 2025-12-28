@@ -1,16 +1,17 @@
 package com.atguigu.gulimall.gulimallcart.web;
 
+import com.atguigu.gulimall.gulimallcart.annotation.LoginUser;
 import com.atguigu.gulimall.gulimallcart.service.CartService;
 import com.atguigu.gulimall.gulimallcart.vo.CartItem;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import constant.LoginConstant;
-import jakarta.servlet.http.HttpSession;
+import constant.PathConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import to.MemberEntityVo;
 
 @Slf4j
@@ -35,15 +36,22 @@ public class CartWebController {
   @GetMapping("/addCart/{skuId}.html")
   public String addCart(@PathVariable Long skuId,
       @RequestParam(required = false, value = "num", defaultValue = "1") Integer num,
-      HttpSession session, Model model) {
-//    不可以强转，获得是一个map
-    Object attribute = session.getAttribute(LoginConstant.LOGIN.getValue());
-    //添加到购物车
-    MemberEntityVo member = objectMapper.convertValue(attribute, MemberEntityVo.class);
+      RedirectAttributes redirectAttributes, @LoginUser MemberEntityVo member) {
     CartItem cartItem = cartService.addCart(member, skuId, num);
-    model.addAttribute("skuInfo", cartItem);
-    model.addAttribute("skuNum", num);
-    return "success";
-
+    redirectAttributes.addAttribute("skuId", skuId);
+    return PathConstant.REDIRECT + "http://cart.gulimall.com/addCartSuccess.html";
   }
+
+  @GetMapping("/addCartSuccess.html")
+  public String addCartSuccess(@RequestParam("skuId") Long skuId, Model model,
+      @LoginUser MemberEntityVo member) {
+    CartItem cartItem = cartService.getCartItemBySkuId(member.getId(), skuId);
+    if (cartItem == null) {
+      return "success";
+    }
+    model.addAttribute("skuInfo", cartItem);
+    model.addAttribute("skuNum", cartItem.getCount());
+    return "success";
+  }
+
 }
