@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <title>购物车</title>
-  <link rel="icon" href="/static/img/心04.png" type="/image/x-icon"/>
-  <link rel="stylesheet" href="/static/css/One_bdyStyle.css">
-  <link rel="stylesheet" href="/static/css/index.css">
-  <script src="/static/js/jquery-3.1.1.min.js" charset="utf-8"></script>
-  <link rel="stylesheet" href="/static/css/One_mainFoot.css">
-  <link rel="stylesheet" href="/static/css/font-awesome-4.7.0/css/font-awesome.css"/>
+  <link href="/static/img/心04.png" rel="icon" type="/image/x-icon"/>
+  <link href="/static/css/One_bdyStyle.css" rel="stylesheet">
+  <link href="/static/css/index.css" rel="stylesheet">
+  <script charset="utf-8" src="/static/js/jquery-3.1.1.min.js"></script>
+  <link href="/static/css/One_mainFoot.css" rel="stylesheet">
+  <link href="/static/css/font-awesome-4.7.0/css/font-awesome.css" rel="stylesheet"/>
 </head>
 <body>
 <header>
@@ -24,8 +24,8 @@
       <ul class="header-right">
 
         <li><a href="http://auth.gulimall.com" th:if="${session.login==null}">你好，请登录</a></li>
-        <li><a href="http://auth.gulimall.com/regist" th:if="${session.login==null}"
-               class="li_2">免费注册</a>
+        <li><a class="li_2" href="http://auth.gulimall.com/regist"
+               th:if="${session.login==null}">免费注册</a>
         </li>
 
 
@@ -47,20 +47,15 @@
   <div class="one_sousuo">
     <div class="one_search_top">
       <div class="one_top_left">
-        <a href="/static/../" class="one_left_logo"><img src="/static/img/logo1.jpg"></a>
-        <a href="/static/#" class="one_left_link">购物车</a>
+        <a class="one_left_logo" href="/static/../"><img src="/static/img/logo1.jpg"></a>
+        <a class="one_left_link" href="/static/#">购物车</a>
       </div>
       <div class="one_top_right">
-        <input type="text" class="one_right_txt" placeholder="" onfocus="this.placeholder=''"
-               onblur="this.placeholder='' ">
-        <input type="button" value="搜索" class="one_right_btn">
+        <input class="one_right_txt" onblur="this.placeholder='' " onfocus="this.placeholder=''"
+               placeholder=""
+               type="text">
+        <input class="one_right_btn" type="button" value="搜索">
       </div>
-    </div>
-    <div class="one_search_load" th:if="${session.login}==null">
-      <img src="/static/img/shop_07.jpg" class="one_load_wraing">
-      <span>您还没有登录！登录后购物车的商品将保存到您账号中</span>
-      <a href="/static/#"><input type="button" onclick="login()" value="立即登录"
-                                 class="one_load_btn"></a>
     </div>
   </div>
 </div>
@@ -75,7 +70,7 @@
     </div>
     <div class="One_ShopTop">
       <ul>
-        <li><input type="checkbox" class="allCheck">全选</li>
+        <li><input class="allCheck" type="checkbox">全选</li>
         <li>商品</li>
         <li>单价</li>
         <li>数量</li>
@@ -85,35 +80,36 @@
     </div>
 
     <div class="One_ShopCon">
-      <ul>
-        <li th:each="cartInfo:${cartList}">
+      <ul th:if="${!cart.getCartItemList().isEmpty()}">
+        <li th:each="cartInfo:${cart.getCartItemList()}">
           <div></div>
 
           <div>
             <ol>
-              <li><input type="checkbox" class="check" th:value="${cartInfo.skuId}"
-                         onchange="checkSku(this)"
-                         th:checked="(${cartInfo.isChecked}==1)?'true':'false'"/></li>
+              <li><input class="check" onchange="checkSku(this)"
+                         th:checked="(${cartInfo.getChecked()})?'true':'false'"
+                         th:value="${cartInfo.getSkuId()}"
+                         type="checkbox"/></li>
               <li>
-                <dt><img th:src="${cartInfo.imgUrl}" src="img\shop1.jpg" alt=""></dt>
-                <dd th:onclick="'toItem('+${cartInfo.skuId}+')'">
+                <dt><img alt="" src="img\shop1.jpg" th:src="${cartInfo.getImage()}"></dt>
+                <dd th:onclick="'toItem('+${cartInfo.getSkuId()}+')'">
                   <p>
-                    <span th:text="${cartInfo.skuName}">TCL 55A950C 55英寸32核</span>
+                    <span th:text="${cartInfo.getTitle()}">TCL 55A950C 55英寸32核</span>
                   </p>
                 </dd>
               </li>
               <li>
-                <p class="dj" th:text="'￥'+${cartInfo.skuPrice}">4599.00</p>
+                <p class="dj" th:text="'￥'+${cartInfo.getPrice()}">4599.00</p>
               </li>
               <li>
                 <p>
                   <span>-</span>
-                  <span th:text="${cartInfo.skuNum}">5</span>
+                  <span th:text="${cartInfo.getCount()}">5</span>
                   <span>+</span>
                 </p>
               </li>
               <li style="font-weight:bold">
-                <p class="zj" th:text="'￥'+${cartInfo.totalPrice}">￥22995.00</p>
+                <p class="zj" th:text="'￥'+${cartInfo.getTotalPrice()}">￥22995.00</p>
               </li>
               <li>
                 <p>删除</p>
@@ -121,68 +117,31 @@
             </ol>
           </div>
         </li>
-        <!--<li>
-    <div>
-    </div>
-    <div>
-        <ol>
-            <li><input type="checkbox"  class="check"></li>
-            <li>
-                <dt><img src="img\shop1.jpg" alt=""></dt>
-                <dd>
-                    <p>
-
-                        <span>TCL 55A950C 55英寸32核</span>
-                        <span>尺码: 55时 超薄曲面 人工智能</span>
-                    </p>
-                    <p>人工智能 HDR曲面超薄4K电视金属机</p>
-
-                </dd>
-            </li>
-            <li>
-                <p class="dj">￥4599.00</p>
-
-            </li>
-            <li>
-                <p>
-                    <span>-</span>
-                    <span>5</span>
-                    <span>+</span>
-                </p>
-
-            </li>
-            <li style="font-weight:bold"><p class="zj">￥22995.00</p></li>
-            <li>
-                <p>删除</p>
-
-            </li>
-        </ol>
-    </div>
-</li>-->
-
       </ul>
+      <a href="http://gulimall.com"
+         th:if="${cart.getCartItemList().isEmpty()}">购物车里没有商品，去首页看看把。</a>
     </div>
     <div class="One_ShopFootBuy fix1">
       <div>
         <ul>
-          <li><input type="checkbox" class="allCheck"><span>全选</span></li>
+          <li><input class="allCheck" type="checkbox"><span>全选</span></li>
           <li>删除选中的商品</li>
           <li>移到我的关注</li>
           <li>清除下柜商品</li>
         </ul>
       </div>
       <div>
-        <font style="color:#e64346;font-weight:bold;" class="sumNum"> </font>&nbsp;
+        <font class="sumNum" style="color:#e64346;font-weight:bold;"> </font>&nbsp;
 
         <ul>
-          <li><img src="/static/img/buyNumleft.png" alt=""></li>
-          <li><img src="/static/img/buyNumright.png" alt=""></li>
+          <li><img alt="" src="/static/img/buyNumleft.png"></li>
+          <li><img alt="" src="/static/img/buyNumright.png"></li>
         </ul>
       </div>
       <div>
         <ol>
-          <li>总价:<span style="color:#e64346;font-weight:bold;font-size:16px;"
-                         class="fnt">￥0.00</span></li>
+          <li>总价:<span class="fnt"
+                         style="color:#e64346;font-weight:bold;font-size:16px;">￥0.00</span></li>
 
         </ol>
       </div>
@@ -195,11 +154,11 @@
 
 <div class="One_isDel">
   <p>
-    <span>删除</span><span><img src="/static/img/错误.png" alt=""></span>
+    <span>删除</span><span><img alt="" src="/static/img/错误.png"></span>
   </p>
   <div>
     <dl>
-      <dt><img src="/static/img/感叹三角形 (2).png" alt=""></dt>
+      <dt><img alt="" src="/static/img/感叹三角形 (2).png"></dt>
       <dd>
         <li>删除商品？</li>
         <li>您可以选择移到关注，或删除商品。</li>
@@ -213,20 +172,20 @@
 </div>
 <div class="One_moveGzIfNull">
   <p>
-    <span>删除</span><span><img src="/static/img/错误.png" alt=""></span>
+    <span>删除</span><span><img alt="" src="/static/img/错误.png"></span>
   </p>
   <dl>
-    <dt><img src="/static/img/感叹三角形 (2).png" alt=""></dt>
+    <dt><img alt="" src="/static/img/感叹三角形 (2).png"></dt>
     <dd>请至少选中一件商品！</dd>
   </dl>
 </div>
 <div class="One_moveMyGz">
   <p>
-    <span>删除</span><span><img src="/static/img/错误.png" alt=""></span>
+    <span>删除</span><span><img alt="" src="/static/img/错误.png"></span>
   </p>
   <div>
     <dl>
-      <dt><img src="/static/img/感叹三角形 (2).png" alt=""></dt>
+      <dt><img alt="" src="/static/img/感叹三角形 (2).png"></dt>
       <dd>
         <li>移到关注</li>
         <li>移动后选中商品将不再购物车中显示</li>
@@ -240,10 +199,10 @@
 </div>
 <div class="One_clearShop">
   <p>
-    <span>提示</span><span><img src="/static/img/错误.png" alt=""></span>
+    <span>提示</span><span><img alt="" src="/static/img/错误.png"></span>
   </p>
   <dl>
-    <dt><img src="/static/img/感叹三角形 (2).png" alt=""></dt>
+    <dt><img alt="" src="/static/img/感叹三角形 (2).png"></dt>
     <dd>没有下柜商品!</dd>
   </dl>
 </div>
@@ -253,7 +212,7 @@
 
 </div>
 </body>
-<script src="/static/js/index.js" charset="utf-8"></script>
+<script charset="utf-8" src="/static/js/index.js"></script>
 <script type="text/javascript">
   function toTrade() {
     window.location.href = "http://cart.gmall.com:8087/toTrade";
@@ -263,21 +222,29 @@
     window.location.href = "http://item.gmall.com:8084/" + skuId + ".html";
   }
 
-  function login() {
-    window.location.href = "http://auth.gulimall.com";
-  }
-
   function checkSku(chkbox) {
     var skuId = $(chkbox).attr("value");
     var checked = $(chkbox).prop("checked");
-    var isCheckedFlag = "0";
+    var isCheckedFlag = false;
     if (checked) {
-      isCheckedFlag = "1";
+      isCheckedFlag = true;
     }
-    var param = "isChecked=" + isCheckedFlag + "&" + "skuId=" + skuId;
-    $.post("checkCart", param, function (data) {
-      sumSumPrice();
-    });
+
+    fetch("/checkCart", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        skuId: skuId,
+        checked: isCheckedFlag
+      })
+    }).then(res => console.log(res.json()));
+    //
+    // var param = "isChecked=" + isCheckedFlag + "&" + "skuId=" + skuId;
+    // $.post("checkCart", param, function (data) {
+    //   sumSumPrice();
+    // });
 
   }
 
@@ -469,6 +436,7 @@
       $(".check").prop("checked", false);
     }
   })
+
   //如果子选择框没有选中则父选框取消全选
   $(".check").click(function () {
     $(".check").each(function () {
@@ -760,6 +728,12 @@
   $(function () {
     //声明变量记录索引
     var index = 0;
+
+    if ($(".check[class='check']:checked").length == $(".check[class='check']").length) {
+      $(".allCheck").prop("checked", true);
+    } else {
+      $(".allCheck").prop("checked", false)
+    }
     //点击右边按钮
     //忽略重复点击开关
     var toggle = true

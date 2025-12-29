@@ -1,5 +1,6 @@
 package com.atguigu.gulimall.gulimallcart.service;
 
+import com.atguigu.gulimall.gulimallcart.vo.Cart;
 import com.atguigu.gulimall.gulimallcart.vo.CartItem;
 import to.MemberEntityVo;
 
@@ -8,5 +9,9 @@ public interface CartService {
 
    CartItem addCart(MemberEntityVo member, Long skuId, Integer num);
 
-   CartItem getCartItemBySkuId(Long memberId, Long skuId);
+   CartItem getCartItemBySkuId(MemberEntityVo memberId, Long skuId);
+
+   Cart getCart(MemberEntityVo member);
+
+  Boolean checkCart(CartItem cartItem, MemberEntityVo memberEntityVo);
 }

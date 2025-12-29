@@ -41,6 +41,32 @@ public class Cart {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    public List<CartItem> getCartItemList() {
+        return cartItemList;
+    }
 
+    public void setCartItemList(List<CartItem> cartItemList) {
+        this.cartItemList = cartItemList;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
+    }
+
+    public void setCountType(Integer countType) {
+        this.countType = countType;
+    }
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public BigDecimal getReduce() {
+        return reduce;
+    }
+
+    public void setReduce(BigDecimal reduce) {
+        this.reduce = reduce;
+    }
 }
 

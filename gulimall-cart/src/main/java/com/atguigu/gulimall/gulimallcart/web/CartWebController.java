@@ -2,6 +2,7 @@ package com.atguigu.gulimall.gulimallcart.web;
 
 import com.atguigu.gulimall.gulimallcart.annotation.LoginUser;
 import com.atguigu.gulimall.gulimallcart.service.CartService;
+import com.atguigu.gulimall.gulimallcart.vo.Cart;
 import com.atguigu.gulimall.gulimallcart.vo.CartItem;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import constant.PathConstant;
@@ -29,7 +30,9 @@ public class CartWebController {
 
   //    返回购物车列表界面
   @GetMapping("/cart.html")
-  public String cartListPage() {
+  public String cartListPage(Model model, @LoginUser MemberEntityVo member) {
+    Cart cart = cartService.getCart(member);
+    model.addAttribute("cart", cart);
     return "cart";
   }
 
@@ -45,7 +48,7 @@ public class CartWebController {
   @GetMapping("/addCartSuccess.html")
   public String addCartSuccess(@RequestParam("skuId") Long skuId, Model model,
       @LoginUser MemberEntityVo member) {
-    CartItem cartItem = cartService.getCartItemBySkuId(member.getId(), skuId);
+    CartItem cartItem = cartService.getCartItemBySkuId(member, skuId);
     if (cartItem == null) {
       return "success";
     }
