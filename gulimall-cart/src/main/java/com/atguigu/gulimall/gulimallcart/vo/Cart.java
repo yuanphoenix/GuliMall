@@ -1,6 +1,7 @@
 package com.atguigu.gulimall.gulimallcart.vo;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,7 +39,7 @@ public class Cart {
         return this.cartItemList.stream()
                 .filter(CartItem::getChecked)
                 .map(CartItem::getTotalPrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .reduce(BigDecimal.ZERO, BigDecimal::add).setScale(2, RoundingMode.FLOOR);
     }
 
     public List<CartItem> getCartItemList() {

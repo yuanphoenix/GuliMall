@@ -102,7 +102,7 @@
                 <p class="dj" th:text="'￥'+${cartInfo.getPrice()}">4599.00</p>
               </li>
               <li>
-                <p>
+                <p th:data-sku-id="${cartInfo.getSkuId()}">
                   <span>-</span>
                   <span th:text="${cartInfo.getCount()}">5</span>
                   <span>+</span>
@@ -141,7 +141,8 @@
       <div>
         <ol>
           <li>总价:<span class="fnt"
-                         style="color:#e64346;font-weight:bold;font-size:16px;">￥0.00</span></li>
+                         style="color:#e64346;font-weight:bold;font-size:16px;"
+                         th:text="'￥'+${cart.getTotalAmount()}">￥0.00</span></li>
 
         </ol>
       </div>
@@ -222,42 +223,28 @@
     window.location.href = "http://item.gmall.com:8084/" + skuId + ".html";
   }
 
-  function checkSku(chkbox) {
-    var skuId = $(chkbox).attr("value");
-    var checked = $(chkbox).prop("checked");
-    var isCheckedFlag = false;
-    if (checked) {
-      isCheckedFlag = true;
-    }
-
-    fetch("/checkCart", {
+  async function changeCart(cartItem) {
+    const res = await fetch("/changeCart", {
       method: "POST",
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        skuId: skuId,
-        checked: isCheckedFlag
-      })
-    }).then(res => console.log(res.json()));
-    //
-    // var param = "isChecked=" + isCheckedFlag + "&" + "skuId=" + skuId;
-    // $.post("checkCart", param, function (data) {
-    //   sumSumPrice();
-    // });
-
+      body: JSON.stringify(cartItem)
+    })
+    return await res.json()
   }
 
-  //封装总价钱函数
-  function sumSumPrice() {
-    //         var zzj=0;
-    //         $(".check").each(function () {
-    //             if($(this).prop("checked")){
-    //                 var zj = $(this).parents("ol").find(".zj").html().substring(1);
-    //                 zzj=zzj+parseFloat(zj);
-    //             }
-    //             $(".fnt").html("￥"+zzj+".00")
-    //         });
+  async function checkSku(chkbox) {
+    const skuId = $(chkbox).attr("value");
+    const checked = $(chkbox).prop("checked");
+    let isCheckedFlag = false;
+    if (checked) {
+      isCheckedFlag = true;
+    }
+    const data = await changeCart({skuId, checked: isCheckedFlag})
+    if (data.code === 0) {
+      $(chkbox).prop("checked", isCheckedFlag);
+    }
   }
 
   /*    //购物车结算固定定位
@@ -405,6 +392,7 @@
     if ($(".One_ShopTop ul li:first-child .allCheck").is(":checked")) {
       // $(".check").each(function(index){
       $(".check").prop("checked", true);
+      $(".allCheck").prop("checked", true)
       $(".check").parent().parent().parent().css("background", "#fff4e8");
       $(".One_ShopBottom>div:first-child span:first-child .allCheck").prop("checked", true)
       // })
@@ -412,20 +400,26 @@
       // $(".check").each(function(){
       $(".check").parent().parent().parent().css("background", "none");
       $(".check").prop("checked", false);
+      $(".allCheck").prop("checked", false)
       $(".One_ShopBottom>div:first-child span:first-child .allCheck").prop("checked", false)
       // })
     }
   })
+
   $(".One_ShopFootBuy>div:first-child ul li:first-child .allCheck").click(function () {
     if ($(".One_ShopFootBuy>div:first-child ul li:first-child .allCheck").is(":checked")) {
       $(".check").prop("checked", true);
+      $(".allCheck").prop("checked", true)
       $(".check").parent().parent().parent().css("background", "#fff4e8");
       $(".One_ShopBottom>div:first-child span:first-child .allCheck").prop("checked", true)
     } else {
       $(".check").parent().parent().parent().css("background", "none");
       $(".check").prop("checked", false);
+      $(".allCheck").prop("checked", false)
       $(".One_ShopBottom>div:first-child span:first-child .allCheck").prop("checked", false)
     }
+    sumSumPrice()
+
   })
   $(".One_ShopBottom>div:first-child span:first-child .allCheck").click(function () {
     if ($(".One_ShopBottom>div:first-child span:first-child .allCheck").is(":checked")) {
@@ -435,6 +429,7 @@
       $(".check").parent().parent().parent().css("background", "none");
       $(".check").prop("checked", false);
     }
+    sumSumPrice()
   })
 
   //如果子选择框没有选中则父选框取消全选
@@ -444,6 +439,8 @@
         $(".allCheck").prop("checked", false);
       }
     })
+    sumSumPrice()
+
   })
   //子选择框全部选中复选框也选中
   $(".check").click(function () {
@@ -548,6 +545,7 @@
   //+
   $(".One_ShopCon ul li>div:nth-child(2) ol>li:nth-child(4) p:first-child span:last-child").click(
       function () {
+        const skuId = $(this).closest('p').data('sku-id');
         var add = $(this).prev("span").html();
         add++;
         $(this).prev("span").html(add);
@@ -557,8 +555,8 @@
         $(this).parent().parent().parent().children("li:nth-child(5)").children(".zj").html(
             "￥" + dj * sl + ".00")
         sumSumPrice();
-
-      })
+        changeCart({skuId, count: add})
+      });
   //-
   $(".One_ShopCon ul li>div:nth-child(2) ol>li:nth-child(4) p:first-child span:first-child").click(
       function () {

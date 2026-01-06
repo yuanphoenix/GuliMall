@@ -16,9 +16,9 @@ public class CartApiController {
   @Autowired
   private CartService cartService;
 
-  @PostMapping("/checkCart")
+  @PostMapping("/changeCart")
   public R checkCart(@RequestBody CartItem cartItem, @LoginUser MemberEntityVo memberEntityVo) {
-    Boolean result = cartService.checkCart(cartItem, memberEntityVo);
+    Boolean result = cartService.changeCart(cartItem, memberEntityVo);
     return Boolean.TRUE.equals(result) ? R.ok() : R.error();
   }
 

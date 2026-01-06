@@ -83,7 +83,7 @@ public class CartServiceImpl implements CartService {
   }
 
   @Override
-  public Boolean checkCart(CartItem cartItem, MemberEntityVo member) {
+  public Boolean changeCart(CartItem cartItem, MemberEntityVo member) {
 
     if (cartItem == null || cartItem.getSkuId() == null) {
       return false;
@@ -95,8 +95,10 @@ public class CartServiceImpl implements CartService {
     }
     CartItem originalCartItem = gson.fromJson(object.toString(), CartItem.class);
     originalCartItem.setChecked(Boolean.TRUE.equals(cartItem.getChecked()));
-
-    this.getBoundGeoOperations(member).put(cartItem.getSkuId().toString(), gson.toJson(originalCartItem));
+    originalCartItem.setCount(
+        cartItem.getCount() == null ? originalCartItem.getCount() : cartItem.getCount());
+    this.getBoundGeoOperations(member)
+        .put(cartItem.getSkuId().toString(), gson.toJson(originalCartItem));
     return true;
   }
 

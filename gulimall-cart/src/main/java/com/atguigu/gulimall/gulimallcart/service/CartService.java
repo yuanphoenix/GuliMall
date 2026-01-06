@@ -13,5 +13,5 @@ public interface CartService {
 
    Cart getCart(MemberEntityVo member);
 
-  Boolean checkCart(CartItem cartItem, MemberEntityVo memberEntityVo);
+  Boolean changeCart(CartItem cartItem, MemberEntityVo memberEntityVo);
 }
