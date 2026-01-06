@@ -58,7 +58,7 @@ public class CartServiceImpl implements CartService {
       cartItem.setCount(num);
     }
     this.getBoundGeoOperations(member)
-        .put(String.valueOf(skuId), gson.toJson(cartItem));
+        .put(skuId.toString(), gson.toJson(cartItem));
     return cartItem;
   }
 
@@ -99,6 +99,13 @@ public class CartServiceImpl implements CartService {
         cartItem.getCount() == null ? originalCartItem.getCount() : cartItem.getCount());
     this.getBoundGeoOperations(member)
         .put(cartItem.getSkuId().toString(), gson.toJson(originalCartItem));
+    return true;
+  }
+
+  @Override
+  public Boolean deleteByItem(List<CartItem> cartItemList, MemberEntityVo memberEntityVo) {
+    this.getBoundGeoOperations(memberEntityVo)
+        .delete(cartItemList.stream().map(CartItem::getSkuId).map(String::valueOf).toArray(String[]::new));
     return true;
   }
 

@@ -2,6 +2,7 @@ package com.atguigu.gulimall.gulimallcart.service;
 
 import com.atguigu.gulimall.gulimallcart.vo.Cart;
 import com.atguigu.gulimall.gulimallcart.vo.CartItem;
+import java.util.List;
 import to.MemberEntityVo;
 
 public interface CartService {
@@ -14,4 +15,6 @@ public interface CartService {
    Cart getCart(MemberEntityVo member);
 
   Boolean changeCart(CartItem cartItem, MemberEntityVo memberEntityVo);
+
+  Boolean deleteByItem(List<CartItem> cartItemList, MemberEntityVo memberEntityVo);
 }

@@ -112,7 +112,7 @@
                 <p class="zj" th:text="'￥'+${cartInfo.getTotalPrice()}">￥22995.00</p>
               </li>
               <li>
-                <p>删除</p>
+                <p th:data-sku-id="${cartInfo.getSkuId()}">删除</p>
               </li>
             </ol>
           </div>
@@ -167,7 +167,7 @@
     </dl>
   </div>
   <div>
-    <button type="button">删除</button>
+    <button type="button" onclick="deleteCartBySkuIds()">删除</button>
 
   </div>
 </div>
@@ -215,6 +215,9 @@
 </body>
 <script charset="utf-8" src="/static/js/index.js"></script>
 <script type="text/javascript">
+
+  const deleteIds = [];
+
   function toTrade() {
     window.location.href = "http://cart.gmall.com:8087/toTrade";
   }
@@ -560,19 +563,20 @@
   //-
   $(".One_ShopCon ul li>div:nth-child(2) ol>li:nth-child(4) p:first-child span:first-child").click(
       function () {
-        var jian = $(this).next("span").html();
+        const skuId = $(this).closest('p').data('sku-id');
+        let jian = $(this).next("span").html();
         jian--;
         if (jian <= 0) {
           jian = 0;
         }
         $(this).next("span").html(jian);
         //总价
-        var dj = $(this).parent().parent().prev().children(".dj").html().substring(1);
-        var sl = $(this).next("span").html();
+        const dj = $(this).parent().parent().prev().children(".dj").html().substring(1);
+        const sl = $(this).next("span").html();
         $(this).parent().parent().parent().children("li:nth-child(5)").children(".zj").html(
             "￥" + dj * sl + ".00")
         sumSumPrice();
-
+        changeCart({skuId, count: jian})
       })
   //选中当前商品背景变色
   $(".check").each(function (index) {
@@ -617,7 +621,8 @@
   $(".One_ShopCon ul li>div:nth-child(2) ol>li:nth-child(6) p:first-child").click(function () {
     $(".One_mb").show();
     $(".One_isDel").show();
-    var that = $(this);
+    deleteIds.push($(this).data('sku-id'))
+
     //确定删除
     /*        $(".One_isDel>div:last-child button:first-child").click(function(){
                 $(".One_mb").hide();
@@ -675,6 +680,24 @@
                 kong+=parseFloat($(this).html().substring(1))
             })
             $(".fnt").html("￥"+kong+".00")*/
+  }
+
+  function deleteCartBySkuIds() {
+    const skuItems = deleteIds.map(id => ({skuId: id}));
+    console.log(skuItems)
+    fetch("/deleteBySkuIds", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(skuItems)
+    }).then(res => res.json())
+    .then(data => {
+      if (data.code === 0) {
+        deleteIds.length = 0
+      }
+      window.location.href = window.location.href;
+    })
   }
 
   //封装总数量函数
