@@ -16,3 +16,11 @@ spring:
       config:
         import-check:
           enabled: false
+
+  rabbitmq:
+    host: 10.200.200.1
+    port: 5672
+    virtual-host: /
+    username: admin
+    password: admin123
+
