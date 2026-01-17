@@ -1,11 +1,15 @@
 package com.atguigu.gulimall.order;
 
+
+import com.atguigu.gulimall.order.entity.OrderEntity;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.Binding.DestinationType;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,7 +32,6 @@ class GulimallOrderApplicationTests {
 
   @Test
   void createQueue() {
-
     amqpAdmin.declareQueue(new Queue("hello"));
   }
 
@@ -42,8 +45,13 @@ class GulimallOrderApplicationTests {
 
   @Test
   void sendMsg() {
-    rabbitTemplate.convertAndSend("hello-java-exchange", "hello-a", "fdsfggfdddsagg");
+    OrderEntity orderEntity = new OrderEntity();
+    orderEntity.setId(12343L);
+
+    rabbitTemplate.convertAndSend("hello-java-exchange", "hello-java",
+        orderEntity,
+        new CorrelationData(
+            UUID.randomUUID().toString()));
+    System.out.println("已经发送");
   }
-
-
 }
