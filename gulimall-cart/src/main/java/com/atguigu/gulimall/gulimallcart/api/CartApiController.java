@@ -1,6 +1,6 @@
 package com.atguigu.gulimall.gulimallcart.api;
 
-import com.atguigu.gulimall.gulimallcart.annotation.LoginUser;
+import annotation.LoginUser;
 import com.atguigu.gulimall.gulimallcart.service.CartService;
 import com.atguigu.gulimall.gulimallcart.vo.CartItem;
 import java.util.List;

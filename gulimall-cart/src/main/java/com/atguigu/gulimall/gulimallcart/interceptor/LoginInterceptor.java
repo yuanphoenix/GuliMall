@@ -1,38 +1,28 @@
-package com.atguigu.gulimall.gulimallcart.filter;
+package com.atguigu.gulimall.gulimallcart.interceptor;
 
 import constant.LoginConstant;
-import jakarta.servlet.Filter;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerInterceptor;
 
-@Slf4j
 @Component
-public class LoginFilter implements Filter {
-
+public class LoginInterceptor implements HandlerInterceptor {
 
   @Autowired
   private StringRedisTemplate redisTemplate;
 
   @Override
-  public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
-      FilterChain filterChain) throws IOException, ServletException {
-    var request = (HttpServletRequest) servletRequest;
-    var response = (HttpServletResponse) servletResponse;
-    HttpSession session = request.getSession();
+  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+      throws Exception {
+    HttpSession session = request.getSession(false);
 
-    if (session.getAttribute(LoginConstant.LOGIN.getValue()) == null) {
+    if (session == null || session.getAttribute(LoginConstant.LOGIN.getValue()) == null) {
       var key = UUID.randomUUID().toString();
       String backUrl = "http://cart.gulimall.com" + request.getRequestURI();
       if (request.getQueryString() != null) {
@@ -43,8 +33,8 @@ public class LoginFilter implements Filter {
               30,
               TimeUnit.MINUTES);
       response.sendRedirect("http://auth.gulimall.com?state=" + key);
-      return;
+      return false;
     }
-    filterChain.doFilter(servletRequest, response);
+    return true;
   }
 }

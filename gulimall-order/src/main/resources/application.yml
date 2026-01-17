@@ -17,13 +17,15 @@ spring:
         import-check:
           enabled: false
 
+  thymeleaf:
+    cache: false
+
   rabbitmq:
     host: 10.200.200.1
     port: 5672
     virtual-host: /
     username: admin
     password: admin123
-
     #消费端需要手动确认
     listener:
       simple:
@@ -35,4 +37,9 @@ spring:
     #    开启发送端消息抵达队列的异步的确认
     template:
       mandatory: true
+  data:
+    redis:
+      host: 10.200.200.1
+      port: 6379
+
 

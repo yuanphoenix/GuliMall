@@ -1,6 +1,5 @@
-package com.atguigu.gulimall.gulimallcart.resolver;
+package com.atguigu.gulimall.order.resolver;
 
-import annotation.LoginUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import constant.LoginConstant;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,7 +25,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
     // 参数类型必须是 MemberEntityVo 且标注了 @LoginUser
     return parameter.getParameterType().equals(MemberEntityVo.class)
         && parameter.hasParameterAnnotation(
-        LoginUser.class);
+        annotation.LoginUser.class);
   }
 
   @Override

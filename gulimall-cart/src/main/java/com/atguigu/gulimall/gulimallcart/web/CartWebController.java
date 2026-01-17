@@ -1,6 +1,6 @@
 package com.atguigu.gulimall.gulimallcart.web;
 
-import com.atguigu.gulimall.gulimallcart.annotation.LoginUser;
+import annotation.LoginUser;
 import com.atguigu.gulimall.gulimallcart.service.CartService;
 import com.atguigu.gulimall.gulimallcart.vo.Cart;
 import com.atguigu.gulimall.gulimallcart.vo.CartItem;

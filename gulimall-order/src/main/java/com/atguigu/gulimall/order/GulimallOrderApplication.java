@@ -1,5 +1,6 @@
 package com.atguigu.gulimall.order;
 
+import annotation.EnableCustomRedisHttpSession;
 import config.JacksonTimeConfig;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan(basePackageClasses = {JacksonTimeConfig.class, GulimallOrderApplication.class})
 @EnableDiscoveryClient
 @EnableRabbit
+@EnableCustomRedisHttpSession
 public class GulimallOrderApplication {
 
   public static void main(String[] args) {
