@@ -1,4 +1,4 @@
-package com.atguigu.gulimall.gulimallcart.vo;
+package to.cart;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -19,6 +19,9 @@ public class CartItem {
   private BigDecimal totalPrice;
 
   public BigDecimal getTotalPrice() {
+    if (this.count == null || this.price == null) {
+      return null;
+    }
     return this.price.multiply(new BigDecimal(this.count));
   }
 

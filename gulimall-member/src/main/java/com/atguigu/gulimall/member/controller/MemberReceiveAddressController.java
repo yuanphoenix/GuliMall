@@ -63,6 +63,13 @@ public class MemberReceiveAddressController {
     return updated ? R.ok() : R.error();
   }
 
+
+  @GetMapping("/{memberId}")
+  public List<MemberReceiveAddressEntity> getMemberByMemberId(@PathVariable Long memberId) {
+    return memberReceiveAddressService.selectByMemberId(memberId);
+  }
+
+
   /**
    * 删除数据
    */

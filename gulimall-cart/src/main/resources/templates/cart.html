@@ -227,7 +227,7 @@
   }
 
   async function changeCart(cartItem) {
-    const res = await fetch("/changeCart", {
+    const res = await fetch("/api/changeCart", {
       method: "POST",
       headers: {
         'Content-Type': 'application/json'
@@ -676,7 +676,7 @@
 
   function deleteCartBySkuIds() {
     const skuItems = deleteIds.map(id => ({skuId: id}));
-    fetch("/deleteBySkuIds", {
+    fetch("/api/deleteBySkuIds", {
       method: "POST",
       headers: {
         'Content-Type': 'application/json'

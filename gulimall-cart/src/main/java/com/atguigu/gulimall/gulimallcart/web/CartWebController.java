@@ -3,7 +3,6 @@ package com.atguigu.gulimall.gulimallcart.web;
 import annotation.LoginUser;
 import com.atguigu.gulimall.gulimallcart.service.CartService;
 import com.atguigu.gulimall.gulimallcart.vo.Cart;
-import com.atguigu.gulimall.gulimallcart.vo.CartItem;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import constant.PathConstant;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import to.MemberEntityVo;
+import to.cart.CartItem;
 
 @Slf4j
 @Controller
@@ -28,7 +28,7 @@ public class CartWebController {
     this.objectMapper = objectMapper;
   }
 
-  //    返回购物车列表界面
+  //返回购物车列表界面
   @GetMapping("/cart.html")
   public String cartListPage(Model model, @LoginUser MemberEntityVo member) {
     Cart cart = cartService.getCart(member);
@@ -40,7 +40,7 @@ public class CartWebController {
   public String addCart(@PathVariable Long skuId,
       @RequestParam(required = false, value = "num", defaultValue = "1") Integer num,
       RedirectAttributes redirectAttributes, @LoginUser MemberEntityVo member) {
-    CartItem cartItem = cartService.addCart(member, skuId, num);
+    cartService.addCart(member, skuId, num);
     redirectAttributes.addAttribute("skuId", skuId);
     return PathConstant.REDIRECT + "http://cart.gulimall.com/addCartSuccess.html";
   }

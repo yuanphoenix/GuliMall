@@ -3,7 +3,7 @@ package com.atguigu.gulimall.gulimallcart.service.impl;
 import com.atguigu.gulimall.gulimallcart.feign.SkuFeignService;
 import com.atguigu.gulimall.gulimallcart.service.CartService;
 import com.atguigu.gulimall.gulimallcart.vo.Cart;
-import com.atguigu.gulimall.gulimallcart.vo.CartItem;
+import to.cart.CartItem;
 import com.atguigu.gulimall.gulimallcart.vo.SkuInfoEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;

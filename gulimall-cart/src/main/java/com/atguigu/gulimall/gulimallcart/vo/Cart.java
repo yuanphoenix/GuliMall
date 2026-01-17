@@ -12,7 +12,7 @@ import lombok.Setter;
 public class Cart {
     @Setter
     @Getter
-    private List<CartItem> cartItemList;
+    private List<to.cart.CartItem> cartItemList;
     private Integer count; //购物车的商品数量
     private Integer countType; //商品的类型数量
     private BigDecimal totalAmount;
@@ -22,7 +22,7 @@ public class Cart {
 
     public Integer getCount() {
         if (cartItemList != null && !cartItemList.isEmpty()) {
-            return cartItemList.stream().mapToInt(CartItem::getCount).sum();
+            return cartItemList.stream().mapToInt(to.cart.CartItem::getCount).sum();
         }
         return 0;
     }
@@ -37,16 +37,16 @@ public class Cart {
             return BigDecimal.ZERO;
         }
         return this.cartItemList.stream()
-                .filter(CartItem::getChecked)
-                .map(CartItem::getTotalPrice)
+                .filter(to.cart.CartItem::getChecked)
+                .map(to.cart.CartItem::getTotalPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add).setScale(2, RoundingMode.FLOOR);
     }
 
-    public List<CartItem> getCartItemList() {
+    public List<to.cart.CartItem> getCartItemList() {
         return cartItemList;
     }
 
-    public void setCartItemList(List<CartItem> cartItemList) {
+    public void setCartItemList(List<to.cart.CartItem> cartItemList) {
         this.cartItemList = cartItemList;
     }
 

@@ -1,7 +1,7 @@
 package com.atguigu.gulimall.gulimallcart.service;
 
 import com.atguigu.gulimall.gulimallcart.vo.Cart;
-import com.atguigu.gulimall.gulimallcart.vo.CartItem;
+import to.cart.CartItem;
 import java.util.List;
 import to.MemberEntityVo;
 
