@@ -4,11 +4,15 @@ import com.atguigu.gulimall.order.entity.OrderEntity;
 import com.atguigu.gulimall.order.feign.CartFeign;
 import com.atguigu.gulimall.order.feign.MemberFeign;
 import com.atguigu.gulimall.order.feign.SkuFeign;
+import com.atguigu.gulimall.order.feign.WareFeign;
 import com.atguigu.gulimall.order.mapper.OrderMapper;
 import com.atguigu.gulimall.order.service.OrderService;
 import com.atguigu.gulimall.order.vo.MemberAddressVo;
 import com.atguigu.gulimall.order.vo.OrderConfirmVo;
+import com.atguigu.gulimall.order.vo.OrderItem;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
 import jakarta.annotation.PostConstruct;
 import java.io.IOException;
@@ -24,11 +28,14 @@ import org.springframework.amqp.core.ReturnedMessage;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.core.RabbitTemplate.ReturnsCallback;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 import to.MemberEntityVo;
+import to.SkuHasStockTo;
 import to.cart.CartItem;
+import utils.R;
 
 /**
  * @author tifa
@@ -49,12 +56,15 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
   @Autowired
   private CartFeign cartFeign;
 
-
+  @Autowired
+  private WareFeign wareFeign;
   @Autowired
   private SkuFeign skuFeign;
 
   @Autowired
   private ThreadPoolExecutor threadPoolExecutor;
+  @Autowired
+  private ObjectMapper objectMapper;
 
 
   @RabbitListener(queues = {"hello"})
@@ -91,31 +101,63 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
   @Override
   public OrderConfirmVo confirmOrder(MemberEntityVo memberEntityVo) {
     OrderConfirmVo confirmVo = new OrderConfirmVo();
-    CompletableFuture<List<MemberAddressVo>> future1 = CompletableFuture.supplyAsync(
-        () -> memberFeign.getMemberByMemberId(
-            memberEntityVo.getId()), threadPoolExecutor);
-
+    CompletableFuture<Void> future1 = CompletableFuture.runAsync(() -> {
+      List<MemberAddressVo> memberByMemberId = memberFeign.getMemberByMemberId(
+          memberEntityVo.getId());
+      confirmVo.setAddress(memberByMemberId);
+    }, threadPoolExecutor);
     CompletableFuture<List<CartItem>> future2 = CompletableFuture.supplyAsync(
-            () -> cartFeign.getCartItems(memberEntityVo.getId()), threadPoolExecutor)
-
-        .thenApply((cartItems) -> {
-          List<CartItem> checkedCartItems = cartItems.stream()
+        () -> {
+          //从购物车中找到当前用户的所有购物内容
+          List<CartItem> cartItems = cartFeign.getCartItems(memberEntityVo.getId());
+          //过滤剩下来被选中的商品。
+          return cartItems.stream()
               .filter(CartItem::getChecked)
               .toList();
+        }, threadPoolExecutor);
 
-          Map<Long, BigDecimal> cartItemMap = skuFeign.skuInfoEntityList(checkedCartItems).stream()
-              .collect(Collectors.toMap(CartItem::getSkuId, CartItem::getPrice));
+    //查询出来最新的价格信息
+    var future3 = future2.thenApplyAsync(
+        (checkedCartItems) -> skuFeign.skuInfoEntityList(checkedCartItems), threadPoolExecutor);
 
-          checkedCartItems.forEach(cartItem ->
-              cartItem.setPrice(cartItemMap.get(cartItem.getSkuId())));
-          return checkedCartItems;
-        });
+    // 查询出是否有库存
+    var future4 = future2.thenApplyAsync((checkedCartItems) -> {
+      R skuHasStock = wareFeign.getSkuHasStock(
+          checkedCartItems.stream().map(CartItem::getSkuId).toList());
+      return objectMapper.convertValue(skuHasStock.get("data"),
+          new TypeReference<List<SkuHasStockTo>>() {
+          });
+    }, threadPoolExecutor);
 
-    CompletableFuture.allOf(future1, future2).join();
-    confirmVo.setAddress(future1.join());
+    CompletableFuture.allOf(future1, future2, future3, future4).join();
+
+    List<CartItem> join2 = future2.join();
+    var orderItems = join2.stream().map(item -> {
+      OrderItem orderItem = new OrderItem();
+      BeanUtils.copyProperties(item, orderItem);
+      return orderItem;
+    }).toList();
+
+    List<CartItem> join3 = future3.join();
+    Map<Long, BigDecimal> cartItemMap = join3.stream()
+        .collect(Collectors.toMap(CartItem::getSkuId, CartItem::getPrice));
+    orderItems.forEach(orderItem ->
+        orderItem.setPrice(cartItemMap.get(orderItem.getSkuId())));
+
+    Map<Long, OrderItem> orderItemMapMap = orderItems.stream()
+        .collect(Collectors.toMap(OrderItem::getSkuId, item -> item));
+
+    List<SkuHasStockTo> join = future4.join();
+    if (join != null) {
+      for (var c : join) {
+        Long skuId = c.getSkuId();
+        Boolean hasStock = c.getHasStock();
+        orderItemMapMap.get(skuId).setHasStock(hasStock);
+      }
+    }
+    confirmVo.setItems(orderItems);
     Integer integration = memberEntityVo.getIntegration();
     confirmVo.setIntegration(integration);
-    confirmVo.setItems(future2.join());
     return confirmVo;
   }
 }

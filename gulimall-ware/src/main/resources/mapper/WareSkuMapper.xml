@@ -34,6 +34,7 @@
     <foreach collection="skuIds" item="id" open="(" separator="," close=")">
       #{id}
     </foreach>
-    GROUP BY sku_id;
+    GROUP BY sku_id
+    HAVING COUNT(*) > 0;
   </select>
 </mapper>
