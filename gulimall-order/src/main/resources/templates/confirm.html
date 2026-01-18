@@ -7,6 +7,28 @@
   <link rel="stylesheet" type="text/css" href="/static/order/confirm/css/JD2.css"/>
 
   <title></title>
+  <style>
+    .address-item {
+      padding: 2px;
+      cursor: pointer;
+    }
+
+
+    .section .top-3 p {
+      width: 135px;
+      height: 27px;
+      border: 2px solid gray;
+      line-height: 27px;
+      font-size: 12px;
+      text-align: center;
+    }
+
+
+    .address-item.selected {
+      border: 2px solid red;
+    }
+  </style>
+
 </head>
 
 <body>
@@ -365,7 +387,7 @@
 
   <!--地址-->
   <div class="top-3" th:each="addr:${orderConfirmData.getAddress()}">
-    <p>[[${addr.name}]]</p><span>[[${addr.name}]]  [[${addr.province}]]  [[${addr.city}]] [[${addr.region}]]   [[${addr.detailAddress}]]   [[${addr.phone}]] </span>
+    <p class="address-item">[[${addr.name}]]</p><span>[[${addr.name}]]  [[${addr.province}]]  [[${addr.city}]] [[${addr.region}]]   [[${addr.detailAddress}]]   [[${addr.phone}]] </span>
   </div>
   <p class="p2">更多地址︾</p>
   <div class="hh1"/>
@@ -436,7 +458,7 @@
       <div class="mi">
         <p>[[${item.title}]] <span style="color: red;"> ￥ [[${#numbers.formatDecimal(item.price,1,2) }]]</span>
           <span>x[[${item.count}]] </span>
-          <span>有货</span></p>
+          <span th:text="${item.getHasStock()?'有货':'无货'}"></span></p>
         <span>重量 0.095kg</span>
         <p class="tui-1"><img src="/static/order/confirm/img/i_07.png"/>支持7天无理由退货</p>
       </div>
@@ -711,6 +733,21 @@
   </p>
 </div>
 <script>
+
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const addressItems = document.querySelectorAll(".address-item");
+    addressItems.forEach(item => {
+      item.addEventListener("click", function () {
+        // 先移除其他元素的 selected
+        console.log("男男女女女")
+        addressItems.forEach(i => i.classList.remove("selected"));
+        // 给当前点击的加 selected
+        this.classList.add("selected");
+      });
+    });
+  });
+
   $(document).ready(function () {
     $('.header-right li:nth-of-type(6)').hover(function () {
       $('.header-r-11').css('display', 'block')
