@@ -12,7 +12,7 @@ public class OrderConfirmVo {
   List<MemberAddressVo> address;
 
   //所有选中的购物项目
-  List<CartItem> items;
+  List<OrderItem> items;
 
   //发票记录
   //优惠券
@@ -21,6 +21,7 @@ public class OrderConfirmVo {
 //  BigDecimal total;
   //应付总额
   BigDecimal payPrice;
+
 
   public BigDecimal getTotal() {
     return items.stream().map(CartItem::getTotalPrice)
