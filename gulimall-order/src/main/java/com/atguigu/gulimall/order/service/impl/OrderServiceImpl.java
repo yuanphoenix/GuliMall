@@ -14,13 +14,16 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
+import constant.OrderConstant;
 import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
@@ -30,6 +33,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.core.RabbitTemplate.ReturnsCallback;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 import to.MemberEntityVo;
@@ -60,6 +64,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
   private WareFeign wareFeign;
   @Autowired
   private SkuFeign skuFeign;
+
+  @Autowired
+  private StringRedisTemplate stringRedisTemplate;
 
   @Autowired
   private ThreadPoolExecutor threadPoolExecutor;
@@ -158,6 +165,17 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
     confirmVo.setItems(orderItems);
     Integer integration = memberEntityVo.getIntegration();
     confirmVo.setIntegration(integration);
+
+    //防重令牌
+
+    String orderKey = UUID.randomUUID().toString().replace("-", "");
+    String token = UUID.randomUUID().toString().replace("-", "");
+    stringRedisTemplate.opsForValue()
+        .set(OrderConstant.USER_ORDER_TOKEN_PREFIX + orderKey, token, 10,
+            TimeUnit.MINUTES);
+
+    confirmVo.setToken(token);
+    confirmVo.setOrderKey(orderKey);
     return confirmVo;
   }
 }
