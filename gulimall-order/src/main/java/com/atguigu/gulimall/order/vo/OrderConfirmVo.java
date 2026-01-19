@@ -22,6 +22,9 @@ public class OrderConfirmVo {
   //应付总额
   BigDecimal payPrice;
 
+  String token;
+  String orderKey;
+
 
   public BigDecimal getTotal() {
     return items.stream().map(CartItem::getTotalPrice)
