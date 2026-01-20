@@ -513,7 +513,8 @@
   </div>
 
   <div class="yfze">
-    <p class="yfze_a"><span class="z">应付总额：</span><span th:data-price="${orderConfirmData.getTotal()}" id="payPrice" class="hq">￥[[${#numbers.formatDecimal(orderConfirmData.getTotal(),1,2)  }]]</span>
+    <p class="yfze_a"><span class="z">应付总额：</span><span
+        th:data-price="${orderConfirmData.getTotal()}" id="payPrice" class="hq">￥[[${#numbers.formatDecimal(orderConfirmData.getTotal(),1,2)  }]]</span>
     </p>
     <p class="yfze_b">寄送至： 北京 朝阳区 三环到四环之间 朝阳北路复兴国际大厦23层麦田房产 IT-中心研发二部
       收货人：赵存权 188****5052</p>
@@ -746,17 +747,21 @@
       orderToken: orderKey,
       totalPrice: payPrice
     };
-    console.log(payPrice)
     fetch("http://order.gulimall.com/order/order/submitOrder", {
       method: "POST",
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(
           postData
       )
-
     })
     .then(res => res.json())
-    .then(data => console.log(data))
+    .then(data => {
+      if (data.code === 0) {
+        window.location.href = "http://order.gulimall.com/pay.html";
+      } else {
+        window.location.href = window.location.href;
+      }
+    })
   }
 
   document.addEventListener("DOMContentLoaded", function () {

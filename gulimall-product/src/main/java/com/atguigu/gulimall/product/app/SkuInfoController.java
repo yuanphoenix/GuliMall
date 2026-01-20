@@ -6,6 +6,8 @@ import com.atguigu.gulimall.product.vo.SpuPageVo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -53,20 +55,16 @@ public class SkuInfoController {
 
 
   @PostMapping("/paylist")
-  public List<to.cart.CartItem> skuInfoEntityList(
-      @RequestBody List<to.cart.CartItem> cartItemList) {
+  public List<CartItem> skuInfoEntityList(
+      @RequestBody List<CartItem> cartItemList) {
     List<SkuInfoEntity> list = skuInfoService.list(
         new LambdaQueryWrapper<SkuInfoEntity>().in(SkuInfoEntity::getSkuId,
             cartItemList.stream().map(
                 CartItem::getSkuId).toList()));
-    return list.stream().map(a -> {
-      CartItem cartItem = new CartItem();
-      cartItem.setSkuId(a.getSkuId());
-      cartItem.setPrice(a.getPrice());
-      return cartItem;
-    }).toList();
+    Map<Long, SkuInfoEntity> collect = list.stream()
+        .collect(Collectors.toMap(SkuInfoEntity::getSkuId, item -> item));
 
-
+    return cartItemList.stream().filter(a -> collect.containsKey(a.getSkuId())).peek(a -> a.setPrice(collect.get(a.getSkuId()).getPrice())).toList();
   }
 
 
