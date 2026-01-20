@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="zh" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head>
   <meta charset="utf-8"/>
@@ -12,17 +12,6 @@
       padding: 2px;
       cursor: pointer;
     }
-
-
-    .section .top-3 p {
-      width: 135px;
-      height: 27px;
-      border: 2px solid gray;
-      line-height: 27px;
-      font-size: 12px;
-      text-align: center;
-    }
-
 
     .address-item.selected {
       border: 2px solid red;
@@ -387,7 +376,7 @@
 
   <!--地址-->
   <div class="top-3" th:each="addr:${orderConfirmData.getAddress()}">
-    <p class="address-item">[[${addr.name}]]</p><span>[[${addr.name}]]  [[${addr.province}]]  [[${addr.city}]] [[${addr.region}]]   [[${addr.detailAddress}]]   [[${addr.phone}]] </span>
+    <p th:data-id="${addr.getId()}" class="address-item">[[${addr.name}]]</p><span>[[${addr.name}]]  [[${addr.province}]]  [[${addr.city}]] [[${addr.region}]]   [[${addr.detailAddress}]]   [[${addr.phone}]] </span>
   </div>
   <p class="p2">更多地址︾</p>
   <div class="hh1"/>
@@ -465,7 +454,9 @@
     </div>
 
     <div class="hh1"></div>
-    <p>退换无忧 <span class="money">￥ 0.00</span></p>
+    <p>退换无忧 <span class="money">￥ [[${#numbers.formatDecimal(orderConfirmData.getTotal(),1,2)  }]]</span>
+    </p>
+
   </div>
 </div>
 <div class="bto">
@@ -522,13 +513,14 @@
   </div>
 
   <div class="yfze">
-    <p class="yfze_a"><span class="z">应付总额：</span><span class="hq">￥28.90</span></p>
+    <p class="yfze_a"><span class="z">应付总额：</span><span th:data-price="${orderConfirmData.getTotal()}" id="payPrice" class="hq">￥[[${#numbers.formatDecimal(orderConfirmData.getTotal(),1,2)  }]]</span>
+    </p>
     <p class="yfze_b">寄送至： 北京 朝阳区 三环到四环之间 朝阳北路复兴国际大厦23层麦田房产 IT-中心研发二部
       收货人：赵存权 188****5052</p>
   </div>
-  <input name="token" type="hidden" th:value="${orderConfirmData.getToken()}">
-  <input name="orderKey" type="hidden" th:value="${orderConfirmData.getOrderKey()}">
-  <button class="tijiao">提交订单</button>
+  <input id="token" type="hidden" th:value="${orderConfirmData.getToken()}">
+  <input id="orderKey" type="hidden" th:value="${orderConfirmData.getOrderKey()}">
+  <button onclick="submitOrder()" class="tijiao">提交订单</button>
 </div>
 </div>
 
@@ -736,13 +728,42 @@
 </div>
 <script>
 
+  function submitOrder() {
+    const token = document.getElementById("token").value;
+    const orderKey = document.getElementById("orderKey").value;
+    const payPrice = document.querySelector('#payPrice').dataset.price;
+    const address_html = document.querySelector(".address-item.selected");
+    if (address_html === null) {
+      alert("请选择一个地址");
+      return
+    }
+    const addrId = address_html.dataset.id;
+    console.log(addrId)
+    const postData = {
+      addrId: addrId,
+      payType: 1,
+      token: token,
+      orderToken: orderKey,
+      totalPrice: payPrice
+    };
+    console.log(payPrice)
+    fetch("http://order.gulimall.com/order/order/submitOrder", {
+      method: "POST",
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(
+          postData
+      )
+
+    })
+    .then(res => res.json())
+    .then(data => console.log(data))
+  }
 
   document.addEventListener("DOMContentLoaded", function () {
     const addressItems = document.querySelectorAll(".address-item");
     addressItems.forEach(item => {
       item.addEventListener("click", function () {
         // 先移除其他元素的 selected
-        console.log("男男女女女")
         addressItems.forEach(i => i.classList.remove("selected"));
         // 给当前点击的加 selected
         this.classList.add("selected");

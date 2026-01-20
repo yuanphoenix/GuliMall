@@ -10,6 +10,7 @@ import com.atguigu.gulimall.order.service.OrderService;
 import com.atguigu.gulimall.order.vo.MemberAddressVo;
 import com.atguigu.gulimall.order.vo.OrderConfirmVo;
 import com.atguigu.gulimall.order.vo.OrderItem;
+import com.atguigu.gulimall.order.vo.OrderSubmitVo;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,6 +19,7 @@ import constant.OrderConstant;
 import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -34,6 +36,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate.ReturnsCallback;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 import to.MemberEntityVo;
@@ -178,6 +181,29 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
     confirmVo.setOrderKey(orderKey);
     return confirmVo;
   }
+
+  @Override
+  public Boolean submit(OrderSubmitVo orderSubmitVo, MemberEntityVo memberEntityVo) {
+    String orderToken = orderSubmitVo.getOrderToken();
+    String token = orderSubmitVo.getToken();
+
+    String script =
+        "if redis.call('get', KEYS[1]) == ARGV[1] then " +
+            "   return redis.call('del', KEYS[1]) " +
+            "else " +
+            "   return 0 " +
+            "end";
+
+    Long result = stringRedisTemplate.execute(
+        new DefaultRedisScript<>(script, Long.class),
+        Collections.singletonList(OrderConstant.USER_ORDER_TOKEN_PREFIX + orderToken),
+        token
+    );
+    log.error("结果是{}",result);
+
+    return 1L==result;
+  }
+
 }
 
 

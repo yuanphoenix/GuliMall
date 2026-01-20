@@ -1,8 +1,11 @@
 package com.atguigu.gulimall.order.controller;
 
+import annotation.LoginUser;
 import com.atguigu.gulimall.order.entity.OrderEntity;
 import com.atguigu.gulimall.order.service.OrderService;
+import com.atguigu.gulimall.order.vo.OrderSubmitVo;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import to.MemberEntityVo;
 import utils.R;
 
 /**
@@ -20,6 +24,7 @@ import utils.R;
  * @author tifa
  * @since 2025-05-09
  */
+@Slf4j
 @RestController
 @RequestMapping("/order/order")
 public class OrderController {
@@ -27,12 +32,23 @@ public class OrderController {
   @Autowired
   private OrderService orderService;
 
+
+  @PostMapping("/submitOrder")
+  public R submitOrder(@RequestBody OrderSubmitVo orderSubmitVo,
+      @LoginUser MemberEntityVo memberEntityVo) {
+    log.info(orderSubmitVo.toString());
+    Boolean res = orderService.submit(orderSubmitVo, memberEntityVo);
+    return Boolean.TRUE.equals(res) ? R.ok() : R.error("订单提交失败");
+  }
+
+
   /**
    * 获取所有数据
    */
   @GetMapping("/list")
   public R list() {
     List<OrderEntity> list = orderService.list();
+
     return R.ok().put("data", list);
   }
 
