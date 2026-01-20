@@ -11,6 +11,7 @@ import com.atguigu.gulimall.order.vo.MemberAddressVo;
 import com.atguigu.gulimall.order.vo.OrderConfirmVo;
 import com.atguigu.gulimall.order.vo.OrderItem;
 import com.atguigu.gulimall.order.vo.OrderSubmitVo;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,7 +22,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -105,72 +105,61 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
         System.out.println(returned);
       }
     });
-
   }
+
+
+  private List<OrderItem> getHasStockSkuItem(Long memberId) {
+
+    var cartItemsFuture = CompletableFuture.supplyAsync(
+        () -> cartFeign.getCartItems(memberId).stream().filter(CartItem::getChecked).toList(),
+        threadPoolExecutor);
+
+    var skuHasFuture = cartItemsFuture.thenApplyAsync((cartItems) -> {
+      R skuHasStock = wareFeign.getSkuHasStock(cartItems.stream().map(CartItem::getSkuId).toList());
+      List<SkuHasStockTo> skuList = objectMapper.convertValue(skuHasStock.get("data"),
+          new TypeReference<>() {
+          });
+      return skuList.stream().filter(SkuHasStockTo::getHasStock)
+          .collect(Collectors.toMap(SkuHasStockTo::getSkuId, s -> s));
+    }, threadPoolExecutor);
+
+    var newestCartItemsFuture = cartItemsFuture.thenApplyAsync(
+        (cartItems -> skuFeign.skuInfoEntityList(cartItems)), threadPoolExecutor);
+    // 合并库存信息和最新商品信息
+
+    //注意这里只筛选出来了有货的
+    return newestCartItemsFuture.thenCombine(skuHasFuture, (newestCartItems, skuIdMap) ->
+        newestCartItems.stream()
+            .filter(item -> skuIdMap.containsKey(item.getSkuId())
+                && item.getCount() <= skuIdMap.get(item.getSkuId()).getSkuNums())
+            .map(a -> {
+              OrderItem orderItem = new OrderItem();
+              BeanUtils.copyProperties(a, orderItem);
+              orderItem.setHasStock(true);
+              return orderItem;
+            })
+            .toList()
+    ).join();
+  }
+
 
   @Override
   public OrderConfirmVo confirmOrder(MemberEntityVo memberEntityVo) {
     OrderConfirmVo confirmVo = new OrderConfirmVo();
-    CompletableFuture<Void> future1 = CompletableFuture.runAsync(() -> {
+    var future1 = CompletableFuture.runAsync(() -> {
       List<MemberAddressVo> memberByMemberId = memberFeign.getMemberByMemberId(
           memberEntityVo.getId());
       confirmVo.setAddress(memberByMemberId);
     }, threadPoolExecutor);
-    CompletableFuture<List<CartItem>> future2 = CompletableFuture.supplyAsync(
-        () -> {
-          //从购物车中找到当前用户的所有购物内容
-          List<CartItem> cartItems = cartFeign.getCartItems(memberEntityVo.getId());
-          //过滤剩下来被选中的商品。
-          return cartItems.stream()
-              .filter(CartItem::getChecked)
-              .toList();
-        }, threadPoolExecutor);
 
-    //查询出来最新的价格信息
-    var future3 = future2.thenApplyAsync(
-        (checkedCartItems) -> skuFeign.skuInfoEntityList(checkedCartItems), threadPoolExecutor);
-
-    // 查询出是否有库存
-    var future4 = future2.thenApplyAsync((checkedCartItems) -> {
-      R skuHasStock = wareFeign.getSkuHasStock(
-          checkedCartItems.stream().map(CartItem::getSkuId).toList());
-      return objectMapper.convertValue(skuHasStock.get("data"),
-          new TypeReference<List<SkuHasStockTo>>() {
-          });
-    }, threadPoolExecutor);
-
-    CompletableFuture.allOf(future1, future2, future3, future4).join();
-
-    List<CartItem> join2 = future2.join();
-    var orderItems = join2.stream().map(item -> {
-      OrderItem orderItem = new OrderItem();
-      BeanUtils.copyProperties(item, orderItem);
-      return orderItem;
-    }).toList();
-
-    List<CartItem> join3 = future3.join();
-    Map<Long, BigDecimal> cartItemMap = join3.stream()
-        .collect(Collectors.toMap(CartItem::getSkuId, CartItem::getPrice));
-    orderItems.forEach(orderItem ->
-        orderItem.setPrice(cartItemMap.get(orderItem.getSkuId())));
-
-    Map<Long, OrderItem> orderItemMapMap = orderItems.stream()
-        .collect(Collectors.toMap(OrderItem::getSkuId, item -> item));
-
-    List<SkuHasStockTo> join = future4.join();
-    if (join != null) {
-      for (var c : join) {
-        Long skuId = c.getSkuId();
-        Boolean hasStock = c.getHasStock();
-        orderItemMapMap.get(skuId).setHasStock(hasStock);
-      }
-    }
-    confirmVo.setItems(orderItems);
+    var future2 = CompletableFuture.supplyAsync(() -> getHasStockSkuItem(memberEntityVo.getId()),threadPoolExecutor);
+    CompletableFuture.allOf(future1, future2);
+    confirmVo.setItems(future2.join());
+    //积分
     Integer integration = memberEntityVo.getIntegration();
     confirmVo.setIntegration(integration);
 
     //防重令牌
-
     String orderKey = UUID.randomUUID().toString().replace("-", "");
     String token = UUID.randomUUID().toString().replace("-", "");
     stringRedisTemplate.opsForValue()
@@ -186,7 +175,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
   public Boolean submit(OrderSubmitVo orderSubmitVo, MemberEntityVo memberEntityVo) {
     String orderToken = orderSubmitVo.getOrderToken();
     String token = orderSubmitVo.getToken();
-
     String script =
         "if redis.call('get', KEYS[1]) == ARGV[1] then " +
             "   return redis.call('del', KEYS[1]) " +
@@ -199,9 +187,49 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
         Collections.singletonList(OrderConstant.USER_ORDER_TOKEN_PREFIX + orderToken),
         token
     );
-    log.error("结果是{}",result);
 
-    return 1L==result;
+    //开始创建订单
+    String orderId = IdWorker.getTimeId();
+    OrderEntity orderEntity = new OrderEntity();
+    orderEntity.setOrderSn(orderId);
+    orderEntity.setMemberId(memberEntityVo.getId());
+    orderEntity.setMemberUsername(memberEntityVo.getUsername());
+
+    orderEntity.setFreightAmount(BigDecimal.ZERO);
+    orderEntity.setPayType(orderSubmitVo.getPayType());
+    //等待付款
+    orderEntity.setStatus(0);
+//确认收货状态
+    orderEntity.setConfirmStatus(0);
+    //未删除
+    orderEntity.setDeleteStatus(0);
+    //从购物车中获得最新的价格数据
+
+    var OrderItemFuture = CompletableFuture.supplyAsync(
+        () -> getHasStockSkuItem(memberEntityVo.getId()),threadPoolExecutor);
+
+    var addFuture = CompletableFuture.runAsync(() -> {
+      R addressData = memberFeign.getAddressById(memberEntityVo.getId());
+      MemberAddressVo addrEntity = objectMapper.convertValue(addressData.get("data"),
+          MemberAddressVo.class);
+      orderEntity.setReceiverName(addrEntity.getName());
+      orderEntity.setReceiverPhone(addrEntity.getPhone());
+      orderEntity.setReceiverPostCode(addrEntity.getPostCode());
+      orderEntity.setReceiverProvince(addrEntity.getProvince());
+      orderEntity.setReceiverCity(addrEntity.getCity());
+      orderEntity.setReceiverRegion(addrEntity.getRegion());
+      orderEntity.setReceiverDetailAddress(addrEntity.getDetailAddress());
+    }, threadPoolExecutor);
+
+    CompletableFuture.allOf(addFuture, OrderItemFuture).join();
+    List<OrderItem> join = OrderItemFuture.join();
+
+    orderEntity.setTotalAmount(
+        join.stream().map(OrderItem::getTotalPrice).reduce(BigDecimal.ZERO, BigDecimal::add));
+
+    log.info("订单的数据{}", orderEntity);
+
+    return 1L == result;
   }
 
 }

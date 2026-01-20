@@ -10,6 +10,6 @@ import to.cart.CartItem;
 public interface SkuFeign {
 
   @PostMapping("/product/skuinfo/paylist")
-  List<to.cart.CartItem> skuInfoEntityList(
+  List<CartItem> skuInfoEntityList(
       @RequestBody List<CartItem> cartItemList);
 }

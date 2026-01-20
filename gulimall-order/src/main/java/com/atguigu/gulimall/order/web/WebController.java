@@ -38,4 +38,9 @@ public class WebController {
     OrderConfirmVo confirmVo = orderService.confirmOrder(memberEntityVo);
     return R.ok().put("data", confirmVo);
   }
+
+  @GetMapping("/pay.html")
+  public String payhtml() {
+    return "pay";
+  }
 }
