@@ -1,6 +1,7 @@
 package to.cart;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.math.BigDecimal;
 import java.util.List;
@@ -15,6 +16,8 @@ public class CartItem {
   private List<String> skuAttr;
   private BigDecimal price;
   private Integer count; //计数
+  @JsonIgnore
+  private Long spuId;
 
   private BigDecimal totalPrice;
 
@@ -25,6 +28,14 @@ public class CartItem {
     return this.price.multiply(new BigDecimal(this.count));
   }
 
+
+  public Long getSpuId() {
+    return spuId;
+  }
+
+  public void setSpuId(Long spuId) {
+    this.spuId = spuId;
+  }
 
   public Long getSkuId() {
     return skuId;

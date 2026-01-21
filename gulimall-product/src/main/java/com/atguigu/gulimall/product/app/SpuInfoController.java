@@ -4,7 +4,9 @@ import com.atguigu.gulimall.product.entity.SpuInfoEntity;
 import com.atguigu.gulimall.product.service.SpuInfoService;
 import com.atguigu.gulimall.product.vo.SpuPageVo;
 import com.atguigu.gulimall.product.vo.spuinfo.SpuInfoVo;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -56,6 +58,15 @@ public class SpuInfoController {
     boolean saved = spuInfoService.saveSpu(spuInfoVo);
     return saved ? R.ok() : R.error();
   }
+
+
+  @GetMapping("/listByIds")
+  public R getSpuByIds(@RequestBody List<Long> spuIds) {
+    List<SpuInfoEntity> spuInfoEntities = spuInfoService.getBaseMapper()
+        .selectList(new LambdaQueryWrapper<SpuInfoEntity>().in(SpuInfoEntity::getId, spuIds));
+    return R.ok().put("data", spuInfoEntities);
+  }
+
 
   /**
    * 修改数据
