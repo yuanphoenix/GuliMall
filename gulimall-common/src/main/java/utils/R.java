@@ -1,11 +1,22 @@
 package utils;
 
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import exception.BizCodeEnum;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.http.HttpStatus;
 
 public class R extends HashMap<String, Object> {
+
+  private static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
   public static R ok() {
     R r = new R();
@@ -21,6 +32,20 @@ public class R extends HashMap<String, Object> {
     R c = ok();
     c.putAll(map);
     return c;
+  }
+
+  public <T> T getData(TypeReference<T> t) {
+    ObjectMapper objectMapper = new ObjectMapper();
+    JavaTimeModule javaTimeModule = new JavaTimeModule();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN);
+    javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(formatter));
+    javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(formatter));
+
+    objectMapper.registerModule(javaTimeModule);
+    objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    // 自动注册其他模块，兼容性更好
+    objectMapper.findAndRegisterModules();
+    return objectMapper.convertValue(this.get("data"), t);
   }
 
   public Integer getCode() {

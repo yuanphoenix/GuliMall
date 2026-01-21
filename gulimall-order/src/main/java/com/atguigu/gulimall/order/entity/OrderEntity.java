@@ -1,6 +1,8 @@
 package com.atguigu.gulimall.order.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.math.BigDecimal;
@@ -38,6 +40,7 @@ public class OrderEntity {
   /**
    * create_time
    */
+  @TableField(fill = FieldFill.INSERT)
   private LocalDateTime createTime;
 
   /**
@@ -223,6 +226,7 @@ public class OrderEntity {
   /**
    * 修改时间
    */
+  @TableField(fill = FieldFill.INSERT_UPDATE)
   private LocalDateTime modifyTime;
 
   /**
