@@ -26,6 +26,16 @@
       and ware_id = #{wareId};
   </update>
 
+
+  <update id="lockSku" >
+
+    update wms_ware_sku
+    set stock_locked =#{lockTo.stockLocked} + stock_locked
+    where sku_id = #{lockTo.skuId}
+      and ware_id = #{wareId}
+      and stock - #{lockTo.stockLocked} >= 0;
+  </update>
+
   <!-- 根据skuids 判断各个sku是否还有库存 -->
   <select id="hasStock" resultType="to.SkuHasStockTo">
     select sku_id as skuId ,SUM(stock-stock_locked)>0 as hasStock, SUM(stock-stock_locked) as
