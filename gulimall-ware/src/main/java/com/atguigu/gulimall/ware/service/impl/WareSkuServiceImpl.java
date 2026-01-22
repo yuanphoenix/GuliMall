@@ -10,8 +10,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.ObjectUtils;
 import to.SkuHasStockTo;
+import to.order.LockTo;
 import utils.PageUtils;
 
 /**
@@ -59,6 +61,31 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuMapper, WareSkuEntity
   @Override
   public List<SkuHasStockTo> getSkuHasStock(List<Long> skuIds) {
     return this.baseMapper.hasStock(skuIds);
+  }
+
+  @Transactional
+  @Override
+  public boolean lock(List<LockTo> lockToList) {
+    for (var lockTo : lockToList) {
+
+      List<WareSkuEntity> list = this.list(
+          new LambdaQueryWrapper<WareSkuEntity>().eq(WareSkuEntity::getSkuId, lockTo.getSkuId())
+              .ge(WareSkuEntity::getStock, lockTo.getStockLocked()));
+
+      boolean hasStock = false;
+      for (var c : list) {
+        int i = this.baseMapper.lockSku(lockTo, c.getWareId());
+        if (i > 0) {
+          hasStock = true;
+          break;
+        }
+      }
+      if (!hasStock) {
+        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        return false;
+      }
+    }
+    return true;
   }
 }
 

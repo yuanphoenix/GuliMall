@@ -36,7 +36,6 @@ public class OrderController {
   @PostMapping("/submitOrder")
   public R submitOrder(@RequestBody OrderSubmitVo orderSubmitVo,
       @LoginUser MemberEntityVo memberEntityVo) {
-    log.info(orderSubmitVo.toString());
     Boolean res = orderService.submit(orderSubmitVo, memberEntityVo);
     return Boolean.TRUE.equals(res) ? R.ok() : R.error("订单提交失败");
   }

@@ -1,0 +1,25 @@
+package to.order;
+
+public class LockTo {
+
+
+  private Long skuId;
+  private Integer stockLocked;
+
+
+  public Long getSkuId() {
+    return skuId;
+  }
+
+  public void setSkuId(Long skuId) {
+    this.skuId = skuId;
+  }
+
+  public Integer getStockLocked() {
+    return stockLocked;
+  }
+
+  public void setStockLocked(Integer stockLocked) {
+    this.stockLocked = stockLocked;
+  }
+}

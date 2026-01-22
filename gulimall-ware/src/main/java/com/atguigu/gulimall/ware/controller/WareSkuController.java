@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import to.SkuHasStockTo;
+import to.order.LockTo;
 import utils.R;
 
 /**
@@ -46,6 +47,14 @@ public class WareSkuController {
     IPage<WareSkuEntity> list = wareSkuService.pageWithCondition(pageDTO);
     return R.ok().put("page", list);
   }
+
+
+  @PostMapping("/lock")
+  public R lock(@RequestBody List<LockTo> lockToList) {
+    boolean result = wareSkuService.lock(lockToList);
+    return result ? R.ok() : R.error();
+  }
+
 
   /**
    * 根据ID获取数据

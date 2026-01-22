@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import java.util.List;
 import to.SkuHasStockTo;
+import to.order.LockTo;
 
 /**
  * @author tifa
@@ -20,4 +21,6 @@ public interface WareSkuService extends IService<WareSkuEntity> {
   void addStock(Long wareId, Long skuId, Integer skuNum);
 
   List<SkuHasStockTo> getSkuHasStock(List<Long> skuIds);
+
+  boolean lock(List<LockTo> lockTo);
 }

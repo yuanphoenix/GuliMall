@@ -7,6 +7,7 @@ import com.atguigu.gulimall.order.feign.MemberFeign;
 import com.atguigu.gulimall.order.feign.SkuFeign;
 import com.atguigu.gulimall.order.feign.SpuFeign;
 import com.atguigu.gulimall.order.feign.WareFeign;
+import com.atguigu.gulimall.order.mapper.OrderItemMapper;
 import com.atguigu.gulimall.order.mapper.OrderMapper;
 import com.atguigu.gulimall.order.service.OrderService;
 import com.atguigu.gulimall.order.vo.MemberAddressVo;
@@ -45,6 +46,7 @@ import org.springframework.stereotype.Service;
 import to.MemberEntityVo;
 import to.SkuHasStockTo;
 import to.cart.CartItem;
+import to.order.LockTo;
 import utils.R;
 
 /**
@@ -79,6 +81,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
   @Autowired
   private SpuFeign spuFeign;
 
+  @Autowired
+  private OrderItemMapper orderItemMapper;
 
   @RabbitListener(queues = {"hello"})
   void listen(Message message, @Payload OrderEntity orderEntity, Channel channel)
@@ -236,9 +240,42 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
 
     //校验价格
     int change = computePrice(orderSubmitVo, orderItemEntities);
+    boolean aaaa = false;
+    if (change == 0) {
+      //锁库存
+       aaaa = lock(orderItemEntities);
+      //保存
+
+
+      //TODO 涉及到了分布式事务，还没开始写
+      if (aaaa) {
+        saveOrder(orderEntity, orderItemEntities);
+      }
+    }
+
 
     log.info("订单的数据{}", orderEntity);
-    return 1L == result;
+    return 1L == result && aaaa;
+  }
+
+  private boolean lock(List<OrderItemEntity> orderItemEntities) {
+    List<LockTo> list = orderItemEntities.stream().map(a -> {
+      LockTo lockTo = new LockTo();
+      lockTo.setSkuId(a.getSkuId());
+
+      lockTo.setStockLocked(a.getSkuQuantity());
+      return lockTo;
+
+    }).toList();
+    R lock = wareFeign.lock(list);
+    return R.ok().getCode().equals(lock.getCode());
+  }
+
+
+  //保存到数据库
+  protected void saveOrder(OrderEntity orderEntity, List<OrderItemEntity> orderItemEntities) {
+    this.save(orderEntity);
+    orderItemMapper.insert(orderItemEntities);
   }
 
 

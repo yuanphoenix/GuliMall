@@ -32,6 +32,7 @@ public class WebController {
   }
 
 
+  @Deprecated
   @ResponseBody
   @GetMapping("/data")
   public R ddd(@LoginUser MemberEntityVo memberEntityVo) {
@@ -40,7 +41,7 @@ public class WebController {
   }
 
   @GetMapping("/pay.html")
-  public String payhtml() {
+  public String payHtml() {
     return "pay";
   }
 }
