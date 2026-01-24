@@ -4,6 +4,7 @@ public class LockTo {
 
 
   private Long skuId;
+//  需要锁住的库存
   private Integer stockLocked;
 
 

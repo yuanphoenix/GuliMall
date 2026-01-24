@@ -1,13 +1,17 @@
 package com.atguigu.gulimall.ware.service.impl;
 
+import com.atguigu.gulimall.ware.entity.WareOrderTaskDetailEntity;
 import com.atguigu.gulimall.ware.entity.WareSkuEntity;
+import com.atguigu.gulimall.ware.mapper.WareOrderTaskDetailMapper;
 import com.atguigu.gulimall.ware.mapper.WareSkuMapper;
 import com.atguigu.gulimall.ware.service.WareSkuService;
 import com.atguigu.gulimall.ware.vo.WarePageVo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import java.util.ArrayList;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -24,6 +28,9 @@ import utils.PageUtils;
 @Service
 public class WareSkuServiceImpl extends ServiceImpl<WareSkuMapper, WareSkuEntity>
     implements WareSkuService {
+
+  @Autowired
+  private WareOrderTaskDetailMapper wareOrderTaskDetailMapper;
 
 
   @Override
@@ -60,32 +67,42 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuMapper, WareSkuEntity
    */
   @Override
   public List<SkuHasStockTo> getSkuHasStock(List<Long> skuIds) {
+    skuIds = skuIds.stream().distinct().toList();
     return this.baseMapper.hasStock(skuIds);
   }
 
   @Transactional
   @Override
-  public boolean lock(List<LockTo> lockToList) {
+  public boolean lockStock(List<LockTo> lockToList) {
+    List<WareOrderTaskDetailEntity> wareOrderTaskDetailEntityList = new ArrayList<>();
     for (var lockTo : lockToList) {
-
-      List<WareSkuEntity> list = this.list(
+//      检查出来有库存的仓库，可能有多个
+      boolean success = false;
+      List<WareSkuEntity> wareList = this.list(
           new LambdaQueryWrapper<WareSkuEntity>().eq(WareSkuEntity::getSkuId, lockTo.getSkuId())
-              .ge(WareSkuEntity::getStock, lockTo.getStockLocked()));
-
-      boolean hasStock = false;
-      for (var c : list) {
+              .apply("stock-stock_locked>={0}", lockTo.getStockLocked()));
+//尝试占用
+      for (var c : wareList) {
         int i = this.baseMapper.lockSku(lockTo, c.getWareId());
-        if (i > 0) {
-          hasStock = true;
-          break;
+        if (i != 1) {
+          continue;
         }
+//      占用成功
+        success = true;
+        break;
       }
-      if (!hasStock) {
+      if (!success) {
         TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         return false;
       }
     }
+
     return true;
+  }
+
+  @Override
+  public void unlockStock() {
+
   }
 }
 

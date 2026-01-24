@@ -15,6 +15,7 @@ import com.atguigu.gulimall.order.vo.OrderConfirmVo;
 import com.atguigu.gulimall.order.vo.OrderItem;
 import com.atguigu.gulimall.order.vo.OrderSubmitVo;
 import com.atguigu.gulimall.order.vo.SpuInfoVo;
+import com.atguigu.gulimall.order.vo.SubmitOrderResponseVo;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -114,12 +115,21 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
   }
 
 
+  /**
+   * 从这个人的id查出来它购物车中所有checked的产品
+   *
+   * @param memberId
+   * @return
+   */
   private List<OrderItem> getHasStockSkuItem(Long memberId) {
 
+    /**
+     * 选出来所有被选择的商品
+     */
     var cartItemsFuture = CompletableFuture.supplyAsync(
         () -> cartFeign.getCartItems(memberId).stream().filter(CartItem::getChecked).toList(),
         threadPoolExecutor);
-
+    //选出有库存的商品
     var skuHasFuture = cartItemsFuture.thenApplyAsync((cartItems) -> {
       R skuHasStock = wareFeign.getSkuHasStock(cartItems.stream().map(CartItem::getSkuId).toList());
       List<SkuHasStockTo> skuList = skuHasStock.getData(new TypeReference<>() {
@@ -134,10 +144,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
     // 合并库存信息和最新商品信息
 
     //注意这里只筛选出来了有货的
-    return newestCartItemsFuture.thenCombine(skuHasFuture, (newestCartItems, skuIdMap) ->
+    return newestCartItemsFuture.thenCombine(skuHasFuture, (newestCartItems, skuHasStockedMap) ->
         newestCartItems.stream()
-            .filter(item -> skuIdMap.containsKey(item.getSkuId())
-                && item.getCount() <= skuIdMap.get(item.getSkuId()).getSkuNums())
+            .filter(item -> skuHasStockedMap.containsKey(item.getSkuId())
+                && item.getCount() <= skuHasStockedMap.get(item.getSkuId()).getSkuNums())
             .map(a -> {
               OrderItem orderItem = new OrderItem();
               BeanUtils.copyProperties(a, orderItem);
@@ -179,7 +189,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
   }
 
   @Override
-  public Boolean submit(OrderSubmitVo orderSubmitVo, MemberEntityVo memberEntityVo) {
+  public SubmitOrderResponseVo submit(OrderSubmitVo orderSubmitVo, MemberEntityVo memberEntityVo) {
+
+    SubmitOrderResponseVo submitOrderResponseVo = new SubmitOrderResponseVo();
+
     String orderToken = orderSubmitVo.getOrderToken();
     String token = orderSubmitVo.getToken();
     String script =
@@ -189,19 +202,28 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
             "   return 0 " +
             "end";
 
+    //原子操作，这意味着下面的所有代码只可能被执行一次
     Long result = stringRedisTemplate.execute(
         new DefaultRedisScript<>(script, Long.class),
         Collections.singletonList(OrderConstant.USER_ORDER_TOKEN_PREFIX + orderToken),
         token
     );
+    if (result != 1L) {
+      //如果前端传过来的token部队，那么快速失败。
+      submitOrderResponseVo.setCode(0);
+      return submitOrderResponseVo;
+    }
 
     //开始创建订单
     String orderId = IdWorker.getTimeId();
     OrderEntity orderEntity = new OrderEntity();
+    submitOrderResponseVo.setOrderEntity(orderEntity);
+
     orderEntity.setOrderSn(orderId);
     orderEntity.setMemberId(memberEntityVo.getId());
     orderEntity.setMemberUsername(memberEntityVo.getUsername());
 
+    //运费直接为0
     orderEntity.setFreightAmount(BigDecimal.ZERO);
     orderEntity.setPayType(orderSubmitVo.getPayType());
     //等待付款
@@ -211,7 +233,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
     //未删除
     orderEntity.setDeleteStatus(0);
 
-
     //从购物车中获得最新的价格数据
     var OrderItemFuture = CompletableFuture.supplyAsync(
         () -> getHasStockSkuItem(memberEntityVo.getId()), threadPoolExecutor);
@@ -220,6 +241,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
       R addressData = memberFeign.getAddressById(memberEntityVo.getId());
       MemberAddressVo addrEntity = addressData.getData(new TypeReference<>() {
       });
+      /**
+       * 下面是收货人的一些信息
+       */
       orderEntity.setReceiverName(addrEntity.getName());
       orderEntity.setReceiverPhone(addrEntity.getPhone());
       orderEntity.setReceiverPostCode(addrEntity.getPostCode());
@@ -230,22 +254,22 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
     }, threadPoolExecutor);
 
     CompletableFuture.allOf(addFuture, OrderItemFuture).join();
-    List<OrderItem> join = OrderItemFuture.join();
+    List<OrderItem> orderItems = OrderItemFuture.join();
 
     orderEntity.setTotalAmount(
-        join.stream().map(OrderItem::getTotalPrice).reduce(BigDecimal.ZERO, BigDecimal::add));
+        orderItems.stream().map(OrderItem::getTotalPrice).reduce(BigDecimal.ZERO, BigDecimal::add));
 
     //生成订单具体项
-    List<OrderItemEntity> orderItemEntities = getOrderItem(join, orderEntity);
+    List<OrderItemEntity> orderItemEntities = getOrderItem(orderItems, orderId);
+    submitOrderResponseVo.setOrderItemEntityList(orderItemEntities);
 
     //校验价格
     int change = computePrice(orderSubmitVo, orderItemEntities);
     boolean aaaa = false;
     if (change == 0) {
       //锁库存
-       aaaa = lock(orderItemEntities);
+      aaaa = lock(orderItemEntities);
       //保存
-
 
       //TODO 涉及到了分布式事务，还没开始写
       if (aaaa) {
@@ -253,9 +277,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
       }
     }
 
-
     log.info("订单的数据{}", orderEntity);
-    return 1L == result && aaaa;
+    return submitOrderResponseVo;
   }
 
   private boolean lock(List<OrderItemEntity> orderItemEntities) {
@@ -290,10 +313,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
     return nowPrice.compareTo(originalPrice);
   }
 
-  private List<OrderItemEntity> getOrderItem(List<OrderItem> orderItems, OrderEntity orderEntity) {
+  private List<OrderItemEntity> getOrderItem(List<OrderItem> orderItems, String orderId) {
     List<OrderItemEntity> list = orderItems.stream().map(a -> {
       OrderItemEntity orderItem = new OrderItemEntity();
-      orderItem.setOrderSn(orderEntity.getOrderSn());
+      orderItem.setOrderSn(orderId);
       orderItem.setSkuId(a.getSkuId());
       orderItem.setSkuPic(a.getImage());
       orderItem.setSkuName(a.getTitle());

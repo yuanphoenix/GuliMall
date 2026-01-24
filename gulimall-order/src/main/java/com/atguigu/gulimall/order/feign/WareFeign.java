@@ -14,6 +14,6 @@ public interface WareFeign {
   R getSkuHasStock(@RequestBody List<Long> skuIds);
 
 
-  @PostMapping("/lock")
+  @PostMapping("/ware/waresku/lockStcok")
    R lock(@RequestBody List<LockTo> lockToList);
 }

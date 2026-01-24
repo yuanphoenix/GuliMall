@@ -49,11 +49,13 @@ public class WareSkuController {
   }
 
 
-  @PostMapping("/lock")
-  public R lock(@RequestBody List<LockTo> lockToList) {
-    boolean result = wareSkuService.lock(lockToList);
+  @PostMapping("/lockStcok")
+  public R lockStock(@RequestBody List<LockTo> lockToList) {
+    boolean result = wareSkuService.lockStock(lockToList);
     return result ? R.ok() : R.error();
   }
+
+
 
 
   /**

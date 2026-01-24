@@ -4,6 +4,7 @@ import annotation.LoginUser;
 import com.atguigu.gulimall.order.entity.OrderEntity;
 import com.atguigu.gulimall.order.service.OrderService;
 import com.atguigu.gulimall.order.vo.OrderSubmitVo;
+import com.atguigu.gulimall.order.vo.SubmitOrderResponseVo;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +37,8 @@ public class OrderController {
   @PostMapping("/submitOrder")
   public R submitOrder(@RequestBody OrderSubmitVo orderSubmitVo,
       @LoginUser MemberEntityVo memberEntityVo) {
-    Boolean res = orderService.submit(orderSubmitVo, memberEntityVo);
-    return Boolean.TRUE.equals(res) ? R.ok() : R.error("订单提交失败");
+    SubmitOrderResponseVo res = orderService.submit(orderSubmitVo, memberEntityVo);
+    return R.ok().put("data", res);
   }
 
 
