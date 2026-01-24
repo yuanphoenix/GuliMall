@@ -22,5 +22,16 @@ public interface WareSkuService extends IService<WareSkuEntity> {
 
   List<SkuHasStockTo> getSkuHasStock(List<Long> skuIds);
 
-  boolean lock(List<LockTo> lockTo);
+  // 锁库存
+  boolean lockStock(List<LockTo> lockTo);
+
+
+  /**
+   * 解除库存。
+   * <p>
+   * 下订单，过期没有支付，系统自动取消。 用户手动取消库存 为了保证一致性而取消
+   */
+  void unlockStock();
+
+
 }

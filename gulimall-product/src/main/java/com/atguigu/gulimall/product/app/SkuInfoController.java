@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -54,6 +55,12 @@ public class SkuInfoController {
   }
 
 
+  /**
+   * 将购物车的中的价格更新为最新的数据库价格。
+   *
+   * @param cartItemList
+   * @return
+   */
   @PostMapping("/paylist")
   public List<CartItem> skuInfoEntityList(
       @RequestBody List<CartItem> cartItemList) {
@@ -64,7 +71,13 @@ public class SkuInfoController {
     Map<Long, SkuInfoEntity> collect = list.stream()
         .collect(Collectors.toMap(SkuInfoEntity::getSkuId, item -> item));
 
-    return cartItemList.stream().filter(a -> collect.containsKey(a.getSkuId())).peek(a -> a.setPrice(collect.get(a.getSkuId()).getPrice())).toList();
+    List<CartItem> result = cartItemList.stream().filter(a -> collect.containsKey(a.getSkuId()))
+        .toList();
+    result.forEach(item -> {
+      SkuInfoEntity skuInfoEntity = collect.get(item.getSkuId());
+      BeanUtils.copyProperties(skuInfoEntity, item);
+    });
+    return result;
   }
 
 
