@@ -2,6 +2,7 @@ package com.atguigu.gulimall.order;
 
 
 import com.atguigu.gulimall.order.entity.OrderEntity;
+import com.atguigu.gulimall.order.service.OrderService;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.amqp.core.AmqpAdmin;
@@ -23,7 +24,6 @@ class GulimallOrderApplicationTests {
   @Autowired
   private RabbitTemplate rabbitTemplate;
 
-
   @Test
   void createExchange() {
     DirectExchange directExchange = new DirectExchange("hello-java-exchange", true, false);
@@ -41,7 +41,6 @@ class GulimallOrderApplicationTests {
         null);
     amqpAdmin.declareBinding(bind);
   }
-
 
   @Test
   void sendMsg() {

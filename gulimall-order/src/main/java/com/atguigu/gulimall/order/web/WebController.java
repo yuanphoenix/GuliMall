@@ -6,6 +6,7 @@ import com.atguigu.gulimall.order.service.OrderService;
 import com.atguigu.gulimall.order.vo.OrderConfirmVo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,16 +48,17 @@ public class WebController {
 
 
   @GetMapping("/pay.html")
-  public String payHtml(@RequestParam("orderSn") String orderSn, Model model) {
-
-    log.info(orderSn);
-    model.addAttribute("orderSn", orderSn);
-
+  public String payHtml(@RequestParam("orderSn") String orderSn, Model model,
+      @LoginUser MemberEntityVo memberEntityVo) {
     OrderEntity orderEntity = orderService.getOne(
         new LambdaQueryWrapper<OrderEntity>().eq(OrderEntity::getOrderSn, orderSn));
 
+    if (ObjectUtils.notEqual(memberEntityVo.getId(), orderEntity.getMemberId())
+        || ObjectUtils.notEqual(orderSn, orderEntity.getOrderSn())) {
+      throw new RuntimeException("付款错误");
+    }
+    model.addAttribute("orderSn", orderSn);
     model.addAttribute("orderEntity", orderEntity);
     return "pay";
   }
-
 }
