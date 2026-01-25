@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import to.MemberEntityVo;
-import to.cart.CartItem;
+import to.cart.CartItemTo;
 
 @Slf4j
 @Controller
@@ -21,11 +21,8 @@ public class CartWebController {
 
   private final CartService cartService;
 
-  private final ObjectMapper objectMapper;
-
   public CartWebController(CartService cartService, ObjectMapper objectMapper) {
     this.cartService = cartService;
-    this.objectMapper = objectMapper;
   }
 
   //返回购物车列表界面
@@ -48,7 +45,7 @@ public class CartWebController {
   @GetMapping("/addCartSuccess.html")
   public String addCartSuccess(@RequestParam("skuId") Long skuId, Model model,
       @LoginUser MemberEntityVo member) {
-    CartItem cartItem = cartService.getCartItemBySkuId(member, skuId);
+    CartItemTo cartItem = cartService.getCartItemBySkuId(member, skuId);
     if (cartItem == null) {
       return "success";
     }

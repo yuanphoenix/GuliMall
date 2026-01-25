@@ -92,6 +92,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
 
 
   private final ObjectMapper objectMapper;
+
   public SpuInfoServiceImpl(SpuInfoDescMapper spuInfoDescMapper, SpuImagesMapper spuImagesMapper,
       AttrMapper attrMapper, ProductAttrValueMapper productAttrValueMapper,
       SkuInfoMapper skuInfoMapper, SkuImagesMapper skuImagesMapper,
@@ -339,6 +340,14 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
       //上架失败，考虑重复调用。接口幂等性，重试机制？
       logger.error("上架失败");
     }
+  }
+
+  @Override
+  public List<SpuInfoEntity> listSpuByIds(List<Long> spuIds) {
+    if (spuIds == null || spuIds.isEmpty()) {
+      return Collections.emptyList();
+    }
+    return list(new LambdaQueryWrapper<SpuInfoEntity>().in(SpuInfoEntity::getId, spuIds));
   }
 
 }

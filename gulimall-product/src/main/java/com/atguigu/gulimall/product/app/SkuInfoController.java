@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import to.cart.CartItem;
+import to.cart.CartItemTo;
 import utils.R;
 
 /**
@@ -28,6 +29,7 @@ import utils.R;
  * @author tifa
  * @since 2025-05-09
  */
+@Slf4j
 @RestController
 @RequestMapping("/product/skuinfo")
 public class SkuInfoController {
@@ -62,16 +64,18 @@ public class SkuInfoController {
    * @return
    */
   @PostMapping("/paylist")
-  public List<CartItem> skuInfoEntityList(
-      @RequestBody List<CartItem> cartItemList) {
+  public List<CartItemTo> skuInfoEntityList(
+      @RequestBody List<CartItemTo> cartItemList) {
     List<SkuInfoEntity> list = skuInfoService.list(
         new LambdaQueryWrapper<SkuInfoEntity>().in(SkuInfoEntity::getSkuId,
             cartItemList.stream().map(
-                CartItem::getSkuId).toList()));
+                CartItemTo::getSkuId).toList()));
+
+
     Map<Long, SkuInfoEntity> collect = list.stream()
         .collect(Collectors.toMap(SkuInfoEntity::getSkuId, item -> item));
 
-    List<CartItem> result = cartItemList.stream().filter(a -> collect.containsKey(a.getSkuId()))
+    List<CartItemTo> result = cartItemList.stream().filter(a -> collect.containsKey(a.getSkuId()))
         .toList();
     result.forEach(item -> {
       SkuInfoEntity skuInfoEntity = collect.get(item.getSkuId());

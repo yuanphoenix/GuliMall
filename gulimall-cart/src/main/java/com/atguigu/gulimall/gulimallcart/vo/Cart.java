@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+import to.cart.CartItemTo;
 
 /**
  * 购物车
@@ -12,7 +13,7 @@ import lombok.Setter;
 public class Cart {
     @Setter
     @Getter
-    private List<to.cart.CartItem> cartItemList;
+    private List<CartItemTo> cartItemList;
     private Integer count; //购物车的商品数量
     private Integer countType; //商品的类型数量
     private BigDecimal totalAmount;
@@ -22,7 +23,7 @@ public class Cart {
 
     public Integer getCount() {
         if (cartItemList != null && !cartItemList.isEmpty()) {
-            return cartItemList.stream().mapToInt(to.cart.CartItem::getCount).sum();
+            return cartItemList.stream().mapToInt(CartItemTo::getCount).sum();
         }
         return 0;
     }
@@ -37,16 +38,16 @@ public class Cart {
             return BigDecimal.ZERO;
         }
         return this.cartItemList.stream()
-                .filter(to.cart.CartItem::getChecked)
-                .map(to.cart.CartItem::getTotalPrice)
+                .filter(CartItemTo::getChecked)
+                .map(CartItemTo::getTotalPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add).setScale(2, RoundingMode.FLOOR);
     }
 
-    public List<to.cart.CartItem> getCartItemList() {
+    public List<CartItemTo> getCartItemList() {
         return cartItemList;
     }
 
-    public void setCartItemList(List<to.cart.CartItem> cartItemList) {
+    public void setCartItemList(List<CartItemTo> cartItemList) {
         this.cartItemList = cartItemList;
     }
 

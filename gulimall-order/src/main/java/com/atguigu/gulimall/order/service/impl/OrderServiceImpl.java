@@ -4,15 +4,14 @@ import com.atguigu.gulimall.order.entity.OrderEntity;
 import com.atguigu.gulimall.order.entity.OrderItemEntity;
 import com.atguigu.gulimall.order.feign.CartFeign;
 import com.atguigu.gulimall.order.feign.MemberFeign;
-import com.atguigu.gulimall.order.feign.SkuFeign;
-import com.atguigu.gulimall.order.feign.SpuFeign;
+import com.atguigu.gulimall.order.feign.ProductFeign;
 import com.atguigu.gulimall.order.feign.WareFeign;
 import com.atguigu.gulimall.order.mapper.OrderItemMapper;
 import com.atguigu.gulimall.order.mapper.OrderMapper;
 import com.atguigu.gulimall.order.service.OrderService;
 import com.atguigu.gulimall.order.vo.MemberAddressVo;
 import com.atguigu.gulimall.order.vo.OrderConfirmVo;
-import com.atguigu.gulimall.order.vo.OrderItem;
+import com.atguigu.gulimall.order.vo.OrderItemTo;
 import com.atguigu.gulimall.order.vo.OrderSubmitVo;
 import com.atguigu.gulimall.order.vo.SpuInfoVo;
 import com.atguigu.gulimall.order.vo.SubmitOrderResponseVo;
@@ -46,8 +45,8 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 import to.MemberEntityVo;
 import to.SkuHasStockTo;
-import to.cart.CartItem;
-import to.order.LockTo;
+import to.cart.CartItemTo;
+import to.order.LockSkuTo;
 import utils.R;
 
 /**
@@ -72,15 +71,13 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
   @Autowired
   private WareFeign wareFeign;
   @Autowired
-  private SkuFeign skuFeign;
+  private ProductFeign productFeign;
 
   @Autowired
   private StringRedisTemplate stringRedisTemplate;
 
   @Autowired
   private ThreadPoolExecutor threadPoolExecutor;
-  @Autowired
-  private SpuFeign spuFeign;
 
   @Autowired
   private OrderItemMapper orderItemMapper;
@@ -121,17 +118,18 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
    * @param memberId
    * @return
    */
-  private List<OrderItem> getHasStockSkuItem(Long memberId) {
+  private List<OrderItemTo> getHasStockSkuItem(Long memberId) {
 
     /**
-     * 选出来所有被选择的商品
+     * 从购物车选出来所有被选择的商品
      */
     var cartItemsFuture = CompletableFuture.supplyAsync(
-        () -> cartFeign.getCartItems(memberId).stream().filter(CartItem::getChecked).toList(),
+        () -> cartFeign.getCartItems(memberId).stream().filter(CartItemTo::getChecked).toList(),
         threadPoolExecutor);
     //选出有库存的商品
     var skuHasFuture = cartItemsFuture.thenApplyAsync((cartItems) -> {
-      R skuHasStock = wareFeign.getSkuHasStock(cartItems.stream().map(CartItem::getSkuId).toList());
+      R skuHasStock = wareFeign.getSkuHasStock(
+          cartItems.stream().map(CartItemTo::getSkuId).toList());
       List<SkuHasStockTo> skuList = skuHasStock.getData(new TypeReference<>() {
       });
 
@@ -139,8 +137,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
           .collect(Collectors.toMap(SkuHasStockTo::getSkuId, s -> s));
     }, threadPoolExecutor);
 
-    var newestCartItemsFuture = cartItemsFuture.thenApplyAsync(
-        (cartItems -> skuFeign.skuInfoEntityList(cartItems)), threadPoolExecutor);
+    var newestCartItemsFuture =   cartItemsFuture.thenApplyAsync((cartItemTos -> productFeign.skuInfoNewestEntityList(cartItemTos)), threadPoolExecutor);
+
     // 合并库存信息和最新商品信息
 
     //注意这里只筛选出来了有货的
@@ -149,10 +147,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
             .filter(item -> skuHasStockedMap.containsKey(item.getSkuId())
                 && item.getCount() <= skuHasStockedMap.get(item.getSkuId()).getSkuNums())
             .map(a -> {
-              OrderItem orderItem = new OrderItem();
-              BeanUtils.copyProperties(a, orderItem);
-              orderItem.setHasStock(true);
-              return orderItem;
+              OrderItemTo orderItemTo = new OrderItemTo();
+              BeanUtils.copyProperties(a, orderItemTo);
+              orderItemTo.setHasStock(true);
+              return orderItemTo;
             })
             .toList()
     ).join();
@@ -254,18 +252,19 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
     }, threadPoolExecutor);
 
     CompletableFuture.allOf(addFuture, OrderItemFuture).join();
-    List<OrderItem> orderItems = OrderItemFuture.join();
+    List<OrderItemTo> orderItemTos = OrderItemFuture.join();
 
     orderEntity.setTotalAmount(
-        orderItems.stream().map(OrderItem::getTotalPrice).reduce(BigDecimal.ZERO, BigDecimal::add));
+        orderItemTos.stream().map(OrderItemTo::getTotalPrice)
+            .reduce(BigDecimal.ZERO, BigDecimal::add));
 
     //生成订单具体项
-    List<OrderItemEntity> orderItemEntities = getOrderItem(orderItems, orderId);
+    List<OrderItemEntity> orderItemEntities = getOrderItem(orderItemTos, orderId);
     submitOrderResponseVo.setOrderItemEntityList(orderItemEntities);
 
     //校验价格
     int change = computePrice(orderSubmitVo, orderItemEntities);
-    boolean aaaa = false;
+    boolean aaaa;
     if (change == 0) {
       //锁库存
       aaaa = lock(orderItemEntities);
@@ -273,32 +272,26 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
 
       //TODO 涉及到了分布式事务，还没开始写
       if (aaaa) {
-        saveOrder(orderEntity, orderItemEntities);
+        this.save(orderEntity);
+        orderItemMapper.insert(orderItemEntities);
       }
     }
 
     log.info("订单的数据{}", orderEntity);
+    submitOrderResponseVo.setCode(200);
     return submitOrderResponseVo;
   }
 
   private boolean lock(List<OrderItemEntity> orderItemEntities) {
-    List<LockTo> list = orderItemEntities.stream().map(a -> {
-      LockTo lockTo = new LockTo();
+    List<LockSkuTo> list = orderItemEntities.stream().map(a -> {
+      LockSkuTo lockTo = new LockSkuTo();
       lockTo.setSkuId(a.getSkuId());
-
       lockTo.setStockLocked(a.getSkuQuantity());
       return lockTo;
 
     }).toList();
     R lock = wareFeign.lock(list);
     return R.ok().getCode().equals(lock.getCode());
-  }
-
-
-  //保存到数据库
-  protected void saveOrder(OrderEntity orderEntity, List<OrderItemEntity> orderItemEntities) {
-    this.save(orderEntity);
-    orderItemMapper.insert(orderItemEntities);
   }
 
 
@@ -313,8 +306,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
     return nowPrice.compareTo(originalPrice);
   }
 
-  private List<OrderItemEntity> getOrderItem(List<OrderItem> orderItems, String orderId) {
-    List<OrderItemEntity> list = orderItems.stream().map(a -> {
+  private List<OrderItemEntity> getOrderItem(List<OrderItemTo> orderItemTos, String orderId) {
+    List<OrderItemEntity> list = orderItemTos.stream().map(a -> {
       OrderItemEntity orderItem = new OrderItemEntity();
       orderItem.setOrderSn(orderId);
       orderItem.setSkuId(a.getSkuId());
@@ -330,7 +323,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
       return orderItem;
     }).toList();
 
-    R spuByIds = spuFeign.getSpuByIds(list.stream().map(OrderItemEntity::getSpuId).toList());
+    R spuByIds = productFeign.getSpuByIds(list.stream().map(OrderItemEntity::getSpuId).toList());
     List<SpuInfoVo> data = spuByIds.getData(new TypeReference<>() {
     });
     Map<Long, SpuInfoVo> collect = data.stream()

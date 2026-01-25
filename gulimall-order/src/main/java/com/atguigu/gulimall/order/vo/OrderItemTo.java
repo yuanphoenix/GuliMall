@@ -1,18 +1,21 @@
 package com.atguigu.gulimall.order.vo;
 
-import to.cart.CartItem;
+import to.cart.CartItemTo;
 
-public class OrderItem extends CartItem {
+public class OrderItemTo extends CartItemTo {
+
 
 
   //是否有库存
   private Boolean hasStock;
 
-  public Boolean getHasStock() {
-    return hasStock != null && hasStock;
-  }
 
   public void setHasStock(Boolean hasStock) {
     this.hasStock = hasStock;
   }
+
+  public Boolean getHasStock() {
+    return hasStock != null && hasStock;
+  }
+
 }

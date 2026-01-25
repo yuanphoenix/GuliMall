@@ -5,6 +5,7 @@ import com.atguigu.gulimall.product.vo.SpuPageVo;
 import com.atguigu.gulimall.product.vo.spuinfo.SpuInfoVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import java.util.List;
 
 /**
  * @author tifa
@@ -24,4 +25,6 @@ public interface SpuInfoService extends IService<SpuInfoEntity> {
   IPage<SpuInfoEntity> pageWithCondition(SpuPageVo pageDTO);
 
   void up(Long id);
+
+  List<SpuInfoEntity> listSpuByIds(List<Long> spuIds);
 }

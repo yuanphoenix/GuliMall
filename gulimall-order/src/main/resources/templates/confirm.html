@@ -753,15 +753,15 @@
       body: JSON.stringify(
           postData
       )
-    })
-    .then(res => res.json())
-    .then(data => {
-      if (data.code === 0) {
-        window.location.href = "http://order.gulimall.com/pay.html";
+    }).then(res => res.json())
+    .then(({code, data: resData}) => {
+      if (code === 0 && resData.code === 200) {
+        orderSn = resData.orderEntity.orderSn;
+        window.location.href = "http://order.gulimall.com/pay.html?orderSn=" + orderSn;
       } else {
         window.location.href = window.location.href;
       }
-    })
+    });
   }
 
   document.addEventListener("DOMContentLoaded", function () {
