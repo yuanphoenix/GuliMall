@@ -3,7 +3,7 @@ package com.atguigu.gulimall.order.vo;
 import java.math.BigDecimal;
 import java.util.List;
 import lombok.Data;
-import to.cart.CartItem;
+import to.cart.CartItemTo;
 
 @Data
 public class OrderConfirmVo {
@@ -12,7 +12,7 @@ public class OrderConfirmVo {
   List<MemberAddressVo> address;
 
   //所有选中的购物项目
-  List<OrderItem> items;
+  List<OrderItemTo> items;
 
   //发票记录
   //优惠券
@@ -27,7 +27,7 @@ public class OrderConfirmVo {
 
 
   public BigDecimal getTotal() {
-    return items.stream().map(CartItem::getTotalPrice)
+    return items.stream().map(CartItemTo::getTotalPrice)
         .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
 }

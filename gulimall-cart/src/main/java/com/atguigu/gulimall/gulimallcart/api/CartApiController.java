@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import to.MemberEntityVo;
-import to.cart.CartItem;
+import to.cart.CartItemTo;
 import utils.R;
 
 @Slf4j
@@ -25,13 +25,13 @@ public class CartApiController {
   private CartService cartService;
 
   @PostMapping("/changeCart")
-  public R checkCart(@RequestBody CartItem cartItem, @LoginUser MemberEntityVo memberEntityVo) {
+  public R checkCart(@RequestBody CartItemTo cartItem, @LoginUser MemberEntityVo memberEntityVo) {
     Boolean result = cartService.changeCart(cartItem, memberEntityVo);
     return Boolean.TRUE.equals(result) ? R.ok() : R.error();
   }
 
   @PostMapping("/deleteBySkuIds")
-  public R deleteBySkuIds(@RequestBody List<CartItem> cartItemList,
+  public R deleteBySkuIds(@RequestBody List<CartItemTo> cartItemList,
       @LoginUser MemberEntityVo memberEntityVo) {
     Boolean result = cartService.deleteByItem(cartItemList, memberEntityVo);
     return Boolean.TRUE.equals(result) ? R.ok() : R.error();
@@ -39,7 +39,7 @@ public class CartApiController {
 
 
   @GetMapping("/getCartItems/{memberId}")
-  public List<CartItem> getCartItems(@PathVariable("memberId") Long memberId) {
+  public List<CartItemTo> getCartItems(@PathVariable("memberId") Long memberId) {
     MemberEntityVo memberEntityVo = new MemberEntityVo();
     memberEntityVo.setId(memberId);
     Cart cart = cartService.getCart(memberEntityVo);

@@ -1,13 +1,12 @@
 package to.cart;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.math.BigDecimal;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CartItem {
+public class CartItemTo {
 
   private Long skuId;
   private String title;
@@ -16,7 +15,6 @@ public class CartItem {
   private List<String> skuAttr;
   private BigDecimal price;
   private Integer count; //计数
-  @JsonIgnore
   private Long spuId;
 
   private BigDecimal totalPrice;
@@ -98,4 +96,18 @@ public class CartItem {
   }
 
 
+  @Override
+  public String toString() {
+    return "CartItemTo{" +
+        "skuId=" + skuId +
+        ", title='" + title + '\'' +
+        ", checked=" + checked +
+        ", image='" + image + '\'' +
+        ", skuAttr=" + skuAttr +
+        ", price=" + price +
+        ", count=" + count +
+        ", spuId=" + spuId +
+        ", totalPrice=" + totalPrice +
+        '}';
+  }
 }

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import to.SkuHasStockTo;
-import to.order.LockTo;
+import to.order.LockSkuTo;
 import utils.R;
 
 /**
@@ -50,7 +50,7 @@ public class WareSkuController {
 
 
   @PostMapping("/lockStcok")
-  public R lockStock(@RequestBody List<LockTo> lockToList) {
+  public R lockStock(@RequestBody List<LockSkuTo> lockToList) {
     boolean result = wareSkuService.lockStock(lockToList);
     return result ? R.ok() : R.error();
   }

@@ -3,8 +3,8 @@ package com.atguigu.gulimall.gulimallcart.service.impl;
 import com.atguigu.gulimall.gulimallcart.feign.SkuFeignService;
 import com.atguigu.gulimall.gulimallcart.service.CartService;
 import com.atguigu.gulimall.gulimallcart.vo.Cart;
-import to.cart.CartItem;
 import com.atguigu.gulimall.gulimallcart.vo.SkuInfoEntity;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import java.math.BigDecimal;
@@ -15,6 +15,7 @@ import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import to.MemberEntityVo;
+import to.cart.CartItemTo;
 import utils.R;
 
 @Slf4j
@@ -36,23 +37,25 @@ public class CartServiceImpl implements CartService {
 
 
   @Override
-  public CartItem addCart(MemberEntityVo member, Long skuId, Integer num) {
+  public CartItemTo addCart(MemberEntityVo member, Long skuId, Integer num) {
     R info = skuFeignService.info(skuId);
     if (info == null) {
       return null;
     }
-    var skuEntity = objectMapper.convertValue(info.get("data"), SkuInfoEntity.class);
+    SkuInfoEntity skuEntity = info.getData(new TypeReference<>() {
+    });
     Object object = this.getBoundGeoOperations(member)
         .get(skuEntity.getSkuId().toString());
-    CartItem cartItem = new CartItem();
+    CartItemTo cartItem = new CartItemTo();
     cartItem.setTitle(skuEntity.getSkuTitle());
     cartItem.setSkuId(skuId);
     cartItem.setChecked(true);
+    cartItem.setSpuId(skuEntity.getSpuId());
     cartItem.setImage(skuEntity.getSkuDefaultImg());
     cartItem.setPrice(skuEntity.getPrice());
     if (object != null) {
 // 如果用户已经加过购物车了，那么只要更新数量就可以
-      var oldCartItem = gson.fromJson(object.toString(), CartItem.class);
+      var oldCartItem = gson.fromJson(object.toString(), CartItemTo.class);
       cartItem.setCount(oldCartItem.getCount() + num);
     } else {
       cartItem.setCount(num);
@@ -63,10 +66,10 @@ public class CartServiceImpl implements CartService {
   }
 
   @Override
-  public CartItem getCartItemBySkuId(MemberEntityVo member, Long skuId) {
+  public CartItemTo getCartItemBySkuId(MemberEntityVo member, Long skuId) {
     Object object = this.getBoundGeoOperations(member).get(skuId.toString());
     if (Objects.nonNull(object)) {
-      return gson.fromJson(object.toString(), CartItem.class);
+      return gson.fromJson(object.toString(), CartItemTo.class);
     }
     return null;
   }
@@ -74,8 +77,8 @@ public class CartServiceImpl implements CartService {
   @Override
   public Cart getCart(MemberEntityVo member) {
     List<Object> values = this.getBoundGeoOperations(member).values();
-    List<CartItem> list = Objects.requireNonNullElse(values, List.of(new Cart())).stream()
-        .map(a -> gson.fromJson(a.toString(), CartItem.class)).toList();
+    List<CartItemTo> list = Objects.requireNonNullElse(values, List.of(new Cart())).stream()
+        .map(a -> gson.fromJson(a.toString(), CartItemTo.class)).toList();
     Cart cart = new Cart();
     cart.setCartItemList(list);
     cart.setReduce(BigDecimal.ZERO);
@@ -83,7 +86,7 @@ public class CartServiceImpl implements CartService {
   }
 
   @Override
-  public Boolean changeCart(CartItem cartItem, MemberEntityVo member) {
+  public Boolean changeCart(CartItemTo cartItem, MemberEntityVo member) {
 
     if (cartItem == null || cartItem.getSkuId() == null) {
       return false;
@@ -93,7 +96,7 @@ public class CartServiceImpl implements CartService {
     if (Objects.isNull(object)) {
       return false;
     }
-    CartItem originalCartItem = gson.fromJson(object.toString(), CartItem.class);
+    CartItemTo originalCartItem = gson.fromJson(object.toString(), CartItemTo.class);
     originalCartItem.setChecked(Boolean.TRUE.equals(cartItem.getChecked()));
     originalCartItem.setCount(
         cartItem.getCount() == null ? originalCartItem.getCount() : cartItem.getCount());
@@ -103,9 +106,10 @@ public class CartServiceImpl implements CartService {
   }
 
   @Override
-  public Boolean deleteByItem(List<CartItem> cartItemList, MemberEntityVo memberEntityVo) {
+  public Boolean deleteByItem(List<CartItemTo> cartItemList, MemberEntityVo memberEntityVo) {
     this.getBoundGeoOperations(memberEntityVo)
-        .delete(cartItemList.stream().map(CartItem::getSkuId).map(String::valueOf).toArray(String[]::new));
+        .delete(cartItemList.stream().map(CartItemTo::getSkuId).map(String::valueOf)
+            .toArray(String[]::new));
     return true;
   }
 

@@ -1,15 +1,14 @@
 package com.atguigu.gulimall.ware.service.impl;
 
-import com.atguigu.gulimall.ware.entity.WareOrderTaskDetailEntity;
 import com.atguigu.gulimall.ware.entity.WareSkuEntity;
 import com.atguigu.gulimall.ware.mapper.WareOrderTaskDetailMapper;
+import com.atguigu.gulimall.ware.mapper.WareOrderTaskMapper;
 import com.atguigu.gulimall.ware.mapper.WareSkuMapper;
 import com.atguigu.gulimall.ware.service.WareSkuService;
 import com.atguigu.gulimall.ware.vo.WarePageVo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.ObjectUtils;
 import to.SkuHasStockTo;
-import to.order.LockTo;
+import to.order.LockSkuTo;
 import utils.PageUtils;
 
 /**
@@ -28,6 +27,11 @@ import utils.PageUtils;
 @Service
 public class WareSkuServiceImpl extends ServiceImpl<WareSkuMapper, WareSkuEntity>
     implements WareSkuService {
+
+
+  @Autowired
+  private WareOrderTaskMapper wareOrderTaskMapper;
+
 
   @Autowired
   private WareOrderTaskDetailMapper wareOrderTaskDetailMapper;
@@ -65,6 +69,7 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuMapper, WareSkuEntity
    * @param skuIds 被查询的skuid列表
    * @return
    */
+  @Transactional(readOnly = true)
   @Override
   public List<SkuHasStockTo> getSkuHasStock(List<Long> skuIds) {
     skuIds = skuIds.stream().distinct().toList();
@@ -73,8 +78,7 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuMapper, WareSkuEntity
 
   @Transactional
   @Override
-  public boolean lockStock(List<LockTo> lockToList) {
-    List<WareOrderTaskDetailEntity> wareOrderTaskDetailEntityList = new ArrayList<>();
+  public boolean lockStock(List<LockSkuTo> lockToList) {
     for (var lockTo : lockToList) {
 //      检查出来有库存的仓库，可能有多个
       boolean success = false;
