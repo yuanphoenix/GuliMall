@@ -28,12 +28,4 @@ public interface OrderService extends IService<OrderEntity> {
    * @return
    */
   SubmitOrderResponseVo submit(OrderSubmitVo orderSubmitVo, MemberEntityVo memberEntityVo);
-
-  /**
-   * 准备付款信息
-   * @param orderSn 订单号
-   * @param memberEntityVo 获取登录者信息
-   * @return
-   */
-  OrderEntity preparePayInfo(String orderSn, MemberEntityVo memberEntityVo);
 }

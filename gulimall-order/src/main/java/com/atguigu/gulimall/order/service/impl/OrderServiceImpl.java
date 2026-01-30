@@ -15,7 +15,6 @@ import com.atguigu.gulimall.order.vo.OrderItemTo;
 import com.atguigu.gulimall.order.vo.OrderSubmitVo;
 import com.atguigu.gulimall.order.vo.SpuInfoVo;
 import com.atguigu.gulimall.order.vo.SubmitOrderResponseVo;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -33,7 +32,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.ReturnedMessage;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -139,8 +137,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
           .collect(Collectors.toMap(SkuHasStockTo::getSkuId, s -> s));
     }, threadPoolExecutor);
 
-    var newestCartItemsFuture = cartItemsFuture.thenApplyAsync(
-        (cartItemTos -> productFeign.skuInfoNewestEntityList(cartItemTos)), threadPoolExecutor);
+    var newestCartItemsFuture =   cartItemsFuture.thenApplyAsync((cartItemTos -> productFeign.skuInfoNewestEntityList(cartItemTos)), threadPoolExecutor);
 
     // 合并库存信息和最新商品信息
 
@@ -283,18 +280,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
     log.info("订单的数据{}", orderEntity);
     submitOrderResponseVo.setCode(200);
     return submitOrderResponseVo;
-  }
-
-  @Override
-  public OrderEntity preparePayInfo(String orderSn, MemberEntityVo memberEntityVo) {
-
-    OrderEntity orderEntity = this.baseMapper.selectOne(
-        new LambdaQueryWrapper<OrderEntity>().eq(OrderEntity::getOrderSn, orderSn));
-    if (orderEntity == null || ObjectUtils.notEqual(memberEntityVo.getId(),
-        orderEntity.getMemberId())) {
-      return null;
-    }
-    return orderEntity;
   }
 
   private boolean lock(List<OrderItemEntity> orderItemEntities) {
