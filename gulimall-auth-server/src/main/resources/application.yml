@@ -16,5 +16,18 @@ spring:
   jackson:
     serialization:
       write-dates-as-timestamps: false
+
+seata:
+  enabled: true
+  tx-service-group: default_tx_group
+  registry:
+    type: nacos
+    nacos:
+      server-addr: 10.200.200.1:8848
+      namespace:
+  service:
+    vgroup-mapping:
+      default_tx_group: default
+
 server:
   port: 20000

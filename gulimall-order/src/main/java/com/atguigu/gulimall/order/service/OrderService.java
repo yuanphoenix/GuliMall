@@ -28,4 +28,6 @@ public interface OrderService extends IService<OrderEntity> {
    * @return
    */
   SubmitOrderResponseVo submit(OrderSubmitVo orderSubmitVo, MemberEntityVo memberEntityVo);
+
+  OrderEntity preparePayInfo(String orderSn, MemberEntityVo memberEntityVo);
 }

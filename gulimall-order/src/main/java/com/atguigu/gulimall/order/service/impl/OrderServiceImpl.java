@@ -20,6 +20,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.rabbitmq.client.Channel;
 import constant.OrderConstant;
+import io.seata.spring.annotation.GlobalTransactional;
 import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -137,7 +138,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
           .collect(Collectors.toMap(SkuHasStockTo::getSkuId, s -> s));
     }, threadPoolExecutor);
 
-    var newestCartItemsFuture =   cartItemsFuture.thenApplyAsync((cartItemTos -> productFeign.skuInfoNewestEntityList(cartItemTos)), threadPoolExecutor);
+    var newestCartItemsFuture = cartItemsFuture.thenApplyAsync(
+        (cartItemTos -> productFeign.skuInfoNewestEntityList(cartItemTos)), threadPoolExecutor);
 
     // 合并库存信息和最新商品信息
 
@@ -186,6 +188,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
     return confirmVo;
   }
 
+  @GlobalTransactional
   @Override
   public SubmitOrderResponseVo submit(OrderSubmitVo orderSubmitVo, MemberEntityVo memberEntityVo) {
 
@@ -279,7 +282,15 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
 
     log.info("订单的数据{}", orderEntity);
     submitOrderResponseVo.setCode(200);
+//    int a = 10 / 0;
+
     return submitOrderResponseVo;
+  }
+
+  @Override
+  public OrderEntity preparePayInfo(String orderSn, MemberEntityVo memberEntityVo) {
+    //TODO 下一步要写的
+    return null;
   }
 
   private boolean lock(List<OrderItemEntity> orderItemEntities) {
