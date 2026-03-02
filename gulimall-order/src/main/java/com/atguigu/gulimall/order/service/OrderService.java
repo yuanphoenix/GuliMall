@@ -19,6 +19,8 @@ public interface OrderService extends IService<OrderEntity> {
   /**
    * 订单从购物车提交后，这个方法可以用来查找。从redis购物车中获取哪些数据被check了。
    * 然后从feign中获取最新价格，比较价格是否发生了变动。如果发生了变动那么就失败。
+   *
+   *
    * 从库存微服务中锁定库存。在订单为服务中插入数据。
    *
    * 涉及redis的lua原子操作和分布式事务

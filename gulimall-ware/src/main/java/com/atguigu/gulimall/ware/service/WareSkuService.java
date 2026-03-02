@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import java.util.List;
 import to.SkuHasStockTo;
-import to.order.LockSkuTo;
+import to.ware.WareTo;
 
 /**
  * @author tifa
@@ -18,12 +18,19 @@ public interface WareSkuService extends IService<WareSkuEntity> {
   IPage<WareSkuEntity> pageWithCondition(WarePageVo pageDTO);
 
 
+  /**
+   * 增加库存
+   *
+   * @param wareId
+   * @param skuId
+   * @param skuNum
+   */
   void addStock(Long wareId, Long skuId, Integer skuNum);
 
   List<SkuHasStockTo> getSkuHasStock(List<Long> skuIds);
 
   // 锁库存
-  boolean lockStock(List<LockSkuTo> lockTo);
+  boolean lockStock(WareTo lockTo);
 
 
   /**
@@ -31,7 +38,7 @@ public interface WareSkuService extends IService<WareSkuEntity> {
    * <p>
    * 下订单，过期没有支付，系统自动取消。 用户手动取消库存 为了保证一致性而取消
    */
-  void unlockStock();
+  void unlockStock(WareTo wareTo);
 
 
 }

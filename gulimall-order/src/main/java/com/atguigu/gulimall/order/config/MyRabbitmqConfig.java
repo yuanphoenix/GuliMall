@@ -1,6 +1,7 @@
 package com.atguigu.gulimall.order.config;
 
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.Binding.DestinationType;
 import org.springframework.amqp.core.Exchange;
@@ -11,6 +12,7 @@ import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+@Slf4j
 @Configuration
 public class MyRabbitmqConfig {
 
@@ -18,7 +20,6 @@ public class MyRabbitmqConfig {
   public MessageConverter messageConverter() {
     return new Jackson2JsonMessageConverter();
   }
-
 
   /**
    * 死信队列
@@ -33,7 +34,7 @@ public class MyRabbitmqConfig {
     return new Queue("order.delay.queue", true, false, false,
         Map.of("x-dead-letter-exchange", "order-event-exchange",
             "x-dead-letter-routing-key", "order.release.order",
-            "x-message-ttl", 60000));
+            "x-message-ttl", 10000 * 6)); //1分钟
   }
 
   @Bean
@@ -44,7 +45,7 @@ public class MyRabbitmqConfig {
   @Bean
   public Exchange orderEventExchange() {
 //    	public TopicExchange(String name, boolean durable, boolean autoDelete, Map<String, Object> arguments)
-    return new TopicExchange("order-event-exchange", false, false);
+    return new TopicExchange("order-event-exchange", true, false);
   }
 
   @Bean

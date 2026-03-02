@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import to.SkuHasStockTo;
-import to.order.LockSkuTo;
+import to.ware.WareItemTo;
 
 /**
  * @author tifa
@@ -21,7 +21,9 @@ public interface WareSkuMapper extends BaseMapper<WareSkuEntity> {
 
   List<SkuHasStockTo> hasStock(@Param("skuIds") List<Long> skuIds);
 
-  int lockSku(@Param("lockTo") LockSkuTo lockTo,@Param("wareId") Long wareId);
+  int lockSku(@Param("lockTo") WareItemTo lockTo,@Param("wareId") Long wareId);
+
+  void unlock(Long skuId, Long wareId, Integer skuNum);
 }
 
 

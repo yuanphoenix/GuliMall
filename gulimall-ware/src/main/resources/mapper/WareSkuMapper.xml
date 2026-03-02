@@ -29,10 +29,17 @@
 
   <update id="lockSku" >
     update wms_ware_sku
-    set stock_locked =#{lockTo.stockLocked} + stock_locked
+    set stock_locked =#{lockTo.skuNum} + stock_locked
     where sku_id = #{lockTo.skuId}
       and ware_id = #{wareId}
-      and stock - #{lockTo.stockLocked} - stock_locked >= 0;
+      and stock - #{lockTo.skuNum} - stock_locked >= 0;
+  </update>
+  <update id="unlock">
+    update wms_ware_sku
+    set stock_locked = stock_locked - #{skuNum}
+    where sku_id = #{skuId}
+      and ware_id = #{wareId}
+
   </update>
 
   <!-- 根据skuids 判断各个sku是否还有库存 -->

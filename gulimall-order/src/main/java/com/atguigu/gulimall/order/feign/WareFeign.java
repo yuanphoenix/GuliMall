@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import to.order.LockSkuTo;
+import to.ware.WareTo;
 import utils.R;
 
 @FeignClient("gulimall-ware")
@@ -15,5 +15,8 @@ public interface WareFeign {
 
 
   @PostMapping("/ware/waresku/lockStcok")
-   R lock(@RequestBody List<LockSkuTo> lockToList);
+  R lock(@RequestBody WareTo lockToList);
+
+  @PostMapping("/ware/waresku/unlock")
+  R unlock(@RequestBody WareTo lockToList);
 }

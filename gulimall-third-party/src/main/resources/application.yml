@@ -10,5 +10,3 @@ spring:
 
 server:
   port: 30009
-
-

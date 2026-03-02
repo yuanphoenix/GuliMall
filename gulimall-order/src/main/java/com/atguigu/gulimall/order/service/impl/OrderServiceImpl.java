@@ -20,7 +20,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.rabbitmq.client.Channel;
 import constant.OrderConstant;
-import io.seata.spring.annotation.GlobalTransactional;
 import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -34,12 +33,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
-import org.springframework.amqp.core.ReturnedMessage;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.rabbit.core.RabbitTemplate.ReturnsCallback;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -48,6 +44,8 @@ import to.MemberEntityVo;
 import to.SkuHasStockTo;
 import to.cart.CartItemTo;
 import to.order.LockSkuTo;
+import to.ware.WareItemTo;
+import to.ware.WareTo;
 import utils.R;
 
 /**
@@ -60,28 +58,34 @@ import utils.R;
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
     implements OrderService {
 
-  @Autowired
-  private RabbitTemplate rabbitTemplate;
+  private final RabbitTemplate rabbitTemplate;
 
-  @Autowired
-  private MemberFeign memberFeign;
+  private final MemberFeign memberFeign;
 
-  @Autowired
-  private CartFeign cartFeign;
+  private final CartFeign cartFeign;
 
-  @Autowired
-  private WareFeign wareFeign;
-  @Autowired
-  private ProductFeign productFeign;
+  private final WareFeign wareFeign;
+  private final ProductFeign productFeign;
 
-  @Autowired
-  private StringRedisTemplate stringRedisTemplate;
+  private final StringRedisTemplate stringRedisTemplate;
 
-  @Autowired
-  private ThreadPoolExecutor threadPoolExecutor;
+  private final ThreadPoolExecutor threadPoolExecutor;
 
-  @Autowired
-  private OrderItemMapper orderItemMapper;
+  private final OrderItemMapper orderItemMapper;
+
+  public OrderServiceImpl(RabbitTemplate rabbitTemplate, MemberFeign memberFeign,
+      CartFeign cartFeign, WareFeign wareFeign, ProductFeign productFeign,
+      StringRedisTemplate stringRedisTemplate, ThreadPoolExecutor threadPoolExecutor,
+      OrderItemMapper orderItemMapper) {
+    this.rabbitTemplate = rabbitTemplate;
+    this.memberFeign = memberFeign;
+    this.cartFeign = cartFeign;
+    this.wareFeign = wareFeign;
+    this.productFeign = productFeign;
+    this.stringRedisTemplate = stringRedisTemplate;
+    this.threadPoolExecutor = threadPoolExecutor;
+    this.orderItemMapper = orderItemMapper;
+  }
 
   @RabbitListener(queues = {"hello"})
   void listen(Message message, @Payload OrderEntity orderEntity, Channel channel)
@@ -97,19 +101,20 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
    */
   @PostConstruct
   public void initRabbitTemplate() {
-    rabbitTemplate.setConfirmCallback((correlationData, ack, cause) -> {
-      System.out.println("confirm..." + correlationData);
-      System.out.println("ack..." + ack);
-      System.out.println("失败原因..." + cause);
-    });
 
-//    当生产者的消息没有到达队列，才会回调这个
-    rabbitTemplate.setReturnsCallback(new ReturnsCallback() {
-      @Override
-      public void returnedMessage(ReturnedMessage returned) {
-        System.out.println(returned);
+//    消息是否成功到达 Exchange
+    rabbitTemplate.setConfirmCallback((correlationData, ack, cause) -> {
+      log.info("confirm{}", correlationData);
+      if (ack) {
+        log.info("ack为{}", true);
+      } else {
+        log.error("失败原因{}", cause);
       }
     });
+
+//    当生产者的消息到达交换机却没有到达队列，才会回调这个
+    rabbitTemplate.setReturnsCallback(
+        returned -> log.error("消息到达交换机却没有到达队列{}", returned));
   }
 
 
@@ -188,11 +193,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
     return confirmVo;
   }
 
-  @GlobalTransactional
+  //最难的分布式事务方法
   @Override
   public SubmitOrderResponseVo submit(OrderSubmitVo orderSubmitVo, MemberEntityVo memberEntityVo) {
-
     SubmitOrderResponseVo submitOrderResponseVo = new SubmitOrderResponseVo();
+    submitOrderResponseVo.setCode(0); //0是快速失败
 
     String orderToken = orderSubmitVo.getOrderToken();
     String token = orderSubmitVo.getToken();
@@ -209,9 +214,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
         Collections.singletonList(OrderConstant.USER_ORDER_TOKEN_PREFIX + orderToken),
         token
     );
+
     if (result != 1L) {
       //如果前端传过来的token部队，那么快速失败。
-      submitOrderResponseVo.setCode(0);
       return submitOrderResponseVo;
     }
 
@@ -265,25 +270,24 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
     List<OrderItemEntity> orderItemEntities = getOrderItem(orderItemTos, orderId);
     submitOrderResponseVo.setOrderItemEntityList(orderItemEntities);
 
-    //校验价格
+    //校验价格，因为价格可能会在瞬间内变动
+
     int change = computePrice(orderSubmitVo, orderItemEntities);
-    boolean aaaa;
+    boolean hasLockStock;
+    //如果价格没有发生变化
     if (change == 0) {
       //锁库存
-      aaaa = lock(orderItemEntities);
+      hasLockStock = lock(orderItemEntities, orderEntity);
       //保存
-
-      //TODO 涉及到了分布式事务，还没开始写
-      if (aaaa) {
+      if (hasLockStock) {
         this.save(orderEntity);
         orderItemMapper.insert(orderItemEntities);
+        submitOrderResponseVo.setCode(200);
       }
     }
-
     log.info("订单的数据{}", orderEntity);
-    submitOrderResponseVo.setCode(200);
-//    int a = 10 / 0;
-
+    //延时队列来取消订单
+    rabbitTemplate.convertAndSend("order-event-exchange", "order.release.order", orderEntity);
     return submitOrderResponseVo;
   }
 
@@ -293,7 +297,21 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
     return null;
   }
 
-  private boolean lock(List<OrderItemEntity> orderItemEntities) {
+  /**
+   * 调用仓库服务来进行锁库存
+   *
+   * @param orderItemEntities
+   * @param orderEntity
+   * @return
+   */
+  private boolean lock(List<OrderItemEntity> orderItemEntities, OrderEntity orderEntity) {
+    WareTo wareTo = new WareTo();
+    wareTo.setOrderSn(orderEntity.getOrderSn());
+
+    wareTo.setConsignee(orderEntity.getReceiverName());
+    wareTo.setConsigneeTel(orderEntity.getReceiverPhone());
+    wareTo.setDeliveryAddress(orderEntity.getReceiverDetailAddress());
+
     List<LockSkuTo> list = orderItemEntities.stream().map(a -> {
       LockSkuTo lockTo = new LockSkuTo();
       lockTo.setSkuId(a.getSkuId());
@@ -301,7 +319,16 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
       return lockTo;
 
     }).toList();
-    R lock = wareFeign.lock(list);
+    List<WareItemTo> wareItemToList = list.stream().map(a -> {
+      WareItemTo wareItemTo = new WareItemTo();
+      wareItemTo.setLockStatus(1);
+      wareItemTo.setSkuId(a.getSkuId());
+      wareItemTo.setSkuNum(a.getStockLocked());
+      return wareItemTo;
+    }).toList();
+    wareTo.setWareItemToList(wareItemToList);
+
+    R lock = wareFeign.lock(wareTo);
     return R.ok().getCode().equals(lock.getCode());
   }
 

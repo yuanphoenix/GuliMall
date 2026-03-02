@@ -4,8 +4,10 @@ import annotation.LoginUser;
 import com.atguigu.gulimall.order.entity.OrderEntity;
 import com.atguigu.gulimall.order.service.OrderService;
 import com.atguigu.gulimall.order.vo.OrderConfirmVo;
+import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.amqp.rabbit.connection.CorrelationData;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,8 +20,14 @@ import utils.R;
 @Controller
 public class WebController {
 
-  @Autowired
-  private OrderService orderService;
+  private final RabbitTemplate rabbitTemplate;
+
+  private final OrderService orderService;
+
+  public WebController(OrderService orderService, RabbitTemplate rabbitTemplate) {
+    this.orderService = orderService;
+    this.rabbitTemplate = rabbitTemplate;
+  }
 
 
   @GetMapping("/confirm.html")
@@ -56,5 +64,17 @@ public class WebController {
     model.addAttribute("orderSn", orderSn);
     model.addAttribute("orderEntity", orderEntity);
     return "pay";
+  }
+
+
+  @GetMapping("/test")
+  public String createOrderTest() {
+    //订单下单成功
+    OrderEntity orderEntity = new OrderEntity();
+    orderEntity.setOrderSn(UUID.randomUUID().toString());
+    //给mq发消息
+    rabbitTemplate.convertAndSend("order-event-exchange", "order.create.order", orderEntity,
+        new CorrelationData(UUID.randomUUID().toString()));
+    return "";
   }
 }

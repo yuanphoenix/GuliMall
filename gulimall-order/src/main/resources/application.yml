@@ -41,4 +41,3 @@ spring:
     redis:
       host: 10.200.200.1
       port: 6379
-
