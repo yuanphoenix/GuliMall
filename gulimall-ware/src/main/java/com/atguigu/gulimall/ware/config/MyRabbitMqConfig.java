@@ -29,7 +29,7 @@ public class MyRabbitMqConfig {
     return new Queue("stock-delay-queue", true, false, false,
         Map.of("x-dead-letter-exchange", "stock-event-exchange",
             "x-dead-letter-routing-key", "stock.release.stock",
-            "x-message-ttl", 6000 * 30));
+            "x-message-ttl", 60000 * 1));
   }
 
 
@@ -45,13 +45,13 @@ public class MyRabbitMqConfig {
 
   @Bean
   public Binding stockCreateBind() {
-    return new Binding("stock.delay.queue", DestinationType.QUEUE, "stock-event-exchange"
+    return new Binding("stock-delay-queue", DestinationType.QUEUE, "stock-event-exchange"
         , "stock.delay.stock", null);
   }
 
   @Bean
   public Binding stockReleaseBind() {
-    return new Binding("stock.release.queue", DestinationType.QUEUE, "stock-event-exchange"
+    return new Binding("stock-release-queue", DestinationType.QUEUE, "stock-event-exchange"
         , "stock.release.stock", null);
   }
 

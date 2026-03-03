@@ -287,7 +287,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
     }
     log.info("订单的数据{}", orderEntity);
     //延时队列来取消订单
-    rabbitTemplate.convertAndSend("order-event-exchange", "order.release.order", orderEntity);
+    rabbitTemplate.convertAndSend("order-event-exchange", "order.create.order", orderEntity);
     return submitOrderResponseVo;
   }
 
