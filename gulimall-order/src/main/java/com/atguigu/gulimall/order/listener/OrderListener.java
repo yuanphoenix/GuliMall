@@ -24,6 +24,14 @@ public class OrderListener {
     this.rabbitTemplate = rabbitTemplate;
   }
 
+  /**
+   * 通过延时队列关闭订单
+   *
+   * @param orderEntity
+   * @param message
+   * @param channel
+   * @throws IOException
+   */
   @RabbitListener(queues = "order.release.queue")
   public void releaseOrder(OrderEntity orderEntity, Message message, Channel channel)
       throws IOException {
@@ -32,7 +40,7 @@ public class OrderListener {
             .eq(OrderEntity::getStatus, 0)
             .eq(OrderEntity::getDeleteStatus, 0)
             .eq(OrderEntity::getOrderSn, orderEntity.getOrderSn())
-            .set(OrderEntity::getDeleteStatus, 1));
+            .set(OrderEntity::getStatus, 4));
     if (!update) {
       try {
         log.info("没有这个订单，或者之前状态已经修改过了");
@@ -45,6 +53,8 @@ public class OrderListener {
 
     WareTo wareTo = new WareTo();
     wareTo.setOrderSn(orderEntity.getOrderSn());
+    //这个在极端情况下会发不出去
+    //每一个消息都可以做好日志记录（给数据库保存每一个消息的详细信息）
     rabbitTemplate.convertAndSend("stock-event-exchange", "stock.release.stock", wareTo);
     try {
       channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);

@@ -1,5 +1,12 @@
 package com.atguigu.gulimall.order.service.impl;
 
+import com.alipay.api.AlipayApiException;
+import com.alipay.api.AlipayClient;
+import com.alipay.api.AlipayConfig;
+import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.domain.AlipayTradePagePayModel;
+import com.alipay.api.request.AlipayTradePagePayRequest;
+import com.alipay.api.response.AlipayTradePagePayResponse;
 import com.atguigu.gulimall.order.entity.OrderEntity;
 import com.atguigu.gulimall.order.entity.OrderItemEntity;
 import com.atguigu.gulimall.order.feign.CartFeign;
@@ -15,17 +22,19 @@ import com.atguigu.gulimall.order.vo.OrderItemTo;
 import com.atguigu.gulimall.order.vo.OrderSubmitVo;
 import com.atguigu.gulimall.order.vo.SpuInfoVo;
 import com.atguigu.gulimall.order.vo.SubmitOrderResponseVo;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.rabbitmq.client.Channel;
 import constant.OrderConstant;
-import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -93,28 +102,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
     System.out.println("消费者" + orderEntity);
     long deliveryTag = message.getMessageProperties().getDeliveryTag();
     channel.basicAck(deliveryTag, false);
-  }
-
-
-  /**
-   * 确认回调
-   */
-  @PostConstruct
-  public void initRabbitTemplate() {
-
-//    消息是否成功到达 Exchange
-    rabbitTemplate.setConfirmCallback((correlationData, ack, cause) -> {
-      log.info("confirm{}", correlationData);
-      if (ack) {
-        log.info("ack为{}", true);
-      } else {
-        log.error("失败原因{}", cause);
-      }
-    });
-
-//    当生产者的消息到达交换机却没有到达队列，才会回调这个
-    rabbitTemplate.setReturnsCallback(
-        returned -> log.error("消息到达交换机却没有到达队列{}", returned));
   }
 
 
@@ -293,8 +280,80 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
 
   @Override
   public OrderEntity preparePayInfo(String orderSn, MemberEntityVo memberEntityVo) {
-    //TODO 下一步要写的
-    return null;
+
+    OrderEntity one = getOne(
+        new LambdaQueryWrapper<OrderEntity>().eq(OrderEntity::getOrderSn, orderSn)
+            .eq(OrderEntity::getStatus, 0)
+            .eq(OrderEntity::getDeleteStatus, 0));
+    if (one == null || !Objects.equals(memberEntityVo.getUsername(), one.getMemberUsername())) {
+      return null;
+    }
+    return one;
+  }
+
+  @Override
+  public String pay(String orderSn, MemberEntityVo memberEntityVo) {
+    OrderEntity orderEntity = preparePayInfo(orderSn, memberEntityVo);
+    if (orderEntity == null) {
+      return "false";
+    }
+    // 初始化SDK
+    AlipayClient alipayClient = null;
+    try {
+      alipayClient = new DefaultAlipayClient(getAlipayConfig());
+    } catch (AlipayApiException e) {
+      throw new RuntimeException(e);
+    }
+
+    // 构造请求参数以调用接口
+    AlipayTradePagePayRequest request = new AlipayTradePagePayRequest();
+    request.setReturnUrl("http://gulimall.com");
+    request.setNotifyUrl("http://gulimall.com");
+
+    AlipayTradePagePayModel model = new AlipayTradePagePayModel();
+
+    // 设置商户订单号
+    model.setOutTradeNo(orderSn);
+
+    // 设置订单总金额
+    model.setTotalAmount(orderEntity.getTotalAmount().setScale(2, RoundingMode.HALF_UP).toString());
+
+    // 设置订单标题
+    model.setSubject("Iphone6 16G");
+
+    // 设置产品码
+    model.setProductCode("FAST_INSTANT_TRADE_PAY");
+
+    // 设置PC扫码支付的方式
+    model.setQrPayMode("1");
+
+    request.setBizModel(model);
+    // 第三方代调用模式下请设置app_auth_token
+    // request.putOtherTextParam("app_auth_token", "<-- 请填写应用授权令牌 -->");
+
+    AlipayTradePagePayResponse response = null;
+    try {
+      response = alipayClient.pageExecute(request, "POST");
+    } catch (AlipayApiException e) {
+      throw new RuntimeException(e);
+    }
+    // 如果需要返回GET请求，请使用
+    // AlipayTradePagePayResponse response = alipayClient.pageExecute(request, "GET");
+    return response.getBody();
+  }
+
+  private static AlipayConfig getAlipayConfig() {
+    String privateKey = "MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCzQHIjoohBc5UY5jzfBtfTfqU0maCVWh2wVHsFVteW12Vq9Y1GBW6PqYBL62QwSQp7j9umGaGSZq5V4Lz2wpZmliTa6uIjEZlZWgVbG14p9jQKj649wTrxQJG7TgbgYynhmwvOGgeTckwwxzaLaXYcNYAIWy7oXeDOGzDl2g5CweTNPpysnCqhU+Emg1P82NH4aNg7fOIoBqF6cxD1nWoAGxDA4h9gTkYHYYZPvRAdb/BpNgVb6vV0HQX67mZJN7lnLmE8UWE/GiPt47kdix1rFQ5VHkXslYkmmEYXTJs4vmDJnbAV1hrxwdKCclFfgqzOeeOhmwC6FnZE3WJwKa/LAgMBAAECggEAVj28bI6nNa5RXrBvOvKE5ll5TIxZaWH5BLwwkAoPIaCyR7qqZLT6U54+fsha5KxPodE94XVVeiVy3RiKccJ/MA4u3zDA6hRujkG0b/gD3vZ4ZVhpgYa1QBtLwi0xO8YaAVRiYp+9Y2BLbfB6uqpbzAild9+++scoAKGubffygoUN93r/rrTnfYf3yY3DnYWAgU3chaSbS6ckS+ySxqKsWJH9qjJBCYjjrrWPDt2xuUr3a+CcSL+83YUhKLNawESf2jvSFdmbqcKXa27iPZPBoK6ib31uPq9EOBrjYsiXsT/qbMwUCp7HS0LSwVe+Tv9psvVFQQGpkD53VXuwwxpd2QKBgQDrAF+fffm1kYQlBn0lY6um58uYiofPTFzK3h2TNZFO4ZkrX3Ul7QbWnKveTlLUFI2Kafrx1lsfIrFxBxuKP1xc1qAqgr2CHOYjK8sXxjeTsC4SnySHh1y4E9AZbMrqJbqTGhUnP+kecAiifFFYbCSpIXsDh8FOb54+8ZVRs35zjQKBgQDDRM4buFgeP/xg7aZBNn9KqFCO5WOET477KW9cWuWv35cwsu7T5MAt2/Wgsepx41pPZzG4zBM89M6SO+RNtzHBO7Thx08wWmBbBmQGnzAEB/MMD72AwUuYwctJxnoKLGPQLjfRGN5Ilum7HgCxtWWwc/v5pjIsMLMdXorXlLjutwKBgEhX2hgQQOH7RPHc+IOdFkeQTeXMp5hSSrKNBA/AStY8rtliTn75Y8SHgIU0GV1+YkA89eqi8XQ5SuSfqoO5k6Zkz/OmQc6fNN2Y6rGL7KoDb3t+EFHEgu+L8eER07mXGcOVIPPvQcWD+bSDjssop3SFgQgKL6EEzXNVDYGUPxY1AoGBAIJM44wz0vk8kVjMvGg/yWk0L61q/KFJxYtr9teWADb/6I+ilyPmPSdc4+c7Ucp1f8oEfnVmGGBQq5eBR7NkT1s2UFlo+jq11B5pgU254/yMoW6nAjlswtlIWDL+smkffetpK+3nvkyKB6XJO4VaGmVIwBezAz/hr2Qltlhs8Yq5AoGBAJb48LgFlg4A9FkmzhXRcPBYTM+Jvj7scur3iKpz979SIZ3Dfi/TG6aecuwy/EbhN8Me52hyVNfHuuwlcR6wU+OFSZ5FwJOM5WWGmvOfATMYoHuX2xXWmYnAA2nWd606gjSHV5EkBFiOeEufis7RgHbZKsfB+Qp0o45sM3YYdh4f";
+    String alipayPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkAY4s5La08xGMGsdPThR6HAg03MoiIoNmwJ59jhuyZm6sDLYgw/rvtnxF0gn6r4P09d6Rqgc1DrLl1hpcLcFTKlTHZE2ORS+UQcIdl8XLP3VpXE2zLiGZ17EAhfsYAkr/XdBc6qCKFmfRS0Q430JQtK+b+Za577RoqJk7Eg/Xjkd6jJNrgkF0JqWgYpdc2yjaGe4yZKTqQLMThRY4k3Pgrc+cBOZKSRsyEvd0RK+QZZ1lyZ2POZGcOU3pdyn5rb9x8yk/cCmELzx/+/QQlJsKiaCR7hfW3MnshPB2UTXhGgY+dF5sj/o55HPhTKk6dYRs+PnXQHtvCWHLy4L/PyhhQIDAQAB";
+    AlipayConfig alipayConfig = new AlipayConfig();
+    alipayConfig.setServerUrl("https://openapi-sandbox.dl.alipaydev.com/gateway.do");
+    alipayConfig.setAppId("9021000161691958");
+    alipayConfig.setPrivateKey(privateKey);
+    alipayConfig.setFormat("json");
+    alipayConfig.setAlipayPublicKey(alipayPublicKey);
+    alipayConfig.setCharset("UTF-8");
+    alipayConfig.setSignType("RSA2");
+    return alipayConfig;
   }
 
   /**

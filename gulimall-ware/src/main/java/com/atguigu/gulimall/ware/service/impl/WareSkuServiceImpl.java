@@ -163,6 +163,7 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuMapper, WareSkuEntity
         Long skuId = a.getSkuId();
         Integer skuNum = a.getSkuNum();
         Long wareId = a.getWareId();
+//        没有跨库，事务回退也会把他回退的。
         this.baseMapper.unlock(skuId, wareId, skuNum);
       }
     });

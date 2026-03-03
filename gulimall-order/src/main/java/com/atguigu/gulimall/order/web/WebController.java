@@ -4,9 +4,7 @@ import annotation.LoginUser;
 import com.atguigu.gulimall.order.entity.OrderEntity;
 import com.atguigu.gulimall.order.service.OrderService;
 import com.atguigu.gulimall.order.vo.OrderConfirmVo;
-import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -67,14 +65,14 @@ public class WebController {
   }
 
 
-  @GetMapping("/test")
-  public String createOrderTest() {
-    //订单下单成功
-    OrderEntity orderEntity = new OrderEntity();
-    orderEntity.setOrderSn(UUID.randomUUID().toString());
-    //给mq发消息
-    rabbitTemplate.convertAndSend("order-event-exchange", "order.create.order", orderEntity,
-        new CorrelationData(UUID.randomUUID().toString()));
-    return "";
+  @GetMapping("/paymoney.html")
+  public String pay(@RequestParam("orderSn") String orderSn, Model model,
+      @LoginUser MemberEntityVo memberEntityVo) {
+    {
+      String paymentForm = orderService.pay(orderSn, memberEntityVo); // 获取支付宝支付表单
+      log.info(paymentForm);
+      model.addAttribute("paymentForm", paymentForm);  // 将支付表单传递到模板
+      return "zhifubao";  // 返回 Thymeleaf 模板
+    }
   }
 }
