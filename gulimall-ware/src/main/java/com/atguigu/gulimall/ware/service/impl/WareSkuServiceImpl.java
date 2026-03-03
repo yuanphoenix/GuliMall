@@ -84,6 +84,9 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuMapper, WareSkuEntity
   @Transactional(readOnly = true)
   @Override
   public List<SkuHasStockTo> getSkuHasStock(List<Long> skuIds) {
+    if (skuIds == null || skuIds.isEmpty()) {
+      return List.of();
+    }
     skuIds = skuIds.stream().distinct().toList();
     return this.baseMapper.hasStock(skuIds);
   }

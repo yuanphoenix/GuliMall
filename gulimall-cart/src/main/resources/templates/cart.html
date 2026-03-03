@@ -464,26 +464,6 @@
       $(".One_isDel").show(); //删除弹框显示
       $(".One_moveGzIfNull").hide();
     }
-    //移除结账固定定位
-    // if($(".check").length==1){
-    // 	$(".fix").remove();
-    // }
-    // })
-    //var that=$(this);
-    //确定删除
-    /*      $(".One_isDel>div:last-child button:first-child").click(function(){
-              $(".One_mb").hide();    //蒙版隐藏
-              $(".One_isDel").hide(); //删除弹框隐藏
-              $(".check:checked").parent().parent().parent().parent().remove();  //删除选中商品
-              if($(".fix").offset().top>$(".fix1").offset().top){
-                  $(".fix").hide();
-              }
-              if($(".check").length==0){
-                  $(".allCheck").prop("checked",false);
-                  $(".sumNum").html("0");
-                  $(".fnt").html("￥ 0.00");
-              }
-          })*/
   })
   //确定删除弹框移入我的关注
   $(".One_isDel>div:last-child button:last-child").click(function () {
@@ -622,32 +602,8 @@
     $(".One_mb").show();
     $(".One_isDel").show();
     deleteIds.push($(this).data('sku-id'))
-
-    //确定删除
-    /*        $(".One_isDel>div:last-child button:first-child").click(function(){
-                $(".One_mb").hide();
-                $(".One_isDel").hide();
-                that.parent().parent().parent().parent().remove();
-                // 移除结账固定定位
-                // if($(".check").length==1){
-                // 	$(".fix").remove();
-                // }
-                if($(".fix").offset().top>$(".fix1").offset().top){
-                    $(".fix").hide();
-                }
-                if($(".check").length==0){
-                    $(".allCheck").prop("checked",false);
-                    $(".sumNum").html("0");
-                    $(".fnt").html("￥ 0.00");
-                }
-            })*/
   })
-  /*    //页面滚动删除去结算固定定位隐藏
-      $(document).scroll(function(){
-          if($(".fix").offset().top>$(".fix1").offset().top){
-              $(".fix").hide();
-          }
-      })*/
+
   $(".One_isDel>div:last-child button").mouseover(function () {
     $(this).css("cursor", "pointer");
   })

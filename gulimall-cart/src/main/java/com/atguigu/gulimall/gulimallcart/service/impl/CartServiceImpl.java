@@ -87,7 +87,6 @@ public class CartServiceImpl implements CartService {
 
   @Override
   public Boolean changeCart(CartItemTo cartItem, MemberEntityVo member) {
-
     if (cartItem == null || cartItem.getSkuId() == null) {
       return false;
     }
@@ -96,8 +95,11 @@ public class CartServiceImpl implements CartService {
     if (Objects.isNull(object)) {
       return false;
     }
+    //从redis中取得的
     CartItemTo originalCartItem = gson.fromJson(object.toString(), CartItemTo.class);
-    originalCartItem.setChecked(Boolean.TRUE.equals(cartItem.getChecked()));
+    originalCartItem.setChecked(cartItem.getChecked() == null ? originalCartItem.getChecked()
+        : Boolean.TRUE.equals(cartItem.getChecked()));
+
     originalCartItem.setCount(
         cartItem.getCount() == null ? originalCartItem.getCount() : cartItem.getCount());
     this.getBoundGeoOperations(member)
