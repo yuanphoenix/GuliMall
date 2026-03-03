@@ -17,3 +17,7 @@ spring:
       config:
         import-check:
           enabled: false
+
+  thymeleaf:
+    cache: false
+

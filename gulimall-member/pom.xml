@@ -33,6 +33,16 @@
       <artifactId>spring-cloud-starter-loadbalancer</artifactId>
       <groupId>org.springframework.cloud</groupId>
     </dependency>
+    <!--    引入Thymeleaf-->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-thymeleaf</artifactId>
+    </dependency>
+    <dependency>
+      <artifactId>spring-boot-devtools</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <optional>true</optional>
+    </dependency>
 
     <dependency>
       <artifactId>spring-boot-starter-test</artifactId>

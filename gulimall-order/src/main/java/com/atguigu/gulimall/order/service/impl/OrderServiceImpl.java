@@ -307,7 +307,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
 
     // 构造请求参数以调用接口
     AlipayTradePagePayRequest request = new AlipayTradePagePayRequest();
-    request.setReturnUrl("http://gulimall.com");
+    request.setReturnUrl("http://member.gulimall.com/memberOrder.html");
     request.setNotifyUrl("http://gulimall.com");
 
     AlipayTradePagePayModel model = new AlipayTradePagePayModel();
