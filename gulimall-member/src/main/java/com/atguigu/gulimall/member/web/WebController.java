@@ -18,9 +18,7 @@ public class WebController {
   @GetMapping("/memberOrder.html")
   public String memberOrder(
       @RequestParam(value = "out_trade_no", required = false) String orderSn) {
-    log.info("out_trade_no{}", orderSn);
     memberService.sendPayed(orderSn);
-
     return "orderList";
   }
 }

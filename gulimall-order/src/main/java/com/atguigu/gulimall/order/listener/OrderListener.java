@@ -28,9 +28,15 @@ public class OrderListener {
   @RabbitListener(queues = "order.payed.queue")
   public void payed(String orderSn, Message message, Channel channel) {
     boolean pay = orderService.isPay(orderSn);
-    if (pay) {
-      log.info("{}支付成功", orderSn);
+    if (!pay) {
+      log.error("{}没有支付成功", orderSn);
+      return;
     }
+
+    OrderEntity one = orderService.getOne(new LambdaUpdateWrapper<OrderEntity>().eq(OrderEntity::getOrderSn, orderSn));
+    one.setStatus(1);
+    orderService.updateById(one);
+    //TODO 通过消息队列调整库存
   }
 
   /**

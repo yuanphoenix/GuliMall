@@ -27,14 +27,6 @@ public class WebController {
         this.orderService = orderService;
         this.rabbitTemplate = rabbitTemplate;
     }
-
-
-    @PostMapping("/alipay")
-    public String alipay() {
-        log.warn("收到了支付宝的回调");
-        return "alipaySuccess";
-    }
-
     @GetMapping("/confirm.html")
     public String begin(@LoginUser MemberEntityVo memberEntityVo,
                         Model model) {
