@@ -4,10 +4,13 @@ import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.AlipayConfig;
 import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.domain.AlipayTradeCloseModel;
 import com.alipay.api.domain.AlipayTradePagePayModel;
 import com.alipay.api.domain.AlipayTradeQueryModel;
+import com.alipay.api.request.AlipayTradeCloseRequest;
 import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.alipay.api.request.AlipayTradeQueryRequest;
+import com.alipay.api.response.AlipayTradeCloseResponse;
 import com.alipay.api.response.AlipayTradePagePayResponse;
 import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.atguigu.gulimall.order.entity.OrderEntity;
@@ -18,6 +21,7 @@ import com.atguigu.gulimall.order.feign.ProductFeign;
 import com.atguigu.gulimall.order.feign.WareFeign;
 import com.atguigu.gulimall.order.mapper.OrderItemMapper;
 import com.atguigu.gulimall.order.mapper.OrderMapper;
+import com.atguigu.gulimall.order.service.OrderItemService;
 import com.atguigu.gulimall.order.service.OrderService;
 import com.atguigu.gulimall.order.vo.MemberAddressVo;
 import com.atguigu.gulimall.order.vo.OrderConfirmVo;
@@ -26,12 +30,14 @@ import com.atguigu.gulimall.order.vo.OrderSubmitVo;
 import com.atguigu.gulimall.order.vo.SpuInfoVo;
 import com.atguigu.gulimall.order.vo.SubmitOrderResponseVo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.rabbitmq.client.Channel;
 import constant.OrderConstant;
-import java.io.IOException;
+import constant.RabbitMqMessageEnum;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -45,20 +51,23 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import to.MemberEntityVo;
 import to.SkuHasStockTo;
 import to.cart.CartItemTo;
 import to.order.LockSkuTo;
+import to.order.OrderInfoTo;
+import to.order.OrderPayedEvent;
 import to.ware.WareItemTo;
 import to.ware.WareTo;
+import utils.PageUtils;
 import utils.R;
 
 /**
@@ -85,11 +94,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
   private final ThreadPoolExecutor threadPoolExecutor;
 
   private final OrderItemMapper orderItemMapper;
+  private final OrderItemService orderItemService;
 
   public OrderServiceImpl(RabbitTemplate rabbitTemplate, MemberFeign memberFeign,
       CartFeign cartFeign, WareFeign wareFeign, ProductFeign productFeign,
       StringRedisTemplate stringRedisTemplate, ThreadPoolExecutor threadPoolExecutor,
-      OrderItemMapper orderItemMapper) {
+      OrderItemMapper orderItemMapper, OrderItemService orderItemService) {
     this.rabbitTemplate = rabbitTemplate;
     this.memberFeign = memberFeign;
     this.cartFeign = cartFeign;
@@ -98,16 +108,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
     this.stringRedisTemplate = stringRedisTemplate;
     this.threadPoolExecutor = threadPoolExecutor;
     this.orderItemMapper = orderItemMapper;
+    this.orderItemService = orderItemService;
   }
-
-  @RabbitListener(queues = {"hello"})
-  void listen(Message message, @Payload OrderEntity orderEntity, Channel channel)
-      throws IOException {
-    System.out.println("消费者" + orderEntity);
-    long deliveryTag = message.getMessageProperties().getDeliveryTag();
-    channel.basicAck(deliveryTag, false);
-  }
-
 
   /**
    * 从这个人的id查出来它购物车中所有checked的产品
@@ -272,6 +274,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
       //保存
       if (hasLockStock) {
         this.save(orderEntity);
+        orderItemEntities.forEach(a -> a.setOrderId(orderEntity.getId()));
         orderItemMapper.insert(orderItemEntities);
         submitOrderResponseVo.setCode(200);
       }
@@ -279,6 +282,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
     log.info("订单的数据{}", orderEntity);
     //延时队列来取消订单
     rabbitTemplate.convertAndSend("order-event-exchange", "order.create.order", orderEntity);
+    rabbitTemplate.convertAndSend("stock-event-exchange", "stock.delay.stock", orderEntity);
     return submitOrderResponseVo;
   }
 
@@ -312,7 +316,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
 
     // 构造请求参数以调用接口
     AlipayTradePagePayRequest request = new AlipayTradePagePayRequest();
-    request.setReturnUrl("http://member.gulimall.com/memberOrder.html");
+    request.setReturnUrl("http://member.gulimall.com/transfer.html");
     AlipayTradePagePayModel model = new AlipayTradePagePayModel();
 
     log.info("商户订单号码{}", orderSn);
@@ -347,7 +351,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
   }
 
   @Override
-  public boolean isPay(String orderSn) {
+  public @NotNull RabbitMqMessageEnum isPay(String orderSn) {
     // 初始化SDK
     AlipayClient alipayClient = null;
     try {
@@ -375,8 +379,117 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
     } catch (AlipayApiException e) {
       throw new RuntimeException(e);
     }
-    log.info(response.toString());
-    return response != null && response.isSuccess();
+    if (response == null) {
+      return RabbitMqMessageEnum.RETRY;
+    }
+
+    if (response.isSuccess()) {
+      return RabbitMqMessageEnum.SUCCESS;
+    }
+
+    String subMsg = response.getSubMsg();
+    if (StringUtils.equalsAny(subMsg, "ACQ.TRADE_NOT_EXIST", "ACQ.INVALID_PARAMETER")) {
+      return RabbitMqMessageEnum.FAILURE;
+    }
+    return RabbitMqMessageEnum.RETRY;
+  }
+
+  @Transactional
+  @Override
+  public RabbitMqMessageEnum changeOrderStateToPayed(String orderSn) {
+    var payed = isPay(orderSn);
+    if (payed != RabbitMqMessageEnum.SUCCESS) {
+      return payed;
+    }
+    boolean update = this.update(
+        new LambdaUpdateWrapper<OrderEntity>().eq(OrderEntity::getStatus, 0)
+            .eq(OrderEntity::getOrderSn, orderSn).set(OrderEntity::getStatus, 1));
+    if (!update) {
+      return RabbitMqMessageEnum.IDEMPOTENT;
+    }
+    rabbitTemplate.convertAndSend("stock-event-exchange", "stock.minus.stock",
+        new OrderPayedEvent(orderSn));
+    return payed;
+  }
+
+  @Override
+  public @NotNull RabbitMqMessageEnum closeOrder(OrderEntity orderEntity) {
+
+    // 初始化SDK
+    AlipayClient alipayClient = null;
+    try {
+      alipayClient = new DefaultAlipayClient(getAlipayConfig());
+    } catch (AlipayApiException e) {
+      throw new RuntimeException(e);
+    }
+
+    // 构造请求参数以调用接口
+    AlipayTradeCloseRequest request = new AlipayTradeCloseRequest();
+    AlipayTradeCloseModel model = new AlipayTradeCloseModel();
+    // 设置订单支付时传入的商户订单号
+    model.setOutTradeNo(orderEntity.getOrderSn());
+
+    // 设置商家操作员编号 id
+    model.setOperatorId("YX01");
+
+    request.setBizModel(model);
+    // 第三方代调用模式下请设置app_auth_token
+    // request.putOtherTextParam("app_auth_token", "<-- 请填写应用授权令牌 -->");
+
+    AlipayTradeCloseResponse response = null;
+    try {
+      response = alipayClient.execute(request);
+    } catch (AlipayApiException e) {
+      throw new RuntimeException(e);
+    }
+
+    if (response == null) {
+      return RabbitMqMessageEnum.RETRY;
+    }
+
+    if (response.isSuccess()) {
+      return RabbitMqMessageEnum.SUCCESS;
+    }
+    String subMsg = response.getSubMsg();
+    if (StringUtils.equalsAny(subMsg, "ACQ.SYSTEM_ERROR")) {
+      return RabbitMqMessageEnum.RETRY;
+    }
+    return RabbitMqMessageEnum.FAILURE;
+  }
+
+  @Override
+  public IPage<OrderInfoTo> pageWithCondition(OrderInfoTo pageDTO) {
+
+    IPage<OrderEntity> page = this.page(PageUtils.of(pageDTO), new LambdaQueryWrapper<OrderEntity>()
+        .eq(OrderEntity::getDeleteStatus, 0)
+        .eq(OrderEntity::getMemberId, pageDTO.getMemberId())
+        .orderBy(false, false, OrderEntity::getCreateTime)
+    );
+    Page<OrderInfoTo> orderInfoToPage = new PageUtils<>(page).convertTo(a -> {
+      OrderInfoTo orderInfoTo = new OrderInfoTo();
+      BeanUtils.copyProperties(a, orderInfoTo);
+      return orderInfoTo;
+    });
+
+    List<OrderItemEntity> list = orderItemService.list(
+        new LambdaQueryWrapper<OrderItemEntity>().in(OrderItemEntity::getOrderSn,
+            orderInfoToPage.getRecords().stream().map(OrderInfoTo::getOrderSn).toList()));
+
+    Map<String, List<OrderItemEntity>> collect = list.stream()
+        .collect(Collectors.groupingBy(OrderItemEntity::getOrderSn));
+
+    orderInfoToPage.getRecords().forEach(a -> {
+      String orderSn = a.getOrderSn();
+      List<OrderItemEntity> orderItemEntities = collect.get(orderSn);
+      var cc = orderItemEntities.stream().map(b -> {
+        to.order.OrderItemTo orderItemTo = new to.order.OrderItemTo();
+        BeanUtils.copyProperties(b, orderItemTo);
+        return orderItemTo;
+      }).toList();
+      a.setOrderItemToList(cc);
+    });
+
+    return orderInfoToPage;
   }
 
   private static AlipayConfig getAlipayConfig() {

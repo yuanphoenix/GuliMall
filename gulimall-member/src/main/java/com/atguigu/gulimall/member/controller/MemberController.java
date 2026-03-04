@@ -3,7 +3,6 @@ package com.atguigu.gulimall.member.controller;
 import com.atguigu.gulimall.member.entity.MemberEntity;
 import com.atguigu.gulimall.member.feign.CouponFeignService;
 import com.atguigu.gulimall.member.service.MemberService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,16 +32,6 @@ public class MemberController {
 
   @Autowired
   private CouponFeignService couponFeignService;
-
-  @Autowired
-  private ObjectMapper objectMapper;
-
-
-  @GetMapping("/test")
-  public R test() {
-    R list = couponFeignService.list();
-    return R.ok().put("list", list);
-  }
 
   /**
    * 获取所有数据

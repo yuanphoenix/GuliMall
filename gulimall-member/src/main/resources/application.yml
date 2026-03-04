@@ -11,6 +11,16 @@ spring:
     url: jdbc:mysql://10.200.200.1:3306/gulimall_ums
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+  data:
+    redis:
+      host: 10.200.200.1
+      port: 6379
+
+  cache:
+    type: redis
+  session:
+    timeout: 30m
+
   rabbitmq:
     host: 10.200.200.1
     port: 5672

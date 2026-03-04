@@ -24,6 +24,8 @@ public interface WareSkuMapper extends BaseMapper<WareSkuEntity> {
   int lockSku(@Param("lockTo") WareItemTo lockTo,@Param("wareId") Long wareId);
 
   void unlock(Long skuId, Long wareId, Integer skuNum);
+
+  void minusStock(Long wareId, Long skuId, Integer skuNum);
 }
 
 

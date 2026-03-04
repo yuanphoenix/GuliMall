@@ -34,6 +34,21 @@ public class R extends HashMap<String, Object> {
     return c;
   }
 
+
+  public <T> T getPage(TypeReference<T> t) {
+    ObjectMapper objectMapper = new ObjectMapper();
+    JavaTimeModule javaTimeModule = new JavaTimeModule();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN);
+    javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(formatter));
+    javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(formatter));
+
+    objectMapper.registerModule(javaTimeModule);
+    objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    // 自动注册其他模块，兼容性更好
+    objectMapper.findAndRegisterModules();
+    return objectMapper.convertValue(this.get("page"), t);
+  }
+
   public <T> T getData(TypeReference<T> t) {
     ObjectMapper objectMapper = new ObjectMapper();
     JavaTimeModule javaTimeModule = new JavaTimeModule();

@@ -4,14 +4,22 @@ import com.atguigu.gulimall.order.entity.OrderEntity;
 import com.atguigu.gulimall.order.service.OrderService;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.rabbitmq.client.Channel;
+import constant.RabbitMqMessageEnum;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
+import to.order.OrderPayedEvent;
 import to.ware.WareTo;
 
+/***
+ * 最严谨的状态是只有达到了正常预期的行为才可以发ack。
+ *
+ * basicNack都应该记录到数据库中
+ *
+ */
 @Slf4j
 @Component
 public class OrderListener {
@@ -26,17 +34,21 @@ public class OrderListener {
 
 
   @RabbitListener(queues = "order.payed.queue")
-  public void payed(String orderSn, Message message, Channel channel) {
-    boolean pay = orderService.isPay(orderSn);
-    if (!pay) {
-      log.error("{}没有支付成功", orderSn);
-      return;
+  public void payed(OrderPayedEvent orderPayedEvent, Message message, Channel channel) {
+    String orderSn = orderPayedEvent.getOrderSn();
+    var result = orderService.changeOrderStateToPayed(orderSn);
+    try {
+      switch (result) {
+        case RETRY ->
+            channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, true);
+        case FAILURE ->
+            channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, false);
+        case IDEMPOTENT, SUCCESS ->
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+      }
+    } catch (IOException e) {
+      throw new RuntimeException(e);
     }
-
-    OrderEntity one = orderService.getOne(new LambdaUpdateWrapper<OrderEntity>().eq(OrderEntity::getOrderSn, orderSn));
-    one.setStatus(1);
-    orderService.updateById(one);
-    //TODO 通过消息队列调整库存
   }
 
   /**
@@ -50,12 +62,34 @@ public class OrderListener {
   @RabbitListener(queues = "order.release.queue")
   public void releaseOrder(OrderEntity orderEntity, Message message, Channel channel)
       throws IOException {
+
+    /**
+     * 订单时候先支付宝闭单
+     */
+    var closeResult = orderService.closeOrder(orderEntity);
+    //支付宝闭单失败
+    if (closeResult != RabbitMqMessageEnum.SUCCESS) {
+      var result = orderService.changeOrderStateToPayed(orderEntity.getOrderSn());
+      switch (result) {
+        case SUCCESS -> channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+        case RETRY -> channel.basicNack(message.getMessageProperties().getDeliveryTag(), false,
+            !message.getMessageProperties().getRedelivered());
+        case FAILURE ->
+            channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, false);
+        case null, default -> {
+          channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, false);
+        }
+      }
+      return;
+    }
+
     boolean update = orderService.update(
         new LambdaUpdateWrapper<OrderEntity>()
             .eq(OrderEntity::getStatus, 0)
             .eq(OrderEntity::getDeleteStatus, 0)
             .eq(OrderEntity::getOrderSn, orderEntity.getOrderSn())
             .set(OrderEntity::getStatus, 4));
+//    幂等
     if (!update) {
       try {
         log.info("没有这个订单，或者之前状态已经修改过了");

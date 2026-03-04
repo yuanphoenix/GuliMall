@@ -4,8 +4,11 @@ import com.atguigu.gulimall.order.entity.OrderEntity;
 import com.atguigu.gulimall.order.vo.OrderConfirmVo;
 import com.atguigu.gulimall.order.vo.OrderSubmitVo;
 import com.atguigu.gulimall.order.vo.SubmitOrderResponseVo;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import constant.RabbitMqMessageEnum;
 import to.MemberEntityVo;
+import to.order.OrderInfoTo;
 
 /**
  * @author tifa
@@ -52,8 +55,28 @@ public interface OrderService extends IService<OrderEntity> {
 
   /**
    * 根据订单号从支付宝验证是否支付成功
+   *
    * @param orderSn
    * @return
    */
-  boolean isPay(String orderSn);
+  RabbitMqMessageEnum isPay(String orderSn);
+
+
+  /**
+   * 幂等接口 削减库存
+   *
+   * @param orderSn
+   * @return
+   */
+  RabbitMqMessageEnum changeOrderStateToPayed(String orderSn);
+
+  /**
+   * 支付宝关闭订单
+   *
+   * @param orderEntity
+   * @return
+   */
+  RabbitMqMessageEnum closeOrder(OrderEntity orderEntity);
+
+  IPage<OrderInfoTo> pageWithCondition(OrderInfoTo pageDTO);
 }

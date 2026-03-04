@@ -41,6 +41,15 @@
       and ware_id = #{wareId}
 
   </update>
+  <update id="minusStock">
+
+    update wms_ware_sku
+    set stock_locked = stock_locked - #{skuNum},
+        stock=stock - #{skuNum}
+    where sku_id = #{skuId}
+      and ware_id = #{wareId};
+  </update>
+
 
   <!-- 根据skuids 判断各个sku是否还有库存 -->
   <select id="hasStock" resultType="to.SkuHasStockTo">

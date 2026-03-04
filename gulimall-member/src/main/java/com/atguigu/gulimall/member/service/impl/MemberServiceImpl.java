@@ -2,6 +2,7 @@ package com.atguigu.gulimall.member.service.impl;
 
 import com.atguigu.gulimall.member.entity.MemberEntity;
 import com.atguigu.gulimall.member.entity.MemberLevelEntity;
+import com.atguigu.gulimall.member.feign.OrderFeign;
 import com.atguigu.gulimall.member.mapper.MemberMapper;
 import com.atguigu.gulimall.member.service.MemberLevelService;
 import com.atguigu.gulimall.member.service.MemberService;
@@ -16,6 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import to.MemberEntityVo;
+import to.order.OrderInfoTo;
+import to.order.OrderPayedEvent;
+import utils.R;
 
 /**
  * @author tifa
@@ -25,12 +29,23 @@ import to.MemberEntityVo;
 @Service
 public class MemberServiceImpl extends ServiceImpl<MemberMapper, MemberEntity>
     implements MemberService {
+  @Autowired
+  private OrderFeign orderFeign;
 
   @Autowired
   private MemberLevelService memberLevelService;
 
   @Autowired
   private RabbitTemplate rabbitTemplate;
+
+  @Override
+  public R test(MemberEntityVo memberEntityVo) {
+    Long memberId = memberEntityVo.getId();
+    OrderInfoTo orderInfoTo = new OrderInfoTo();
+    orderInfoTo.setMemberId(memberId);
+    R list = orderFeign.list(orderInfoTo);
+    return list;
+  }
 
   /**
    *
@@ -79,7 +94,8 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, MemberEntity>
 
   @Override
   public void sendPayed(String orderSn) {
-    rabbitTemplate.convertAndSend("order-event-exchange", "order.payed.order", orderSn);
+    OrderPayedEvent orderPayedEvent = new OrderPayedEvent(orderSn);
+    rabbitTemplate.convertAndSend("order-event-exchange", "order.payed.order", orderPayedEvent);
   }
 }
 

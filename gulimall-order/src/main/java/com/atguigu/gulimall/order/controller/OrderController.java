@@ -5,7 +5,7 @@ import com.atguigu.gulimall.order.entity.OrderEntity;
 import com.atguigu.gulimall.order.service.OrderService;
 import com.atguigu.gulimall.order.vo.OrderSubmitVo;
 import com.atguigu.gulimall.order.vo.SubmitOrderResponseVo;
-import java.util.List;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import to.MemberEntityVo;
+import to.order.OrderInfoTo;
+import to.order.OrderPayedEvent;
 import utils.R;
 
 /**
@@ -33,6 +35,14 @@ public class OrderController {
   @Autowired
   private OrderService orderService;
 
+
+  @PostMapping("/list")
+  public R list(@RequestBody OrderInfoTo pageDTO) {
+    IPage<OrderInfoTo> list = orderService.pageWithCondition(pageDTO);
+    return R.ok().put("page", list);
+  }
+
+
   @PostMapping("/submitOrder")
   public R submitOrder(@RequestBody OrderSubmitVo orderSubmitVo,
       @LoginUser MemberEntityVo memberEntityVo) {
@@ -41,15 +51,12 @@ public class OrderController {
   }
 
 
-  /**
-   * 获取所有数据
-   */
-  @GetMapping("/list")
-  public R list() {
-    List<OrderEntity> list = orderService.list();
-
-    return R.ok().put("data", list);
+  @PostMapping("/changeOrderToPayed")
+  public R changeOrderToPayed(@RequestBody OrderPayedEvent orderPayedEvent) {
+    orderService.changeOrderStateToPayed(orderPayedEvent.getOrderSn());
+    return R.ok();
   }
+
 
   /**
    * 根据ID获取数据

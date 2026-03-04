@@ -3,6 +3,7 @@ package com.atguigu.gulimall.member.service;
 import com.atguigu.gulimall.member.entity.MemberEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
 import to.MemberEntityVo;
+import utils.R;
 
 /**
  * @author tifa
@@ -11,6 +12,8 @@ import to.MemberEntityVo;
  */
 public interface MemberService extends IService<MemberEntity> {
 
+
+  R test(MemberEntityVo memberEntityVo);
 
   boolean saveMember(MemberEntity member);
 

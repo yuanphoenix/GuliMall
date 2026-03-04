@@ -17,12 +17,10 @@ import org.springframework.context.annotation.Configuration;
 public class MyRabbitmqConfig {
 
 
-
   @Bean
   public MessageConverter messageConverter() {
     return new Jackson2JsonMessageConverter();
   }
-
 
 
   /**
@@ -38,7 +36,7 @@ public class MyRabbitmqConfig {
     return new Queue("order.delay.queue", true, false, false,
         Map.of("x-dead-letter-exchange", "order-event-exchange",
             "x-dead-letter-routing-key", "order.release.order",
-            "x-message-ttl", 10000 * 6)); //1分钟
+            "x-message-ttl", 10000 * 10)); //10分钟
   }
 
   @Bean

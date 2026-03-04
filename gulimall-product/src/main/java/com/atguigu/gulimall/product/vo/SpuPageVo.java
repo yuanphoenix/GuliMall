@@ -3,9 +3,11 @@ package com.atguigu.gulimall.product.vo;
 import utils.PageDTO;
 
 public class SpuPageVo extends PageDTO {
+
   private Long catalogId;
   private Long brandId;
   private Integer status;
+  //min和max都是价格
   private Long min;
   private Long max;
 

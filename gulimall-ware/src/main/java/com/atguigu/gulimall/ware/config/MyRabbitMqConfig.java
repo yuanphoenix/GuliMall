@@ -25,11 +25,11 @@ public class MyRabbitMqConfig {
    */
   @Bean
   public Queue stockDelayQueue() {
-//  30分钟的延时队列，到时候根据情况自动解锁库存
+//  12分钟的延时队列，到时候根据情况自动解锁库存
     return new Queue("stock-delay-queue", true, false, false,
         Map.of("x-dead-letter-exchange", "stock-event-exchange",
             "x-dead-letter-routing-key", "stock.release.stock",
-            "x-message-ttl", 60000 * 1));
+            "x-message-ttl", 10000 * 12));
   }
 
 
@@ -37,6 +37,14 @@ public class MyRabbitMqConfig {
   public Queue stockReleaseQueue() {
     return new Queue("stock-release-queue", true, false, false);
   }
+
+
+  @Bean
+  public Queue stockMinusQueue() {
+    return new Queue("stock-minus-queue", true, false, false);
+  }
+
+
 
   @Bean
   public Exchange stockEventExchange() {
@@ -53,6 +61,12 @@ public class MyRabbitMqConfig {
   public Binding stockReleaseBind() {
     return new Binding("stock-release-queue", DestinationType.QUEUE, "stock-event-exchange"
         , "stock.release.stock", null);
+  }
+
+  @Bean
+  public Binding stockMinusBind() {
+    return new Binding("stock-minus-queue", DestinationType.QUEUE, "stock-event-exchange"
+        , "stock.minus.stock", null);
   }
 
 }

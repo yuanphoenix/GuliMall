@@ -26,20 +26,8 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute(LoginConstant.LOGIN.getValue()) == null) {
-            log.info(request.getRemoteHost());
-            log.info(request.getRequestURI());
-            log.info(request.getMethod());
-            log.info(request.getServletPath());
-            log.info(request.getContextPath());
-            log.info(request.getPathInfo());
-            if (request.getRequestURI().contains("/alipay")) {
-                return true;
-            }
-
-
             var key = UUID.randomUUID().toString();
             String backUrl = "http://order.gulimall.com" + request.getRequestURI();
             if (request.getQueryString() != null) {

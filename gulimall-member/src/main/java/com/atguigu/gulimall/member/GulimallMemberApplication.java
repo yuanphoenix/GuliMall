@@ -1,5 +1,6 @@
 package com.atguigu.gulimall.member;
 
+import annotation.EnableCustomRedisHttpSession;
 import config.MybatisPlusConfig;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @MapperScan("com.atguigu.gulimall.member.mapper")
 @EnableDiscoveryClient
+@EnableCustomRedisHttpSession
 @ComponentScan(basePackageClasses = { MybatisPlusConfig.class, GulimallMemberApplication.class})
 @EnableFeignClients(basePackages = "com.atguigu.gulimall.member.feign")
 public class GulimallMemberApplication {

@@ -27,9 +27,8 @@ public class WebConfig implements WebMvcConfigurer {
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
-
     registry.addInterceptor(loginInterceptor)
-        .addPathPatterns("/**");
+        .addPathPatterns("/**").excludePathPatterns("/order/order/changeOrderToPayed/**","/order/order/list/**");
   }
 
   /**
@@ -56,6 +55,5 @@ public class WebConfig implements WebMvcConfigurer {
   @Override
   public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
     resolvers.add(loginUserArgumentResolver);
-
   }
 }

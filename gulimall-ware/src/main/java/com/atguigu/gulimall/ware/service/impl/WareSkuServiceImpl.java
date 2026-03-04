@@ -12,7 +12,9 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import constant.RabbitMqMessageEnum;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -72,7 +74,6 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuMapper, WareSkuEntity
       wareSkuEntity.setStock(skuNum);
       save(wareSkuEntity);
     }
-
   }
 
   /**
@@ -137,14 +138,14 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuMapper, WareSkuEntity
 
   @Override
   @Transactional
-  public void unlockStock(WareTo wareTo) {
+  public @NotNull RabbitMqMessageEnum unlockStock(WareTo wareTo) {
     //OrderSn是必然有的
     WareOrderTaskEntity wareOrderTaskEntity = wareOrderTaskMapper.selectOne(
         new LambdaQueryWrapper<WareOrderTaskEntity>().eq(WareOrderTaskEntity::getOrderSn,
             wareTo.getOrderSn()));
     if (wareOrderTaskEntity == null) {
       log.warn("释放库存发现并没有记录");
-      return;
+      return RabbitMqMessageEnum.FAILURE;
     }
     List<WareOrderTaskDetailEntity> wareOrderTaskDetailEntityList = wareOrderTaskDetailMapper.selectList(
         new LambdaQueryWrapper<WareOrderTaskDetailEntity>()
@@ -167,6 +168,36 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuMapper, WareSkuEntity
         this.baseMapper.unlock(skuId, wareId, skuNum);
       }
     });
+    return RabbitMqMessageEnum.SUCCESS;
+  }
+
+  @Transactional
+  @Override
+  public @NotNull RabbitMqMessageEnum minusStock(String orderSn) {
+    WareOrderTaskEntity wareOrderTaskEntity = wareOrderTaskMapper.selectOne(
+        new LambdaQueryWrapper<WareOrderTaskEntity>().eq(WareOrderTaskEntity::getOrderSn, orderSn));
+    if (wareOrderTaskEntity == null) {
+      return RabbitMqMessageEnum.FAILURE;
+    }
+    Long taskId = wareOrderTaskEntity.getId();
+    List<WareOrderTaskDetailEntity> wareOrderTaskDetailEntityList = wareOrderTaskDetailMapper.selectList(
+        new LambdaQueryWrapper<WareOrderTaskDetailEntity>().eq(WareOrderTaskDetailEntity::getTaskId,
+            taskId).ne(WareOrderTaskDetailEntity::getLockStatus, 2));
+    if (wareOrderTaskDetailEntityList.isEmpty()) {
+      return RabbitMqMessageEnum.IDEMPOTENT;
+    }
+
+    for (WareOrderTaskDetailEntity a : wareOrderTaskDetailEntityList) {
+      Long wareId = a.getWareId();
+      Long skuId = a.getSkuId();
+      a.setLockStatus(3);
+      int i = wareOrderTaskDetailMapper.updateById(a);
+      if (i == 0) {
+        continue;
+      }
+      this.baseMapper.minusStock(wareId, skuId, a.getSkuNum());
+    }
+    return RabbitMqMessageEnum.SUCCESS;
   }
 }
 
