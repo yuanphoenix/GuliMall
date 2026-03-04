@@ -52,6 +52,18 @@ public class MyRabbitmqConfig {
     return new TopicExchange("order-event-exchange", true, false);
   }
 
+
+  @Bean
+  public Queue payedQueue() {
+    return new Queue("order.payed.queue", true, false, false);
+  }
+
+  @Bean
+  public Binding orderPayedOrder() {
+    return new Binding("order.payed.queue", DestinationType.QUEUE, "order-event-exchange",
+        "order.payed.order", null);
+  }
+
   @Bean
   public Binding orderCreateOrder() {
     return new Binding("order.delay.queue", DestinationType.QUEUE, "order-event-exchange",

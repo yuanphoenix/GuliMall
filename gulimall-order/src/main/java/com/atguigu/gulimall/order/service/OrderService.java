@@ -48,4 +48,12 @@ public interface OrderService extends IService<OrderEntity> {
    * @return
    */
   String pay(String orderSn, MemberEntityVo memberEntityVo);
+
+
+  /**
+   * 根据订单号从支付宝验证是否支付成功
+   * @param orderSn
+   * @return
+   */
+  boolean isPay(String orderSn);
 }

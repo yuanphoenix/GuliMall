@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import exception.BizCodeEnum;
 import exception.BizException;
 import java.time.LocalDateTime;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -28,6 +29,8 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, MemberEntity>
   @Autowired
   private MemberLevelService memberLevelService;
 
+  @Autowired
+  private RabbitTemplate rabbitTemplate;
 
   /**
    *
@@ -72,6 +75,11 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, MemberEntity>
     BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
     return bCryptPasswordEncoder.matches(member.getPassword(), trueMember.getPassword())
         ? memberEntityVo : null;
+  }
+
+  @Override
+  public void sendPayed(String orderSn) {
+    rabbitTemplate.convertAndSend("order-event-exchange", "order.payed.order", orderSn);
   }
 }
 

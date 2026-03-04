@@ -24,6 +24,15 @@ public class OrderListener {
     this.rabbitTemplate = rabbitTemplate;
   }
 
+
+  @RabbitListener(queues = "order.payed.queue")
+  public void payed(String orderSn, Message message, Channel channel) {
+    boolean pay = orderService.isPay(orderSn);
+    if (pay) {
+      log.info("{}支付成功", orderSn);
+    }
+  }
+
   /**
    * 通过延时队列关闭订单
    *

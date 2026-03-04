@@ -67,14 +67,6 @@ spring:
           predicates:
             - Host=order.gulimall.com
 
-        - id: zhifubao
-          uri: lb://gulimall-order
-          predicates:
-            - Host=*.happywizard.asia
-            - Path=/**
-          filters:
-            - RewritePath=/(?<segment>.*), /alipay
-
         - id: gulimall-member
           uri: lb://gulimall-member
           predicates:

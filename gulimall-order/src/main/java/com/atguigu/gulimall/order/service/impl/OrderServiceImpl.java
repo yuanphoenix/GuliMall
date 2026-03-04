@@ -5,8 +5,11 @@ import com.alipay.api.AlipayClient;
 import com.alipay.api.AlipayConfig;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.domain.AlipayTradePagePayModel;
+import com.alipay.api.domain.AlipayTradeQueryModel;
 import com.alipay.api.request.AlipayTradePagePayRequest;
+import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.response.AlipayTradePagePayResponse;
+import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.atguigu.gulimall.order.entity.OrderEntity;
 import com.atguigu.gulimall.order.entity.OrderItemEntity;
 import com.atguigu.gulimall.order.feign.CartFeign;
@@ -31,6 +34,7 @@ import constant.OrderConstant;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -291,6 +295,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
     return one;
   }
 
+
   @Override
   public String pay(String orderSn, MemberEntityVo memberEntityVo) {
     OrderEntity orderEntity = preparePayInfo(orderSn, memberEntityVo);
@@ -308,10 +313,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
     // 构造请求参数以调用接口
     AlipayTradePagePayRequest request = new AlipayTradePagePayRequest();
     request.setReturnUrl("http://member.gulimall.com/memberOrder.html");
-    request.setNotifyUrl("http://www.happywizard.asia:33789/zhifubao");
-
     AlipayTradePagePayModel model = new AlipayTradePagePayModel();
 
+    log.info("商户订单号码{}", orderSn);
     // 设置商户订单号
     model.setOutTradeNo(orderSn);
 
@@ -340,6 +344,39 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
     // 如果需要返回GET请求，请使用
     // AlipayTradePagePayResponse response = alipayClient.pageExecute(request, "GET");
     return response.getBody();
+  }
+
+  @Override
+  public boolean isPay(String orderSn) {
+    // 初始化SDK
+    AlipayClient alipayClient = null;
+    try {
+      alipayClient = new DefaultAlipayClient(getAlipayConfig());
+    } catch (AlipayApiException e) {
+      throw new RuntimeException(e);
+    }
+
+    // 构造请求参数以调用接口
+    AlipayTradeQueryRequest request = new AlipayTradeQueryRequest();
+    AlipayTradeQueryModel model = new AlipayTradeQueryModel();
+
+    // 设置订单支付时传入的商户订单号
+    model.setOutTradeNo(orderSn);
+
+    // 设置查询选项
+    List<String> queryOptions = new ArrayList<String>();
+    queryOptions.add("trade_settle_info");
+    model.setQueryOptions(queryOptions);
+
+    request.setBizModel(model);
+    AlipayTradeQueryResponse response = null;
+    try {
+      response = alipayClient.execute(request);
+    } catch (AlipayApiException e) {
+      throw new RuntimeException(e);
+    }
+    log.info(response.toString());
+    return response != null && response.isSuccess();
   }
 
   private static AlipayConfig getAlipayConfig() {

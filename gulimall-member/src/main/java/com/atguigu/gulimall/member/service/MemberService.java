@@ -15,4 +15,7 @@ public interface MemberService extends IService<MemberEntity> {
   boolean saveMember(MemberEntity member);
 
   MemberEntityVo checkLogin(MemberEntity member);
+
+
+  void sendPayed(String orderSn);
 }
