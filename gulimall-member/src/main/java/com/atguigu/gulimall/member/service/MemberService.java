@@ -3,6 +3,7 @@ package com.atguigu.gulimall.member.service;
 import com.atguigu.gulimall.member.entity.MemberEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
 import to.MemberEntityVo;
+import to.order.OrderInfoTo;
 import utils.R;
 
 /**
@@ -13,7 +14,7 @@ import utils.R;
 public interface MemberService extends IService<MemberEntity> {
 
 
-  R test(MemberEntityVo memberEntityVo);
+  R test(MemberEntityVo memberEntityVo, OrderInfoTo orderInfoTo);
 
   boolean saveMember(MemberEntity member);
 

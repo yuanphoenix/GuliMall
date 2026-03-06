@@ -39,9 +39,8 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, MemberEntity>
   private RabbitTemplate rabbitTemplate;
 
   @Override
-  public R test(MemberEntityVo memberEntityVo) {
+  public R test(MemberEntityVo memberEntityVo, OrderInfoTo orderInfoTo) {
     Long memberId = memberEntityVo.getId();
-    OrderInfoTo orderInfoTo = new OrderInfoTo();
     orderInfoTo.setMemberId(memberId);
     R list = orderFeign.list(orderInfoTo);
     return list;

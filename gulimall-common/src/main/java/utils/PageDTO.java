@@ -4,8 +4,8 @@ import java.util.Optional;
 
 public class PageDTO {
 
-  private Integer page;
-  private Integer limit;
+  private Integer page = 1;
+  private Integer limit = 50;
   private String key;
   private String sidx;
   private String order;
