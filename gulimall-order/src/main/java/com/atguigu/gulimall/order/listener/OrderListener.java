@@ -62,7 +62,6 @@ public class OrderListener {
   @RabbitListener(queues = "order.release.queue")
   public void releaseOrder(OrderEntity orderEntity, Message message, Channel channel)
       throws IOException {
-
     /**
      * 订单时候先支付宝闭单
      */

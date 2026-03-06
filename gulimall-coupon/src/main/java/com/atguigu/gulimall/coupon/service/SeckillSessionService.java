@@ -1,7 +1,9 @@
 package com.atguigu.gulimall.coupon.service;
 
 import com.atguigu.gulimall.coupon.entity.SeckillSessionEntity;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import utils.PageDTO;
 
 /**
  * @author tifa
@@ -10,4 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface SeckillSessionService extends IService<SeckillSessionEntity> {
 
+  IPage<SeckillSessionEntity> list(PageDTO pageDTO);
 }

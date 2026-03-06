@@ -1,6 +1,8 @@
 package com.atguigu.gulimall.coupon.service;
 
 import com.atguigu.gulimall.coupon.entity.SeckillSkuRelationEntity;
+import com.atguigu.gulimall.coupon.vo.SessionRealtionDTO;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -10,4 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface SeckillSkuRelationService extends IService<SeckillSkuRelationEntity> {
 
+  IPage<SeckillSkuRelationEntity> pageWithCondition(SessionRealtionDTO pageDTO);
 }

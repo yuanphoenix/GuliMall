@@ -3,8 +3,13 @@ package com.atguigu.gulimall.coupon.service.impl;
 import com.atguigu.gulimall.coupon.entity.SeckillSkuRelationEntity;
 import com.atguigu.gulimall.coupon.mapper.SeckillSkuRelationMapper;
 import com.atguigu.gulimall.coupon.service.SeckillSkuRelationService;
+import com.atguigu.gulimall.coupon.vo.SessionRealtionDTO;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import java.util.Objects;
 import org.springframework.stereotype.Service;
+import utils.PageUtils;
 
 /**
  * @author tifa
@@ -16,6 +21,14 @@ public class SeckillSkuRelationServiceImpl extends
     ServiceImpl<SeckillSkuRelationMapper, SeckillSkuRelationEntity>
     implements SeckillSkuRelationService {
 
+
+  @Override
+  public IPage<SeckillSkuRelationEntity> pageWithCondition(SessionRealtionDTO pageDTO) {
+    return this.baseMapper.selectPage(PageUtils.of(pageDTO),
+        new LambdaQueryWrapper<SeckillSkuRelationEntity>().eq(
+            Objects.nonNull(pageDTO.getPromotionSessionId()),
+            SeckillSkuRelationEntity::getPromotionSessionId, pageDTO.getPromotionSessionId()));
+  }
 }
 
 

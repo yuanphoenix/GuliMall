@@ -351,7 +351,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
   }
 
   @Override
-  public @NotNull RabbitMqMessageEnum isPay(String orderSn) {
+  public @NotNull RabbitMqMessageEnum checkHasBeenPaid(String orderSn) {
     // 初始化SDK
     AlipayClient alipayClient = null;
     try {
@@ -368,7 +368,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
     model.setOutTradeNo(orderSn);
 
     // 设置查询选项
-    List<String> queryOptions = new ArrayList<String>();
+    List<String> queryOptions = new ArrayList<>();
     queryOptions.add("trade_settle_info");
     model.setQueryOptions(queryOptions);
 
@@ -397,14 +397,16 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
   @Transactional
   @Override
   public RabbitMqMessageEnum changeOrderStateToPayed(String orderSn) {
-    var payed = isPay(orderSn);
+    var payed = checkHasBeenPaid(orderSn);
     if (payed != RabbitMqMessageEnum.SUCCESS) {
+//      如果是失败和重试，那说明这个订单其实没有并没有支付成功。所以并不会更改状态。
       return payed;
     }
     boolean update = this.update(
         new LambdaUpdateWrapper<OrderEntity>().eq(OrderEntity::getStatus, 0)
             .eq(OrderEntity::getOrderSn, orderSn).set(OrderEntity::getStatus, 1));
     if (!update) {
+//      幂等性接口
       return RabbitMqMessageEnum.IDEMPOTENT;
     }
     rabbitTemplate.convertAndSend("stock-event-exchange", "stock.minus.stock",

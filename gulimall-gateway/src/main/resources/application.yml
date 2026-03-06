@@ -26,6 +26,13 @@ spring:
           filters:
             - StripPrefix=2
 
+        - id: coupon-service
+          uri: lb://gulimall-coupon
+          predicates:
+            - Path=/api/renren-fast/coupon/**
+          filters:
+            - StripPrefix=2
+
         - id: ware-service
           uri: lb://gulimall-ware
           predicates:

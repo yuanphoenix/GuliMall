@@ -57,9 +57,10 @@ public interface OrderService extends IService<OrderEntity> {
    * 根据订单号从支付宝验证是否支付成功
    *
    * @param orderSn
-   * @return
+   * @return   RabbitMqMessageEnum.RETRY,SUCCESS，FAILURE
+   * @see RabbitMqMessageEnum#RETRY,RabbitMqMessageEnum#SUCCESS,RabbitMqMessageEnum#FAILURE
    */
-  RabbitMqMessageEnum isPay(String orderSn);
+  RabbitMqMessageEnum checkHasBeenPaid(String orderSn);
 
 
   /**

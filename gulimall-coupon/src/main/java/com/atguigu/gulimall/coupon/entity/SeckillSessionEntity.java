@@ -1,6 +1,8 @@
 package com.atguigu.gulimall.coupon.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.time.LocalDateTime;
@@ -42,11 +44,13 @@ public class SeckillSessionEntity {
   /**
    * 创建时间
    */
+  @TableField(fill = FieldFill.INSERT)
   private LocalDateTime createTime;
 
   /**
    * id
    */
+
   public Long getId() {
     return id;
   }
@@ -127,6 +131,7 @@ public class SeckillSessionEntity {
   public void setCreateTime(LocalDateTime createTime) {
     this.createTime = createTime;
   }
+
 
   @Override
   public boolean equals(Object that) {

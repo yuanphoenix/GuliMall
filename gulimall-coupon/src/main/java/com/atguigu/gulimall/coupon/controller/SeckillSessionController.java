@@ -2,14 +2,16 @@ package com.atguigu.gulimall.coupon.controller;
 
 import com.atguigu.gulimall.coupon.entity.SeckillSessionEntity;
 import com.atguigu.gulimall.coupon.service.SeckillSessionService;
-import java.util.List;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import utils.PageDTO;
 import utils.R;
 
 /**
@@ -21,7 +23,7 @@ import utils.R;
  * @since 2025-05-09
  */
 @RestController
-@RequestMapping("/coupon/seckillSession")
+@RequestMapping("/coupon/seckillsession")
 public class SeckillSessionController {
 
   @Autowired
@@ -31,9 +33,9 @@ public class SeckillSessionController {
    * 获取所有数据
    */
   @GetMapping("/list")
-  public R list() {
-    List<SeckillSessionEntity> list = seckillSessionService.list();
-    return R.ok().put("data", list);
+  public R list(@ModelAttribute PageDTO pageDTO) {
+    IPage<SeckillSessionEntity> result = seckillSessionService.list(pageDTO);
+    return R.ok().put("page", result);
   }
 
   /**

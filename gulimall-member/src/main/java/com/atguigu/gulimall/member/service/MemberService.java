@@ -14,7 +14,14 @@ import utils.R;
 public interface MemberService extends IService<MemberEntity> {
 
 
-  R test(MemberEntityVo memberEntityVo, OrderInfoTo orderInfoTo);
+  /**
+   * 我不明白为什么这个账单有关的接口要放在member微服务里，但是视频里就是这么写的。
+   *
+   * @param memberEntityVo
+   * @param orderInfoTo
+   * @return
+   */
+  R getOrderList(MemberEntityVo memberEntityVo, OrderInfoTo orderInfoTo);
 
   boolean saveMember(MemberEntity member);
 

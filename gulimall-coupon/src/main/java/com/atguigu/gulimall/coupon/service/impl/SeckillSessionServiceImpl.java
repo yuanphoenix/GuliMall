@@ -3,8 +3,11 @@ package com.atguigu.gulimall.coupon.service.impl;
 import com.atguigu.gulimall.coupon.entity.SeckillSessionEntity;
 import com.atguigu.gulimall.coupon.mapper.SeckillSessionMapper;
 import com.atguigu.gulimall.coupon.service.SeckillSessionService;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+import utils.PageDTO;
+import utils.PageUtils;
 
 /**
  * @author tifa
@@ -16,6 +19,10 @@ public class SeckillSessionServiceImpl extends
     ServiceImpl<SeckillSessionMapper, SeckillSessionEntity>
     implements SeckillSessionService {
 
+  @Override
+  public IPage<SeckillSessionEntity> list(PageDTO pageDTO) {
+   return this.page(PageUtils.of(pageDTO));
+  }
 }
 
 
