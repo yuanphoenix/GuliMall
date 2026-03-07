@@ -2,6 +2,24 @@ spring:
   application:
     name: gulimall-product
 
+  rabbitmq:
+    host: 10.200.200.1
+    port: 5672
+    virtual-host: /
+    username: admin
+    password: admin123
+    #消费端需要手动确认
+    listener:
+      simple:
+        acknowledge-mode: manual
+    #        开启发送端确认
+    publisher-confirm-type: correlated
+    #    开启发送端消息抵达队列的确认
+    publisher-returns: true
+    #    开启发送端消息抵达队列的异步的确认
+    template:
+      mandatory: true
+
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -51,3 +69,6 @@ gulimall:
     core-pool-size: 50
     max-pool-size: 200
     keep-alive-time: 10
+
+
+

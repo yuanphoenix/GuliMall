@@ -6,7 +6,6 @@ import jakarta.annotation.PostConstruct;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -16,14 +15,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-  @Autowired
-  private RabbitTemplate rabbitTemplate;
-  @Autowired
-  private LoginInterceptor loginInterceptor;
-
-
-  @Autowired
-  private LoginUserArgumentResolver loginUserArgumentResolver;
+  private final RabbitTemplate rabbitTemplate;
+  private final LoginInterceptor loginInterceptor;
+  private final LoginUserArgumentResolver loginUserArgumentResolver;
+  public WebConfig(RabbitTemplate rabbitTemplate, LoginInterceptor loginInterceptor,
+      LoginUserArgumentResolver loginUserArgumentResolver) {
+    this.rabbitTemplate = rabbitTemplate;
+    this.loginInterceptor = loginInterceptor;
+    this.loginUserArgumentResolver = loginUserArgumentResolver;
+  }
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {

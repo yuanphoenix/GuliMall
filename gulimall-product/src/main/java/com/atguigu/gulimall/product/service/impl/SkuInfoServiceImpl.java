@@ -31,7 +31,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import utils.PageUtils;
@@ -51,14 +50,15 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfoEntity
 
   private final SkuImagesService skuImagesService;
 
-  @Autowired
-  private SkuSaleAttrValueService skuSaleAttrValueService;
+  private final SkuSaleAttrValueService skuSaleAttrValueService;
 
   public SkuInfoServiceImpl(SpuInfoDescService spuInfoDescService,
-      SkuImagesService skuImagesService, ThreadPoolExecutor executor) {
+      SkuImagesService skuImagesService, ThreadPoolExecutor executor,
+      SkuSaleAttrValueService skuSaleAttrValueService) {
     this.spuInfoDescService = spuInfoDescService;
     this.skuImagesService = skuImagesService;
     this.executor = executor;
+    this.skuSaleAttrValueService = skuSaleAttrValueService;
   }
 
   @Override

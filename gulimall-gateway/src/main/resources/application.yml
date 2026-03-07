@@ -74,6 +74,11 @@ spring:
           predicates:
             - Host=order.gulimall.com
 
+        - id: gulimall-coupon
+          uri: lb://gulimall-coupon
+          predicates:
+            - Host=coupon.gulimall.com
+
         - id: gulimall-member
           uri: lb://gulimall-member
           predicates:

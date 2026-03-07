@@ -39,16 +39,18 @@ public class AttrServiceImpl extends ServiceImpl<AttrMapper, AttrEntity>
 
 
   private final AttrAttrgroupRelationService attrAttrgroupRelationService;
-  @Autowired
-  private CategoryMapper categoryMapper;
-  @Autowired
-  private AttrGroupMapper attrGroupMapper;
-  @Autowired
-  private AttrAttrgroupRelationMapper attrAttrgroupRelationMapper;
+  private final CategoryMapper categoryMapper;
+  private final AttrGroupMapper attrGroupMapper;
+  private final AttrAttrgroupRelationMapper attrAttrgroupRelationMapper;
 
   @Autowired
-  public AttrServiceImpl(AttrAttrgroupRelationService attrAttrgroupRelationService) {
+  public AttrServiceImpl(AttrAttrgroupRelationService attrAttrgroupRelationService,
+      CategoryMapper categoryMapper, AttrGroupMapper attrGroupMapper,
+      AttrAttrgroupRelationMapper attrAttrgroupRelationMapper) {
     this.attrAttrgroupRelationService = attrAttrgroupRelationService;
+    this.categoryMapper = categoryMapper;
+    this.attrGroupMapper = attrGroupMapper;
+    this.attrAttrgroupRelationMapper = attrAttrgroupRelationMapper;
   }
 
   @Transactional

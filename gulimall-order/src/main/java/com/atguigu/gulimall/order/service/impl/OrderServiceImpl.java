@@ -36,7 +36,7 @@ import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
-import constant.OrderConstant;
+import constant.RedisConstant;
 import constant.RabbitMqMessageEnum;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -178,7 +178,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
     String orderKey = UUID.randomUUID().toString().replace("-", "");
     String token = UUID.randomUUID().toString().replace("-", "");
     stringRedisTemplate.opsForValue()
-        .set(OrderConstant.USER_ORDER_TOKEN_PREFIX + orderKey, token, 10,
+        .set(RedisConstant.USER_ORDER_TOKEN_PREFIX + orderKey, token, 10,
             TimeUnit.MINUTES);
 
     confirmVo.setToken(token);
@@ -204,7 +204,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
     //原子操作，这意味着下面的所有代码只可能被执行一次
     Long result = stringRedisTemplate.execute(
         new DefaultRedisScript<>(script, Long.class),
-        Collections.singletonList(OrderConstant.USER_ORDER_TOKEN_PREFIX + orderToken),
+        Collections.singletonList(RedisConstant.USER_ORDER_TOKEN_PREFIX + orderToken),
         token
     );
 

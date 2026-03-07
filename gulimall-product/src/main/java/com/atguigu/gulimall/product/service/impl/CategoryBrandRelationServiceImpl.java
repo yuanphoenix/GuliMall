@@ -10,7 +10,6 @@ import com.atguigu.gulimall.product.service.CategoryBrandRelationService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -24,10 +23,13 @@ public class CategoryBrandRelationServiceImpl extends
     ServiceImpl<CategoryBrandRelationMapper, CategoryBrandRelationEntity>
     implements CategoryBrandRelationService {
 
-  @Autowired
-  BrandMapper brandMapper;
-  @Autowired
-  CategoryMapper categoryMapper;
+  private final BrandMapper brandMapper;
+  private final CategoryMapper categoryMapper;
+
+  public CategoryBrandRelationServiceImpl(BrandMapper brandMapper, CategoryMapper categoryMapper) {
+    this.brandMapper = brandMapper;
+    this.categoryMapper = categoryMapper;
+  }
 
   @Override
   public boolean saveDetail(CategoryBrandRelationEntity categoryBrandRelation) {

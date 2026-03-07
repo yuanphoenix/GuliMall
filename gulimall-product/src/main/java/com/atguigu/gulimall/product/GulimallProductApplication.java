@@ -4,6 +4,7 @@ import annotation.EnableCustomRedisHttpSession;
 import com.atguigu.gulimall.product.feign.CouponFeignService;
 import config.MybatisPlusConfig;
 import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @MapperScan("com.atguigu.gulimall.product.mapper")
 @EnableDiscoveryClient
+@EnableRabbit
 @ComponentScan(basePackageClasses = {MybatisPlusConfig.class,GulimallProductApplication.class})
 public class GulimallProductApplication {
 

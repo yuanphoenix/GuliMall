@@ -3,6 +3,7 @@ package com.atguigu.gulimall.coupon.controller;
 import com.atguigu.gulimall.coupon.entity.SeckillSessionEntity;
 import com.atguigu.gulimall.coupon.service.SeckillSessionService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -36,6 +37,13 @@ public class SeckillSessionController {
   public R list(@ModelAttribute PageDTO pageDTO) {
     IPage<SeckillSessionEntity> result = seckillSessionService.list(pageDTO);
     return R.ok().put("page", result);
+  }
+
+
+  @GetMapping("/list3daysSecKill")
+  public List<SeckillSessionEntity> getSecKill3daysLatest() {
+    //查出来了这些活动
+    return seckillSessionService.getSecKill3daysLatest();
   }
 
   /**

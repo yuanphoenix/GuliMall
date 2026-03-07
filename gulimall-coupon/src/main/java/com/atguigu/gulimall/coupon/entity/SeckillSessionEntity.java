@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 秒杀活动场次
@@ -46,6 +47,20 @@ public class SeckillSessionEntity {
    */
   @TableField(fill = FieldFill.INSERT)
   private LocalDateTime createTime;
+
+
+  @TableField(exist = false)
+  private List<SeckillSkuRelationEntity> seckillSkuRelationEntities;
+
+
+  public List<SeckillSkuRelationEntity> getSeckillSkuRelationEntities() {
+    return seckillSkuRelationEntities;
+  }
+
+  public void setSeckillSkuRelationEntities(
+      List<SeckillSkuRelationEntity> seckillSkuRelationEntities) {
+    this.seckillSkuRelationEntities = seckillSkuRelationEntities;
+  }
 
   /**
    * id

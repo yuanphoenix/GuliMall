@@ -16,12 +16,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MyRabbitmqConfig {
 
-
   @Bean
   public MessageConverter messageConverter() {
     return new Jackson2JsonMessageConverter();
   }
-
 
   /**
    * 死信队列

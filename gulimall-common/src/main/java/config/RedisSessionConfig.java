@@ -20,11 +20,10 @@ public class RedisSessionConfig {
 
   private final Logger logger = LoggerFactory.getLogger(RedisSessionConfig.class);
 
-
   @Bean
   public RedisSerializer<Object> springSessionDefaultRedisSerializer(ObjectMapper objectMapper) {
-      return new GenericJackson2JsonRedisSerializer(
-          objectMapper);
+    return new GenericJackson2JsonRedisSerializer(
+        objectMapper);
   }
 
   @Bean
