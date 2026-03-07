@@ -1,0 +1,28 @@
+server:
+  port: 25000
+
+xxl:
+  job:
+    admin:
+      accessToken: default_token
+      addresses: http://10.200.200.1:33678/xxl-job-admin
+    executor:
+      appname: gulimall-job
+      port: -1
+      logpath: ~/logs/xxl-job/
+
+spring:
+  application:
+    name: gulimall-seckill
+
+  cloud:
+    nacos:
+      server-addr: 10.200.200.1:8848
+      config:
+        import-check:
+          enabled: false
+  data:
+    redis:
+      host: 10.200.200.1
+      port: 6379
+
