@@ -1,21 +1,23 @@
-package com.tifa.gulimallseckill.config;
+package com.atguigu.gulimall.gulimallcart.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Slf4j
 @Configuration
 public class RedisConfig {
 
-  @Autowired
-  private ObjectMapper objectMapper;
+  private final ObjectMapper objectMapper;
+
+  public RedisConfig(ObjectMapper objectMapper) {
+    this.objectMapper = objectMapper;
+  }
 
   @Bean
   public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
@@ -24,11 +26,11 @@ public class RedisConfig {
     template.setKeySerializer(new StringRedisSerializer());
     template.setHashKeySerializer(new StringRedisSerializer());
 
-    // 使用 Jackson2JsonRedisSerializer
-    Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(objectMapper,
-        Object.class);
+
+    GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
     template.setValueSerializer(serializer);
     template.setHashValueSerializer(serializer);
+    template.afterPropertiesSet();
     return template;
   }
 

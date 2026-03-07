@@ -5,27 +5,29 @@ import com.atguigu.gulimall.gulimallcart.service.CartService;
 import com.atguigu.gulimall.gulimallcart.vo.Cart;
 import com.atguigu.gulimall.gulimallcart.vo.SkuInfoEntity;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundHashOperations;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import to.MemberEntityVo;
 import to.cart.CartItemTo;
-import utils.GsonUtil;
 import utils.R;
 
 @Slf4j
 @Service
 public class CartServiceImpl implements CartService {
 
-  private final StringRedisTemplate redisTemplate;
+  private final RedisTemplate redisTemplate;
   private final SkuFeignService skuFeignService;
+  @Autowired
+  private ObjectMapper objectMapper;
 
-  public CartServiceImpl(StringRedisTemplate redisTemplate, SkuFeignService skuFeignService) {
+  public CartServiceImpl(RedisTemplate redisTemplate, SkuFeignService skuFeignService) {
     this.redisTemplate = redisTemplate;
     this.skuFeignService = skuFeignService;
   }
@@ -39,7 +41,7 @@ public class CartServiceImpl implements CartService {
     }
     SkuInfoEntity skuEntity = info.getData(new TypeReference<>() {
     });
-    Object object = this.getBoundGeoOperations(member)
+    Object oldCartItem = this.getBoundGeoOperations(member)
         .get(skuEntity.getSkuId().toString());
     CartItemTo cartItem = new CartItemTo();
     cartItem.setTitle(skuEntity.getSkuTitle());
@@ -48,37 +50,36 @@ public class CartServiceImpl implements CartService {
     cartItem.setSpuId(skuEntity.getSpuId());
     cartItem.setImage(skuEntity.getSkuDefaultImg());
     cartItem.setPrice(skuEntity.getPrice());
-    Gson gson = GsonUtil.INSTANCE.getInstance();
-    if (object != null) {
+    if (oldCartItem != null) {
 // 如果用户已经加过购物车了，那么只要更新数量就可以
-      var oldCartItem = gson
-          .fromJson(object.toString(), CartItemTo.class);
-      cartItem.setCount(oldCartItem.getCount() + num);
+      cartItem.setCount(objectMapper.convertValue(oldCartItem, CartItemTo.class).getCount() + num);
     } else {
       cartItem.setCount(num);
     }
     this.getBoundGeoOperations(member)
-        .put(skuId.toString(), gson.toJson(cartItem));
+        .put(skuId.toString(), cartItem);
     return cartItem;
   }
 
   @Override
   public CartItemTo getCartItemBySkuId(MemberEntityVo member, Long skuId) {
     Object object = this.getBoundGeoOperations(member).get(skuId.toString());
-    if (Objects.nonNull(object)) {
-      return GsonUtil.INSTANCE.getInstance().fromJson(object.toString(), CartItemTo.class);
-    }
-    return null;
+    return objectMapper.convertValue(object, CartItemTo.class);
   }
 
   @Override
   public Cart getCart(MemberEntityVo member) {
-    List<Object> values = this.getBoundGeoOperations(member).values();
-    List<CartItemTo> list = Objects.requireNonNullElse(values, List.of(new Cart())).stream()
-        .map(a -> GsonUtil.INSTANCE.getInstance().fromJson(a.toString(), CartItemTo.class))
-        .toList();
     Cart cart = new Cart();
-    cart.setCartItemList(list);
+    cart.setCartItemList(List.of());
+
+    List<Object> list = this.getBoundGeoOperations(member).values();
+    if (list == null || list.isEmpty()) {
+      return cart;
+    }
+    List<CartItemTo> list1 = list.stream().map(a -> objectMapper.convertValue(a, CartItemTo.class))
+        .toList();
+
+    cart.setCartItemList(list1);
     cart.setReduce(BigDecimal.ZERO);
     return cart;
   }
@@ -88,21 +89,20 @@ public class CartServiceImpl implements CartService {
     if (cartItem == null || cartItem.getSkuId() == null) {
       return false;
     }
-
-    Object object = this.getBoundGeoOperations(member).get(cartItem.getSkuId().toString());
-    if (Objects.isNull(object)) {
+    //从redis中取得的
+    Object c1 = this.getBoundGeoOperations(member).get(cartItem.getSkuId());
+    var originalCartItem = objectMapper.convertValue(c1, CartItemTo.class);
+    if (Objects.isNull(originalCartItem)) {
       return false;
     }
-    //从redis中取得的
-    CartItemTo originalCartItem = GsonUtil.INSTANCE.getInstance()
-        .fromJson(object.toString(), CartItemTo.class);
+
     originalCartItem.setChecked(cartItem.getChecked() == null ? originalCartItem.getChecked()
         : Boolean.TRUE.equals(cartItem.getChecked()));
 
     originalCartItem.setCount(
         cartItem.getCount() == null ? originalCartItem.getCount() : cartItem.getCount());
     this.getBoundGeoOperations(member)
-        .put(cartItem.getSkuId().toString(),  GsonUtil.INSTANCE.getInstance().toJson(originalCartItem));
+        .put(cartItem.getSkuId().toString(), originalCartItem);
     return true;
   }
 
@@ -114,7 +114,7 @@ public class CartServiceImpl implements CartService {
     return true;
   }
 
-  private BoundHashOperations<String, Object, Object> getBoundGeoOperations(
+  private BoundHashOperations<String, String, Object> getBoundGeoOperations(
       MemberEntityVo member) {
     return redisTemplate.boundHashOps("cart:" + member.getId());
   }
