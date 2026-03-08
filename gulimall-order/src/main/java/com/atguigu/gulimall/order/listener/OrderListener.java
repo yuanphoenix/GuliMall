@@ -98,7 +98,6 @@ public class OrderListener {
       }
       return;
     }
-
     WareTo wareTo = new WareTo();
     wareTo.setOrderSn(orderEntity.getOrderSn());
     //这个在极端情况下会发不出去

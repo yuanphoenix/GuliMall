@@ -41,12 +41,11 @@ public class SeckillServiceImpl implements SeckillService {
       BoundHashOperations<String, String, SeckillSessionEntityTo> stringObjectObjectBoundHashOperations = redisTemplate.boundHashOps(
           RedisConstant.SECOND_KILL_PREFIX + a.getStartTime().toString());
       String hashKey = a.getId().toString();
-      if (Boolean.FALSE.equals(stringObjectObjectBoundHashOperations.hasKey(hashKey))) {
-        stringObjectObjectBoundHashOperations.put(hashKey, a);
+//      如果这个活动已经上了，那么就不再重复上了。幂等性
+      if (Boolean.TRUE.equals(stringObjectObjectBoundHashOperations.putIfAbsent(hashKey, a))) {
         list.addAll(a.getSeckillSkuRelationEntities());
       }
     });
-
     if (list.isEmpty()) {
       log.info("没有可以上架的");
       return;

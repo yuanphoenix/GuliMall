@@ -57,14 +57,12 @@ public class RabbitMqListener {
     skuRelationEntityToList.forEach(a -> {
       BoundHashOperations<String, String, Object> stringObjectObjectBoundHashOperations = redisTemplate.boundHashOps(
           RedisConstant.SECOND_KILL_SKU_PREFIX + a.getSkuId());
-
       Long skuId = a.getSkuId();
       SkuInfoEntity orDefault = collect.getOrDefault(skuId, new SkuInfoEntity());
       SkuInfoEntityTo skuInfoEntityTo = new SkuInfoEntityTo();
       BeanUtils.copyProperties(orDefault, skuInfoEntityTo);
       a.setSkuInfoEntityTo(skuInfoEntityTo);
-      stringObjectObjectBoundHashOperations.put(a.getPromotionSessionId().toString(), a);
-
+      stringObjectObjectBoundHashOperations.putIfAbsent(a.getPromotionSessionId().toString(), a);
     });
 
     try {
