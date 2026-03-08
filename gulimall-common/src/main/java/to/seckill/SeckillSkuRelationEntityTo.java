@@ -1,6 +1,7 @@
 package to.seckill;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import to.SkuInfoEntityTo;
 
@@ -49,6 +50,10 @@ public class SeckillSkuRelationEntityTo {
    */
   private Integer seckillSort;
 
+
+  private LocalDateTime startTime;
+  private LocalDateTime endTime;
+
   private SkuInfoEntityTo skuInfoEntityTo;
 
   public SkuInfoEntityTo getSkuInfoEntityTo() {
@@ -58,6 +63,24 @@ public class SeckillSkuRelationEntityTo {
   public void setSkuInfoEntityTo(SkuInfoEntityTo skuInfoEntityTo) {
     this.skuInfoEntityTo = skuInfoEntityTo;
   }
+
+
+  public LocalDateTime getStartTime() {
+    return startTime;
+  }
+
+  public void setStartTime(LocalDateTime startTime) {
+    this.startTime = startTime;
+  }
+
+  public LocalDateTime getEndTime() {
+    return endTime;
+  }
+
+  public void setEndTime(LocalDateTime endTime) {
+    this.endTime = endTime;
+  }
+
 
   @Override
   public String toString() {
@@ -70,6 +93,9 @@ public class SeckillSkuRelationEntityTo {
         ", seckillCount=" + seckillCount +
         ", seckillLimit=" + seckillLimit +
         ", seckillSort=" + seckillSort +
+        ", startTime=" + startTime +
+        ", endTime=" + endTime +
+        ", skuInfoEntityTo=" + skuInfoEntityTo +
         '}';
   }
 

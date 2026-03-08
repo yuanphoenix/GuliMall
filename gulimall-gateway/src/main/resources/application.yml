@@ -40,6 +40,11 @@ spring:
           filters:
             - StripPrefix=2
 
+        - id: gulimall-seckill
+          uri: lb://gulimall-seckill
+          predicates:
+            - Host=seckill.gulimall.com
+
         - id: member-service
           uri: lb://gulimall-member
           predicates:
