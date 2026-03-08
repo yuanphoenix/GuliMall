@@ -14,7 +14,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import constant.RabbitMqMessageEnum;
 import java.util.List;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -138,7 +137,7 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuMapper, WareSkuEntity
 
   @Override
   @Transactional
-  public @NotNull RabbitMqMessageEnum unlockStock(WareTo wareTo) {
+  public RabbitMqMessageEnum unlockStock(WareTo wareTo) {
     //OrderSn是必然有的
     WareOrderTaskEntity wareOrderTaskEntity = wareOrderTaskMapper.selectOne(
         new LambdaQueryWrapper<WareOrderTaskEntity>().eq(WareOrderTaskEntity::getOrderSn,
@@ -173,7 +172,7 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuMapper, WareSkuEntity
 
   @Transactional
   @Override
-  public @NotNull RabbitMqMessageEnum minusStock(String orderSn) {
+  public RabbitMqMessageEnum minusStock(String orderSn) {
     WareOrderTaskEntity wareOrderTaskEntity = wareOrderTaskMapper.selectOne(
         new LambdaQueryWrapper<WareOrderTaskEntity>().eq(WareOrderTaskEntity::getOrderSn, orderSn));
     if (wareOrderTaskEntity == null) {

@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import constant.RabbitMqMessageEnum;
 import java.util.List;
-import org.jetbrains.annotations.NotNull;
 import to.SkuHasStockTo;
 import to.ware.WareTo;
 
@@ -42,7 +41,7 @@ public interface WareSkuService extends IService<WareSkuEntity> {
    *
    * @return
    */
-  @NotNull RabbitMqMessageEnum unlockStock(WareTo wareTo);
+  RabbitMqMessageEnum unlockStock(WareTo wareTo);
 
 
   /**
