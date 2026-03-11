@@ -6,6 +6,7 @@ import com.tifa.gulimallseckill.feign.CouponFeign;
 import com.tifa.gulimallseckill.service.SeckillService;
 import constant.RedisConstant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -17,6 +18,9 @@ import org.springframework.stereotype.Service;
 import to.seckill.SeckillSkuRelationEntityTo;
 
 
+/**
+ * @author tifa
+ */
 @Slf4j
 @Service
 public class SeckillServiceImpl implements SeckillService {
@@ -40,26 +44,35 @@ public class SeckillServiceImpl implements SeckillService {
   public void uploadSecKillLatest3daySku() {
 //扫描需要参加秒杀的活动
     List<SeckillSessionEntityTo> secKill3daysLatest = couponFeign.getSecKill3daysLatest();
+    List<Long> sessionIds = secKill3daysLatest.stream().map(SeckillSessionEntityTo::getId).toList();
+
+    for (var item : secKill3daysLatest) {
+//      将活动按照起始时间放到redis中，使用的是zset。zset具有排序功能
+      redisTemplate.boundZSetOps("seckill:sessions:zset")
+          .add("seckill:session:" + item.getId(), item.getStartTime().atZone(
+              ZoneId.of("Asia/Shanghai")).toEpochSecond());
+    }
+
 //    将这些信息保存到redis中
     //sec:kill:开始时间
     List<SeckillSkuRelationEntityTo> list = new ArrayList<>();
-    secKill3daysLatest.forEach(a -> {
-
+    for (SeckillSessionEntityTo a : secKill3daysLatest) {
       List<SeckillSkuRelationEntityTo> seckillSkuRelationEntities = a.getSeckillSkuRelationEntities();
+
+      a.setSeckillSkuRelationEntities(null);
+//      将活动场次信息放到单独的key中
+      redisTemplate.opsForValue().set("seckill:session:" + a.getId(), a);
+
       //只能写成这个，不能从coupon微服务里修改
       seckillSkuRelationEntities.forEach(b -> {
         b.setStartTime(a.getStartTime());
         b.setEndTime(a.getEndTime());
+        redisTemplate.opsForSet()
+            .add("seckill:session:" + a.getId() + ":skus", b);
       });
 
-      BoundHashOperations<String, String, SeckillSessionEntityTo> stringObjectObjectBoundHashOperations = redisTemplate.boundHashOps(
-          RedisConstant.SECOND_KILL_PREFIX + a.getStartTime().toString());
-      String hashKey = a.getId().toString();
-//      如果这个活动已经上了，那么就不再重复上了。幂等性
-      if (Boolean.TRUE.equals(stringObjectObjectBoundHashOperations.putIfAbsent(hashKey, a))) {
-        list.addAll(a.getSeckillSkuRelationEntities());
-      }
-    });
+
+    }
     if (list.isEmpty()) {
       log.info("没有可以上架的");
       return;

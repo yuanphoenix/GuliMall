@@ -55,6 +55,7 @@ public class RabbitMqListener {
         .stream().collect(Collectors.toMap(SkuInfoEntity::getSkuId, Function.identity()));
 
     skuRelationEntityToList.forEach(a -> {
+
       BoundHashOperations<String, String, Object> stringObjectObjectBoundHashOperations = redisTemplate.boundHashOps(
           RedisConstant.SECOND_KILL_SKU_PREFIX + a.getSkuId());
       Long skuId = a.getSkuId();
