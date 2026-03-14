@@ -3,11 +3,10 @@ package com.atguigu.gulimall.product.listener;
 import com.atguigu.gulimall.product.entity.SkuInfoEntity;
 import com.atguigu.gulimall.product.service.SkuInfoService;
 import com.rabbitmq.client.Channel;
-import constant.RedisConstant;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.amqp.core.ExchangeTypes;
 import org.springframework.amqp.core.Message;
@@ -15,13 +14,9 @@ import org.springframework.amqp.rabbit.annotation.Exchange;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
-import to.SkuInfoEntityTo;
-import to.seckill.SeckillSkuRelationEntityTo;
 
 @Component
 public class RabbitMqListener {
@@ -43,32 +38,36 @@ public class RabbitMqListener {
           key = "seckill.sku"
       )
   )
-  public void secondKillSkuPublish(List<SeckillSkuRelationEntityTo> skuRelationEntityToList,
+  public void secondKillSkuPublish(List<String> sessionAndSkuIdList,
       Message message,
       Channel channel) {
-    List<Long> skuIds = skuRelationEntityToList.stream().map(SeckillSkuRelationEntityTo::getSkuId)
-        .distinct()
-        .toList();
-
-    Map<Long, SkuInfoEntity> collect = skuInfoService.lambdaQuery()
-        .in(SkuInfoEntity::getSkuId, skuIds).list()
-        .stream().collect(Collectors.toMap(SkuInfoEntity::getSkuId, Function.identity()));
-
-    skuRelationEntityToList.forEach(a -> {
-
-      BoundHashOperations<String, String, Object> stringObjectObjectBoundHashOperations = redisTemplate.boundHashOps(
-          RedisConstant.SECOND_KILL_SKU_PREFIX + a.getSkuId());
-      Long skuId = a.getSkuId();
-      SkuInfoEntity orDefault = collect.getOrDefault(skuId, new SkuInfoEntity());
-      SkuInfoEntityTo skuInfoEntityTo = new SkuInfoEntityTo();
-      BeanUtils.copyProperties(orDefault, skuInfoEntityTo);
-      a.setSkuInfoEntityTo(skuInfoEntityTo);
-      stringObjectObjectBoundHashOperations.putIfAbsent(a.getPromotionSessionId().toString(), a);
-    });
-
     try {
+
+      Set<Long> skuIds = sessionAndSkuIdList.stream()
+          .map(a -> Long.parseLong(a.substring(a.indexOf("_") + 1))).collect(Collectors.toSet());
+
+      List<SkuInfoEntity> list = skuInfoService.lambdaQuery()
+          .in(SkuInfoEntity::getSkuId, skuIds).list();
+
+      Map<Long, SkuInfoEntity> skuMap = list.stream()
+          .collect(Collectors.toMap(SkuInfoEntity::getSkuId, v -> v));
+
+      for (String key : sessionAndSkuIdList) {
+
+        long skuId = Long.parseLong(key.substring(key.indexOf("_") + 1));
+        SkuInfoEntity sku = skuMap.get(skuId);
+
+//        防止热key
+        redisTemplate.opsForValue().set("seckill:sku:" + key, sku);
+      }
       channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
     } catch (IOException e) {
+      try {
+        channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, true);
+      } catch (IOException ex) {
+        throw new RuntimeException(ex);
+      }
+
       throw new RuntimeException(e);
     }
 

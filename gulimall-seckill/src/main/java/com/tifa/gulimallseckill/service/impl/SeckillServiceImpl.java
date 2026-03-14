@@ -44,38 +44,34 @@ public class SeckillServiceImpl implements SeckillService {
   public void uploadSecKillLatest3daySku() {
 //扫描需要参加秒杀的活动
     List<SeckillSessionEntityTo> secKill3daysLatest = couponFeign.getSecKill3daysLatest();
-    List<Long> sessionIds = secKill3daysLatest.stream().map(SeckillSessionEntityTo::getId).toList();
+    List<String> list = new ArrayList<>();
 
-    for (var item : secKill3daysLatest) {
+    for (SeckillSessionEntityTo lightningDeal : secKill3daysLatest) {
 //      将活动按照起始时间放到redis中，使用的是zset。zset具有排序功能
       redisTemplate.boundZSetOps("seckill:sessions:zset")
-          .add("seckill:session:" + item.getId(), item.getStartTime().atZone(
-              ZoneId.of("Asia/Shanghai")).toEpochSecond());
-    }
-
+          .add("seckill:session:" + lightningDeal.getId(),
+              lightningDeal.getStartTime().atZone(ZoneId.of("Asia/Shanghai")).toEpochSecond());
 //    将这些信息保存到redis中
-    //sec:kill:开始时间
-    List<SeckillSkuRelationEntityTo> list = new ArrayList<>();
-    for (SeckillSessionEntityTo a : secKill3daysLatest) {
-      List<SeckillSkuRelationEntityTo> seckillSkuRelationEntities = a.getSeckillSkuRelationEntities();
-
-      a.setSeckillSkuRelationEntities(null);
+//    sec:kill:开始时间
+      List<SeckillSkuRelationEntityTo> seckillSkuRelationEntities = lightningDeal.getSeckillSkuRelationEntities();
+//      将活动实体里的关联信息置为空，因为向redis中存储用不到。其实前面已经保存过了。
+      lightningDeal.setSeckillSkuRelationEntities(null);
 //      将活动场次信息放到单独的key中
-      redisTemplate.opsForValue().set("seckill:session:" + a.getId(), a);
+      redisTemplate.opsForValue().set("seckill:session:" + lightningDeal.getId(), lightningDeal);
 
-      //只能写成这个，不能从coupon微服务里修改
       seckillSkuRelationEntities.forEach(b -> {
-        b.setStartTime(a.getStartTime());
-        b.setEndTime(a.getEndTime());
+
+        String sessionAndSkuId = lightningDeal.getId() + "_" + b.getSkuId();
+
+//      建立活动id和skuid的关系
         redisTemplate.opsForSet()
-            .add("seckill:session:" + a.getId() + ":skus", b);
+            .add("seckill:session:" + lightningDeal.getId() + ":skus", sessionAndSkuId);
+
+//        将库存存入redis中
+        redisTemplate.opsForValue().set("seckill:stock:" + sessionAndSkuId, b.getSeckillCount());
+        list.add(sessionAndSkuId);
       });
 
-
-    }
-    if (list.isEmpty()) {
-      log.info("没有可以上架的");
-      return;
     }
     log.info("发送了sku上架信号");
     rabbitTemplate.convertAndSend("seckill-exchange", "seckill.sku", list);

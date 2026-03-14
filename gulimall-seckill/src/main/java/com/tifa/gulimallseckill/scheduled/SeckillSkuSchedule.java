@@ -2,7 +2,6 @@ package com.tifa.gulimallseckill.scheduled;
 
 import com.tifa.gulimallseckill.service.SeckillService;
 import com.xxl.job.core.handler.annotation.XxlJob;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,8 +13,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class SeckillSkuSchedule {
 
-  @Autowired
-  private SeckillService seckillService;
+  private final SeckillService seckillService;
+
+  public SeckillSkuSchedule(SeckillService seckillService) {
+    this.seckillService = seckillService;
+  }
 
 
   @XxlJob("secondKill3days")
