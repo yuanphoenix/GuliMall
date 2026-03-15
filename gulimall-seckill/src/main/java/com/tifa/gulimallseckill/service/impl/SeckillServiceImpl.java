@@ -96,17 +96,16 @@ public class SeckillServiceImpl implements SeckillService {
 
     Set<String> endTime = redisTemplate.boundZSetOps("seckill:sessions:end")
         .rangeByScore(0, epochSecond);
-    startTime.removeAll (endTime);
+    startTime.removeAll(endTime);
     return startTime;
   }
 
   @Override
   public List<SeckillSkuRelationEntityTo> getAllSecKillSku() {
     List<SeckillSkuRelationEntityTo> result = new ArrayList<>();
-
     Set<String> sessionKeys = filterSession();
+//TODO 这种严重的在循环里发送redis请求的做法，后续要改
     sessionKeys.forEach(a -> {
-
 //"1_1"
       List<String> members = redisTemplate.boundSetOps(a + ":skus").members().stream().toList();
       for (var item : members) {

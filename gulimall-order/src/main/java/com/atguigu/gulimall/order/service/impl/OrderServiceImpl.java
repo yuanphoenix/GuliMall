@@ -36,10 +36,12 @@ import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
-import constant.RedisConstant;
 import constant.RabbitMqMessageEnum;
+import constant.RedisConstant;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -324,8 +326,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity>
     model.setOutTradeNo(orderSn);
 
     // 设置订单总金额
-    model.setTotalAmount(orderEntity.getTotalAmount().setScale(2, RoundingMode.HALF_UP).toString());
 
+    model.setTotalAmount(orderEntity.getTotalAmount().setScale(2, RoundingMode.HALF_UP).toString());
+//设置超时时间
+    model.setTimeExpire(
+        LocalDateTime.now().plusMinutes(30)
+            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
     // 设置订单标题
     model.setSubject("Iphone6 16G");
 
