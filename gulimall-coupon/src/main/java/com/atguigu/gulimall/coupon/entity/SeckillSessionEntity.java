@@ -49,6 +49,7 @@ public class SeckillSessionEntity {
   private LocalDateTime createTime;
 
 
+  //第一次秒杀传输中存在这个字段
   @TableField(exist = false)
   private List<SeckillSkuRelationEntity> seckillSkuRelationEntities;
 
